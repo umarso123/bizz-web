@@ -1,0 +1,33 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { m, useReducedMotion } from 'framer-motion';
+import { Container } from '@/components/layout/Container.tsx';
+import { homeContent } from '@/content/home.ts';
+import { cn } from '@/lib/cn.ts';
+function ScreenFill({ shot, className, placeholderLabel, }) {
+    if (shot.src) {
+        return (_jsx("img", { src: shot.src, alt: shot.alt, className: cn('h-full w-full object-cover object-top', className), loading: "lazy", decoding: "async" }));
+    }
+    return (_jsx("div", { className: cn('flex h-full w-full flex-col items-center justify-center gap-2 bg-[linear-gradient(165deg,#EAF6FC_0%,#F8FBFD_48%,#FFF4EE_100%)]', className), "aria-label": shot.alt, children: _jsx("span", { className: "rounded-full border border-dashed border-[#0A8FD8]/35 px-3 py-1 text-[0.65rem] font-medium tracking-[0.04em] text-[#087BB9]", children: placeholderLabel }) }));
+}
+function BrowserFrame({ shot }) {
+    return (_jsxs("div", { className: "overflow-hidden rounded-[1.15rem] border border-white/80 bg-white shadow-[0_28px_60px_-28px_rgb(23_33_43_/_0.35)] ring-1 ring-[#0A8FD8]/10", children: [_jsxs("div", { className: "flex h-9 items-center gap-2 border-b border-[#E8EEF2] bg-[#F8FAFC] px-3.5", children: [_jsx("span", { className: "size-2 rounded-full bg-[#FF5F57]" }), _jsx("span", { className: "size-2 rounded-full bg-[#FEBC2E]" }), _jsx("span", { className: "size-2 rounded-full bg-[#28C840]" }), _jsx("div", { className: "ml-2 h-4 flex-1 rounded-full bg-[#EEF3F6]" })] }), _jsx("div", { className: "aspect-[16/10] w-full", children: _jsx(ScreenFill, { shot: shot, placeholderLabel: "Desktop screenshot" }) })] }));
+}
+function PhoneFrame({ shot, className, style, }) {
+    return (_jsxs("div", { className: cn('relative overflow-hidden rounded-[1.85rem] border-[3px] border-[#17212B] bg-[#17212B] shadow-[0_24px_48px_-20px_rgb(23_33_43_/_0.45)]', className), style: style, children: [_jsx("div", { className: "absolute top-2 left-1/2 z-10 h-4 w-20 -translate-x-1/2 rounded-full bg-black" }), _jsx("div", { className: "aspect-[9/19.2] w-full overflow-hidden rounded-[1.55rem] bg-white", children: _jsx(ScreenFill, { shot: shot, placeholderLabel: "Mobile screenshot" }) })] }));
+}
+function AccentChip({ label, className, tone, }) {
+    const tones = {
+        blue: 'bg-[#0A8FD8] text-white',
+        orange: 'bg-[#F66C2A] text-white',
+        ink: 'bg-[#17212B] text-white',
+    };
+    return (_jsx("span", { className: cn('inline-block rotate-[-6deg] rounded-[0.85rem] px-3 py-1.5 text-[0.62rem] font-bold tracking-[0.06em] uppercase shadow-md', tones[tone], className), children: label }));
+}
+export function WorkShowcase() {
+    const reduced = useReducedMotion() === true;
+    const copy = homeContent.work;
+    const shots = copy.shots;
+    return (_jsx("section", { id: "work", className: "bg-[#F0F3F5] py-14 md:py-20", "aria-labelledby": "work-title", children: _jsx(Container, { variant: "wide", className: "w-full", children: _jsxs("div", { className: "flex items-stretch gap-3 md:gap-5", children: [_jsx("div", { className: "hidden shrink-0 items-center sm:flex", children: _jsx("h2", { id: "work-title", className: "origin-center rotate-180 text-[0.72rem] font-semibold tracking-[0.22em] text-[#67737E] uppercase [writing-mode:vertical-rl]", children: copy.label }) }), _jsxs(m.div, { className: "relative min-h-[28rem] flex-1 overflow-hidden rounded-[1.75rem] md:min-h-[34rem] md:rounded-[2.25rem] lg:min-h-[38rem]", style: {
+                            backgroundImage: 'linear-gradient(115deg, #FFFFFF 0%, #EAF6FC 42%, #D7EEF9 72%, #F4FBFF 100%)',
+                        }, initial: reduced ? false : { opacity: 0, y: 28 }, whileInView: reduced ? undefined : { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.25 }, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] }, children: [_jsx("p", { className: "absolute top-5 left-5 z-30 text-[0.72rem] font-semibold tracking-[0.18em] text-[#087BB9] uppercase sm:hidden", children: copy.label }), _jsx(m.div, { className: "absolute top-[12%] right-[6%] left-[18%] z-10 md:top-[10%] md:right-[10%] md:left-[22%] lg:left-[24%]", initial: reduced ? false : { opacity: 0, y: 20 }, whileInView: reduced ? undefined : { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 }, transition: { delay: 0.08, duration: 0.55 }, children: _jsx(BrowserFrame, { shot: shots.desktop }) }), _jsxs(m.div, { className: "absolute bottom-[6%] left-[4%] z-20 w-[38%] max-w-[11.5rem] sm:left-[6%] sm:w-[32%] md:bottom-[8%] md:left-[8%] md:max-w-[13.5rem] lg:max-w-[15rem]", initial: reduced ? false : { opacity: 0, y: 32, rotate: -14 }, whileInView: reduced ? undefined : { opacity: 1, y: 0, rotate: -9 }, viewport: { once: true, amount: 0.2 }, transition: { delay: 0.16, duration: 0.6, ease: [0.22, 1, 0.36, 1] }, children: [_jsx(PhoneFrame, { shot: shots.phoneLeft }), _jsx(AccentChip, { label: copy.chips[0], tone: "blue", className: "absolute -bottom-2 -left-2 z-30 md:-bottom-3 md:-left-3" })] }), _jsxs(m.div, { className: "absolute right-[18%] bottom-[10%] z-20 w-[34%] max-w-[10rem] sm:right-[22%] sm:w-[28%] md:right-[24%] md:bottom-[12%] md:max-w-[12rem] lg:max-w-[13.5rem]", initial: reduced ? false : { opacity: 0, y: 36 }, whileInView: reduced ? undefined : { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.2 }, transition: { delay: 0.22, duration: 0.55 }, children: [_jsx(PhoneFrame, { shot: shots.phoneRight }), _jsx(AccentChip, { label: copy.chips[1], tone: "orange", className: "absolute -top-3 -right-4 z-30 rotate-[8deg]" }), _jsx(AccentChip, { label: copy.chips[2], tone: "ink", className: "absolute top-[38%] -right-8 z-30 hidden rotate-[12deg] sm:inline-block" })] }), _jsxs(m.div, { className: "absolute top-[14%] right-[3%] z-20 hidden w-[22%] max-w-[11rem] flex-col gap-3 lg:flex", initial: reduced ? false : { opacity: 0, x: 24 }, whileInView: reduced ? undefined : { opacity: 1, x: 0 }, viewport: { once: true }, transition: { delay: 0.28, duration: 0.5 }, children: [_jsx("div", { className: "overflow-hidden rounded-2xl bg-[#0A8FD8] p-3 shadow-lg", children: _jsx("p", { className: "text-[0.7rem] leading-snug font-semibold text-white", children: copy.cardTitle }) }), _jsx("div", { className: "aspect-[4/5] overflow-hidden rounded-2xl border border-white/70 bg-white shadow-lg", children: _jsx(ScreenFill, { shot: shots.card, placeholderLabel: "Project image" }) })] })] })] }) }) }));
+}

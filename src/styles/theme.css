@@ -1,0 +1,212 @@
+/*
+ * Bizaffix design tokens.
+ * Brand hex values are unchanged. Text and status colors that missed WCAG 2.2 AA
+ * for normal-size text are shifted only as far as needed. See the Step 2 notes.
+ */
+@theme static {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --text-*: initial;
+  --tracking-tighter: -0.03em;
+  --tracking-tight: -0.02em;
+
+  --font-sans:
+    'Geist Variable', Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+
+  /* Surfaces — cards and chrome use white; only page-* utilities tint full sections. */
+  --color-bg: #ffffff;
+  --color-bg-subtle: #ffffff;
+  --color-bg-muted: #e8f5fc;
+  --color-surface: #ffffff;
+  --color-surface-warm: #ffffff;
+
+  /* Text */
+  --color-text: #17212b;
+  --color-text-secondary: #4b5965;
+  --color-text-muted: #626e78;
+  --color-text-subtle: #67737e;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-border-subtle: #eef1f3;
+  --color-border: #e4e9ed;
+  --color-border-strong: #cbd4db;
+
+  /* Brand */
+  --color-brand: #0a8fd8;
+  --color-brand-hover: #087bb9;
+  --color-brand-active: #06699e;
+  --color-brand-soft: #eaf6fc;
+  --color-brand-subtle: #e8f5fc;
+  --color-focus: #0a8fd8;
+
+  /* Flat dark fills for select sections (no gradients) */
+  --color-surface-dark: #17212b;
+  --color-surface-brand-deep: #043d5a;
+
+  /* Page backgrounds — only these three solids site-wide (no gradients on sections). */
+  --color-page-white: #ffffff;
+  --color-page-brand: #e8f5fc;
+  --color-page-dark: #17212b;
+
+  /* Status */
+  --color-success: #247f5a;
+  --color-success-soft: #edf8f2;
+  --color-warning: #a76014;
+  --color-warning-soft: #fff6e8;
+  --color-error: #c73a42;
+  --color-error-soft: #fff0f1;
+  --color-info: #0a8fd8;
+  --color-info-soft: #eaf6fc;
+
+  /* Future button fills. White label text needs the darker brand steps. */
+  --color-button-primary: #087bb9;
+  --color-button-primary-hover: #06699e;
+  --color-button-primary-active: #06699e;
+
+  /* Type scale. Sizes use clamp() so they ease between mobile and desktop. */
+  --text-display: clamp(2.75rem, 1.6rem + 4vw, 5.5rem);
+  --text-display--line-height: 1.02;
+  --text-display--font-weight: 600;
+  --text-display--letter-spacing: -0.03em;
+
+  --text-page-title: clamp(2.25rem, 1.4rem + 3vw, 4rem);
+  --text-page-title--line-height: 1.05;
+  --text-page-title--font-weight: 600;
+  --text-page-title--letter-spacing: -0.03em;
+
+  --text-section-title: clamp(2.25rem, 1.4rem + 2.8vw, 4rem);
+  --text-section-title--line-height: 1.05;
+  --text-section-title--font-weight: 600;
+  --text-section-title--letter-spacing: -0.03em;
+
+  --text-title: clamp(1.5rem, 1.34rem + 0.67vw, 1.875rem);
+  --text-title--line-height: 1.2;
+  --text-title--font-weight: 600;
+  --text-title--letter-spacing: -0.02em;
+
+  --text-card-title: clamp(1.25rem, 1.15rem + 0.28vw, 1.375rem);
+  --text-card-title--line-height: 1.3;
+  --text-card-title--font-weight: 600;
+  --text-card-title--letter-spacing: -0.01em;
+
+  --text-body-large: clamp(1.125rem, 1.05rem + 0.28vw, 1.25rem);
+  --text-body-large--line-height: 1.6;
+  --text-body-large--font-weight: 400;
+  --text-body-large--letter-spacing: 0em;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-body--font-weight: 400;
+  --text-body--letter-spacing: 0em;
+
+  --text-body-small: 0.9375rem;
+  --text-body-small--line-height: 1.6;
+  --text-body-small--font-weight: 400;
+  --text-body-small--letter-spacing: 0em;
+
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--font-weight: 600;
+  --text-eyebrow--letter-spacing: 0.04em;
+
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-caption--font-weight: 400;
+  --text-caption--letter-spacing: 0em;
+
+  /* Layout */
+  --container-page: 80rem;
+  --container-wide: 90rem;
+  --container-reading: 47.5rem;
+
+  /* Radius. 22px is the maximum. Pill is for badges and tags only. */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.375rem;
+  --radius-pill: 999px;
+  --radius-button: 0.625rem;
+
+  /* Shadows — layered cards */
+  --shadow-xs: 0 1px 1px rgb(23 33 43 / 0.04);
+  --shadow-sm: 0 1px 2px rgb(23 33 43 / 0.04), 0 2px 8px rgb(23 33 43 / 0.04);
+  --shadow-md: 0 2px 4px rgb(23 33 43 / 0.05), 0 12px 28px rgb(23 33 43 / 0.08);
+  --shadow-lg: 0 4px 8px rgb(23 33 43 / 0.04), 0 24px 48px rgb(23 33 43 / 0.12);
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 8px 28px rgb(23 33 43 / 0.08);
+  --shadow-card-hover: 0 1px 0 rgb(255 255 255 / 0.85) inset, 0 16px 40px rgb(10 143 216 / 0.14);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --default-transition-duration: 220ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root {
+  --duration-fast: 150ms;
+  --duration-standard: 220ms;
+  --duration-slow: 350ms;
+  --button-height: 2.75rem;
+  --button-height-desktop: 3rem;
+  --button-padding-inline: 1.25rem;
+  --page-gutter: clamp(1.25rem, 0.55rem + 1.9vw, 2rem);
+  --section-space: clamp(5rem, 3.2rem + 6vw, 10rem);
+  --header-clearance: 5.75rem;
+  --measure: 68ch;
+}
+
+@utility measure {
+  max-width: min(var(--measure), 100%);
+}
+
+@utility section-y {
+  padding-block: var(--section-space);
+}
+
+@utility page-x {
+  padding-inline: var(--page-gutter);
+}
+
+@utility container-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: var(--container-page);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+@utility container-wide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+@utility container-reading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: var(--container-reading);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+@utility sticky-section {
+  padding-top: var(--header-clearance);
+}
+
+@utility bg-page-white {
+  background-color: var(--color-page-white);
+}
+
+@utility bg-page-brand {
+  background-color: var(--color-page-brand);
+}
+
+@utility bg-page-dark {
+  background-color: var(--color-page-dark);
+}

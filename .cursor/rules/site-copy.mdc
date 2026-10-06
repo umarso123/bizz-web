@@ -1,0 +1,14 @@
+---
+description: Write public copy from the old Bizaffix website content
+alwaysApply: true
+---
+
+# Site copy
+
+Before writing or rewriting any user-facing sentence, read `content/legacy-site.md` and use it as the source.
+
+- Keep the services, industries, healthcare offers, technologies, process, case study, and article titles that are in that file.
+- Do not add clients, ratings, percentages, or products that the file does not list.
+- The old “Future of learning” and “Future of work” bodies are placeholder text. Do not publish them.
+- The live call to action is Book a call. Use the 2-month trial line only when that offer is the subject.
+- Healthcare stays the lead story. Educational, Fintech, Fitness, and eCommerce stay available as the other industries.
