@@ -1,6 +1,6 @@
-const blue = '#0A8FD8'
-const orange = '#F66C2A'
-const ink = '#17212B'
+const blue = '#2f5bea'
+const orange = '#f5c84c'
+const ink = '#0d121f'
 
 export function HeroVisual() {
   return (

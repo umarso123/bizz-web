@@ -34,16 +34,16 @@ function FlowNode({
     <g transform={`translate(200 ${y})`}>
       <m.circle
         r={lit ? 18 : 12}
-        fill={lit ? 'rgb(10 143 216 / 0.16)' : 'white'}
-        stroke={lit ? '#0A8FD8' : 'rgb(10 143 216 / 0.25)'}
+        fill={lit ? 'rgb(47 91 234 / 0.16)' : 'white'}
+        stroke={lit ? '#2f5bea' : 'rgb(47 91 234 / 0.25)'}
         strokeWidth={1.5}
         style={{ scale: pulse }}
       />
-      <circle r={4} fill={lit ? (index % 2 === 0 ? '#0A8FD8' : '#F66C2A') : 'rgb(10 143 216 / 0.35)'} />
+      <circle r={4} fill={lit ? (index % 2 === 0 ? '#2f5bea' : '#f5c84c') : 'rgb(47 91 234 / 0.35)'} />
       <text
         x={36}
         y={5}
-        fill={lit ? '#17212B' : '#67737E'}
+        fill={lit ? '#0d121f' : '#67737E'}
         fontSize="15"
         fontWeight="600"
       >
@@ -71,7 +71,7 @@ function CareFlow({
         <m.path
           d="M200 48 V336"
           fill="none"
-          stroke="#0A8FD8"
+          stroke="#2f5bea"
           strokeWidth="2"
           strokeLinecap="round"
           style={{ pathLength: draw }}
@@ -87,11 +87,11 @@ function CareFlow({
           />
         ))}
         <m.g style={{ opacity: aiOpacity }}>
-          <rect x="300" y="160" width="96" height="36" rx="18" fill="rgb(246 108 42 / 0.12)" stroke="#F66C2A" />
+          <rect x="300" y="160" width="96" height="36" rx="18" fill="rgb(245 200 76 / 0.12)" stroke="#f5c84c" />
           <text x="348" y="183" textAnchor="middle" fill="#C45A20" fontSize="12" fontWeight="700">
             AI
           </text>
-          <path d="M300 178 H236" stroke="#F66C2A" strokeWidth="1.4" strokeDasharray="4 4" />
+          <path d="M300 178 H236" stroke="#f5c84c" strokeWidth="1.4" strokeDasharray="4 4" />
         </m.g>
       </svg>
     </div>

@@ -36,7 +36,7 @@ export function ClosingCta() {
         damping: 24,
     });
     const glow = useTransform(scrollYProgress, [0.2, 0.7], [0.2, 1]);
-    return (_jsxs("section", { ref: ref, className: "relative overflow-hidden bg-surface-brand-deep py-28 text-text-inverse md:py-36", "aria-labelledby": "close-title", children: [_jsxs(m.svg, { className: "pointer-events-none absolute inset-0 h-full w-full", viewBox: "0 0 100 100", preserveAspectRatio: "none", "aria-hidden": "true", style: { opacity: reduced ? 0.9 : glow }, children: [[
+    return (_jsxs("section", { ref: ref, className: "relative overflow-hidden bg-page-dark py-28 text-text-inverse md:py-36", "aria-labelledby": "close-title", children: [_jsxs(m.svg, { className: "pointer-events-none absolute inset-0 h-full w-full", viewBox: "0 0 100 100", preserveAspectRatio: "none", "aria-hidden": "true", style: { opacity: reduced ? 0.9 : glow }, children: [[
                         'M8 12 L50 55',
                         'M92 14 L50 55',
                         'M10 88 L50 55',

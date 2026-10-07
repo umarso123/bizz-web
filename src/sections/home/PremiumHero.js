@@ -1,0 +1,28 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { m, useReducedMotion } from 'framer-motion';
+import { Link } from 'react-router';
+import { Container } from '@/components/layout/Container.tsx';
+import { premiumHome } from '@/content/premium-home.ts';
+import { cn } from '@/lib/cn.ts';
+const ease = [0.22, 1, 0.36, 1];
+export function PremiumHero() {
+    const reduced = useReducedMotion() === true;
+    const copy = premiumHome.hero;
+    const facts = premiumHome.facts.cards;
+    return (_jsxs("section", { className: "atmosphere-hero relative min-h-svh overflow-x-clip -mt-(--header-clearance) pt-(--header-clearance) pb-12 md:pb-16 lg:pb-20", "aria-labelledby": "premium-hero-title", children: [_jsx("div", { "aria-hidden": "true", className: "pointer-events-none absolute inset-0", style: {
+                    background: `
+            radial-gradient(ellipse 70% 65% at 88% 18%, rgb(47 91 234 / 0.42), transparent 58%),
+            radial-gradient(ellipse 55% 50% at 72% 42%, rgb(201 215 248 / 0.7), transparent 62%),
+            radial-gradient(ellipse 45% 40% at 8% 78%, rgb(254 246 216 / 0.55), transparent 55%),
+            radial-gradient(ellipse 40% 35% at 40% 8%, rgb(232 238 252 / 0.65), transparent 50%)
+          `,
+                } }), _jsx("div", { "aria-hidden": "true", className: "pointer-events-none absolute top-[-20%] right-[-18%] h-[min(95vh,52rem)] w-[min(90vw,54rem)] rounded-full blur-3xl", style: {
+                    background: 'radial-gradient(circle at 38% 40%, rgb(47 91 234 / 0.55), rgb(201 215 248 / 0.45) 48%, transparent 72%)',
+                } }), _jsx("div", { "aria-hidden": "true", className: "pointer-events-none absolute bottom-[-5%] left-[-10%] h-80 w-80 rounded-full bg-accent/30 blur-3xl" }), _jsxs(Container, { variant: "wide", className: "relative z-10 w-full", children: [_jsxs(m.div, { className: "flex flex-wrap items-center gap-3", initial: reduced ? false : { opacity: 0, y: 12 }, animate: reduced ? undefined : { opacity: 1, y: 0 }, transition: { duration: 0.55, ease }, children: [_jsx("span", { className: "inline-flex items-center rounded-pill bg-accent px-3.5 py-1.5 text-[0.78rem] font-semibold tracking-tight text-text shadow-sm", children: copy.badge }), _jsx("span", { className: "text-body-small text-text-secondary", children: copy.badgeNote })] }), _jsxs(m.h1, { id: "premium-hero-title", className: "mt-8 max-w-[14ch] text-display text-text md:mt-10", initial: reduced ? false : { opacity: 0, y: 24 }, animate: reduced ? undefined : { opacity: 1, y: 0 }, transition: { duration: 0.7, delay: 0.05, ease }, children: [copy.titleLead, ' ', _jsx("span", { className: "text-brand", children: copy.titleAccent })] }), _jsxs("div", { className: "mt-8 grid gap-8 md:mt-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end lg:gap-16", children: [_jsx(m.p, { className: "max-w-[34rem] text-body-large text-text-secondary", initial: reduced ? false : { opacity: 0, y: 16 }, animate: reduced ? undefined : { opacity: 1, y: 0 }, transition: { duration: 0.55, delay: 0.12, ease }, children: copy.body }), _jsxs(m.div, { className: "flex flex-wrap items-center gap-3 md:justify-end", initial: reduced ? false : { opacity: 0, y: 16 }, animate: reduced ? undefined : { opacity: 1, y: 0 }, transition: { duration: 0.55, delay: 0.16, ease }, children: [_jsxs(Link, { to: copy.primaryTo, className: cn('inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill bg-brand px-7 text-body-small font-semibold text-text-inverse no-underline', 'shadow-[0_12px_32px_rgb(47_91_234/0.35)] transition-[transform,background-color,box-shadow] duration-(--duration-standard)', 'hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_16px_40px_rgb(47_91_234/0.4)]'), children: [copy.primaryCta, _jsx("span", { "aria-hidden": "true", className: "ms-2", children: "\u2192" })] }), _jsx(Link, { to: copy.secondaryTo, className: "inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill border border-border bg-surface/80 px-6 text-body-small font-semibold text-text no-underline backdrop-blur-sm transition-colors hover:border-border-strong hover:bg-surface", children: copy.secondaryCta })] })] }), _jsx("ul", { className: "mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4 md:mt-16 md:gap-5", "aria-label": "Key facts", children: facts.map((card, index) => (_jsxs(m.li, { className: cn('group flex min-h-[9.75rem] flex-col justify-between rounded-[1.85rem] p-6 transition-transform duration-500 md:min-h-[11.5rem] md:rounded-[2.15rem] md:p-7', card.tone === 'brand' &&
+                                'bg-brand text-text-inverse shadow-[0_18px_48px_rgb(47_91_234/0.28)]', card.tone === 'light' &&
+                                'bg-surface/85 text-text shadow-card ring-1 ring-border-subtle backdrop-blur-sm'), style: card.tone === 'brand'
+                                ? {
+                                    backgroundImage: 'linear-gradient(155deg, #4570f2 0%, #2f5bea 52%, #2549c9 100%)',
+                                }
+                                : undefined, initial: reduced ? false : { opacity: 0, y: 20 }, animate: reduced ? undefined : { opacity: 1, y: 0 }, transition: { duration: 0.5, delay: 0.22 + index * 0.07, ease }, children: [_jsx("p", { className: cn('text-[clamp(1.7rem,1.15rem+1.7vw,2.75rem)] leading-none font-bold tracking-tighter', card.tone === 'brand' ? 'text-white' : 'text-text'), children: card.value }), _jsx("p", { className: cn('mt-4 max-w-[16rem] text-body-small leading-snug', card.tone === 'brand' ? 'text-white/78' : 'text-text-secondary'), children: card.label })] }, card.id))) })] })] }));
+}

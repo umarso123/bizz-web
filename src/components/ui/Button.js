@@ -4,7 +4,8 @@ import { cn } from '@/lib/cn.ts';
 import { omitKeys } from '@/lib/omit.ts';
 const variantClass = {
     primary: 'bg-button-primary text-text-inverse hover:bg-button-primary-hover active:bg-button-primary-active',
-    secondary: 'border border-[#7F8D99] bg-surface text-text hover:border-text-subtle hover:bg-bg-subtle active:bg-bg-muted',
+    brand: 'bg-button-brand text-text-inverse shadow-md hover:bg-button-brand-hover active:bg-brand-active',
+    secondary: 'border border-border bg-surface text-text hover:border-border-strong hover:bg-bg-subtle active:bg-bg-muted',
     subtle: 'bg-bg-subtle text-text hover:bg-bg-muted active:bg-bg-muted',
     ghost: 'bg-transparent text-text hover:bg-bg-subtle active:bg-bg-muted',
 };

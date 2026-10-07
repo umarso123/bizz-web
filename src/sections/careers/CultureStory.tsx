@@ -35,7 +35,7 @@ export function CultureStory() {
     >
       <Container variant="page" className="relative w-full">
         <div className="max-w-[34rem]">
-          <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+          <Eyebrow>
             {careersCopy.culture.eyebrow}
           </Eyebrow>
           <h2
@@ -58,9 +58,7 @@ export function CultureStory() {
             style={{ y: reduced ? 0 : outerY, rotate: reduced ? 0 : outerRotate }}
           />
           <div className="absolute top-1/2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 text-center md:block">
-            <p className="text-[0.7rem] font-semibold tracking-[0.18em] text-brand-hover uppercase">
-              Bizaffix
-            </p>
+            <Eyebrow>Bizaffix</Eyebrow>
             <p className="mt-2 max-w-[12rem] text-body-small text-text-secondary">
               People, craft, and healthcare impact in one studio.
             </p>

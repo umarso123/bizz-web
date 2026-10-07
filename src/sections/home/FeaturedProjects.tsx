@@ -21,8 +21,8 @@ import { cn } from '@/lib/cn.ts'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
-const BLUE = '#0A8FD8'
-const ORANGE = '#F66C2A'
+const PAPER = '#fbf7f2'
+const ORANGE = '#F5C84C'
 const LERP = 0.085
 const BREATH_AMP = 0.004
 
@@ -75,15 +75,15 @@ function ProjectImage({ project }: { project: FeaturedProject }) {
   const [loaded, setLoaded] = useState(false)
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#0E5F90]">
+    <div className="absolute inset-0 overflow-hidden bg-bg-muted">
       <div
         aria-hidden="true"
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(ellipse at 28% 22%, rgb(255 255 255 / 0.18), transparent 52%),
-            radial-gradient(ellipse at 78% 78%, rgb(246 108 42 / 0.16), transparent 48%),
-            linear-gradient(145deg, #0B7FBF 0%, #0870A8 48%, #06618F 100%)
+            radial-gradient(ellipse at 28% 22%, rgb(255 255 255 / 0.7), transparent 52%),
+            radial-gradient(ellipse at 78% 78%, rgb(254 246 216 / 0.8), transparent 48%),
+            linear-gradient(145deg, #fff9f2 0%, #fbf7f2 48%, #efe8df 100%)
           `,
         }}
       />
@@ -104,13 +104,13 @@ function ProjectImage({ project }: { project: FeaturedProject }) {
       ) : null}
       {failed || !loaded ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center">
-          <p className="text-[clamp(2.5rem,5vw,4.5rem)] leading-none font-semibold tracking-tighter text-white/90">
+          <p className="text-[clamp(2.5rem,5vw,4.5rem)] leading-none font-semibold tracking-tighter text-text/80">
             {project.number}
           </p>
-          <p className="text-[clamp(1.25rem,2.4vw,2rem)] leading-none font-semibold tracking-tight text-white">
+          <p className="text-[clamp(1.25rem,2.4vw,2rem)] leading-none font-semibold tracking-tight text-text">
             {project.name}
           </p>
-          <p className="text-[0.72rem] font-medium tracking-[0.18em] text-white/55 uppercase">
+          <p className="text-[0.72rem] font-medium tracking-[0.18em] text-text-muted uppercase">
             {project.category}
           </p>
         </div>
@@ -134,13 +134,13 @@ function SectionChrome({
     <div ref={headerRef} className="flex items-end justify-between gap-6">
       <h2
         id="featured-projects-title"
-        className="text-[clamp(1.85rem,1.15rem+2.2vw,3.15rem)] leading-none font-semibold tracking-tighter text-white"
+        className="text-[clamp(1.85rem,1.15rem+2.2vw,3.15rem)] leading-none font-semibold tracking-tighter text-text"
       >
         {title}
       </h2>
       <Link
         to={viewAllTo}
-        className="group inline-flex shrink-0 items-center gap-2.5 text-[0.92rem] font-medium text-white/90 no-underline transition-colors hover:text-white"
+        className="group inline-flex shrink-0 items-center gap-2.5 text-[0.92rem] font-medium text-text-secondary no-underline transition-colors hover:text-text"
       >
         <span className="hidden sm:inline">{viewAllLabel}</span>
         <span
@@ -163,14 +163,14 @@ function Atmosphere() {
         style={{
           background: `
             radial-gradient(ellipse 70% 55% at 18% 12%, rgb(255 255 255 / 0.16), transparent 58%),
-            radial-gradient(ellipse 55% 45% at 88% 78%, rgb(246 108 42 / 0.1), transparent 55%),
+            radial-gradient(ellipse 55% 45% at 88% 78%, rgb(245 200 76 / 0.1), transparent 55%),
             radial-gradient(ellipse 40% 35% at 55% 48%, rgb(255 255 255 / 0.07), transparent 60%)
           `,
         }}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-[16%] left-[5%] hidden h-px w-24 bg-white/25 lg:block"
+        className="pointer-events-none absolute bottom-[16%] left-[5%] hidden h-px w-24 bg-text/15 lg:block"
       />
       <div
         aria-hidden="true"
@@ -192,7 +192,7 @@ function MobileFeatured({
     <section
       id="featured-projects"
       className="relative overflow-hidden rounded-t-[2rem] py-12 md:rounded-t-[2.75rem] md:py-16"
-      style={{ backgroundColor: BLUE }}
+      style={{ backgroundColor: PAPER }}
       aria-labelledby="featured-projects-title"
     >
       <Atmosphere />
@@ -210,19 +210,19 @@ function MobileFeatured({
                   <ProjectImage project={project} />
                 </div>
               </div>
-              <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-white">
-                <span className="text-[0.78rem] font-semibold tracking-[0.14em] text-white/70">
+              <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-text">
+                <span className="text-[0.78rem] font-semibold tracking-[0.14em] text-text-muted">
                   {project.number}
                 </span>
                 <h3 className="text-[1.2rem] font-semibold tracking-tight">{project.name}</h3>
-                <span className="text-[0.78rem] text-white/60">{project.category}</span>
+                <span className="text-[0.78rem] text-text-secondary">{project.category}</span>
               </div>
-              <p className="mt-2 max-w-xl text-[0.95rem] leading-snug text-white/75">
+              <p className="mt-2 max-w-xl text-[0.95rem] leading-snug text-text-secondary">
                 {project.description}
               </p>
               <Link
                 to={project.href}
-                className="mt-3 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-white no-underline"
+                className="mt-3 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-text no-underline"
               >
                 {copy.caseStudyLabel}
                 <span aria-hidden="true">→</span>
@@ -246,7 +246,7 @@ function ReducedFeatured({
     <section
       id="featured-projects"
       className="relative overflow-hidden rounded-t-[2.5rem] py-14 md:rounded-t-[3.25rem] md:py-20"
-      style={{ backgroundColor: BLUE }}
+      style={{ backgroundColor: PAPER }}
       aria-labelledby="featured-projects-title"
     >
       <Atmosphere />
@@ -264,15 +264,15 @@ function ReducedFeatured({
                   <ProjectImage project={project} />
                 </div>
               </div>
-              <div className="mt-4 text-white">
-                <p className="text-[0.75rem] font-semibold tracking-[0.14em] text-white/65">
+              <div className="mt-4 text-text">
+                <p className="text-[0.75rem] font-semibold tracking-[0.14em] text-text-muted">
                   {project.number} · {project.category}
                 </p>
                 <h3 className="mt-1 text-title">{project.name}</h3>
-                <p className="mt-2 text-body-small text-white/75">{project.description}</p>
+                <p className="mt-2 text-body-small text-text-secondary">{project.description}</p>
                 <Link
                   to={project.href}
-                  className="mt-3 inline-flex text-body-small font-semibold text-white no-underline"
+                  className="mt-3 inline-flex text-body-small font-semibold text-text no-underline"
                 >
                   {copy.caseStudyLabel} →
                 </Link>
@@ -505,7 +505,7 @@ export function FeaturedProjects() {
     >
       <div
         className="sticky top-0 flex h-svh flex-col overflow-hidden rounded-t-[2.5rem] md:rounded-t-[3.25rem] sticky-section"
-        style={{ backgroundColor: BLUE }}
+        style={{ backgroundColor: PAPER }}
       >
         <Atmosphere />
 
@@ -516,8 +516,8 @@ export function FeaturedProjects() {
           viewBox="0 0 176 176"
           fill="none"
         >
-          <circle cx="88" cy="88" r="70" stroke="white" strokeOpacity="0.28" strokeWidth="0.7" />
-          <circle cx="88" cy="88" r="48" stroke="white" strokeOpacity="0.16" strokeWidth="0.6" />
+          <circle cx="88" cy="88" r="70" stroke="#0d121f" strokeOpacity="0.18" strokeWidth="0.7" />
+          <circle cx="88" cy="88" r="48" stroke="#0d121f" strokeOpacity="0.1" strokeWidth="0.6" />
           <circle cx="138" cy="42" r="2.4" fill={ORANGE} />
         </svg>
 
@@ -530,9 +530,9 @@ export function FeaturedProjects() {
           />
 
           <div className="mt-4 flex items-center gap-4 md:mt-5">
-            <p className="font-mono text-[0.78rem] tracking-[0.08em] text-white/80 tabular-nums">
+            <p className="font-mono text-[0.78rem] tracking-[0.08em] text-text/80 tabular-nums">
               <span ref={counterRef}>{activeProject?.number ?? '01'}</span>
-              <span className="text-white/40"> / 0{count}</span>
+              <span className="text-text-muted"> / 0{count}</span>
             </p>
             <div className="h-px max-w-40 flex-1 overflow-hidden bg-white/20">
               <div

@@ -39,5 +39,10 @@ export function SmoothScroll({ children }) {
     }, [pathname, reduced]);
     if (reduced)
         return children;
-    return (_jsx(ReactLenis, { ref: lenisRef, root: true, options: { autoRaf: false, anchors: true }, children: children }));
+    return (_jsx(ReactLenis, { ref: lenisRef, root: true, options: {
+            autoRaf: false,
+            anchors: true,
+            lerp: 0.075,
+            smoothWheel: true,
+        }, children: children }));
 }

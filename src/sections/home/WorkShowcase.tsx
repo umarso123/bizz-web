@@ -1,6 +1,7 @@
 import { m, useReducedMotion } from 'framer-motion'
 import type { CSSProperties } from 'react'
 import { Container } from '@/components/layout/Container.tsx'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { homeContent } from '@/content/home.ts'
 import { cn } from '@/lib/cn.ts'
 
@@ -128,12 +129,13 @@ export function WorkShowcase() {
       <Container variant="wide" className="w-full">
         <div className="flex items-stretch gap-3 md:gap-5">
           <div className="hidden shrink-0 items-center sm:flex">
-            <h2
+            <Eyebrow
+              as="h2"
               id="work-title"
-              className="origin-center rotate-180 text-[0.72rem] font-semibold tracking-[0.22em] text-[#67737E] uppercase [writing-mode:vertical-rl]"
+              className="origin-center rotate-180 [writing-mode:vertical-rl]"
             >
               {copy.label}
-            </h2>
+            </Eyebrow>
           </div>
 
           <m.div
@@ -143,9 +145,7 @@ export function WorkShowcase() {
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="absolute top-5 left-5 z-30 text-[0.72rem] font-semibold tracking-[0.18em] text-[#087BB9] uppercase sm:hidden">
-              {copy.label}
-            </p>
+            <Eyebrow className="absolute top-5 left-5 z-30 sm:hidden">{copy.label}</Eyebrow>
 
             {/* Desktop / laptop screen — back layer */}
             <m.div

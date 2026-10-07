@@ -73,30 +73,52 @@ function CloseIcon() {
   )
 }
 
-function Logo() {
+const glassPill =
+  'border border-white/35 bg-transparent shadow-[0_8px_32px_rgb(13_18_31/0.05)] backdrop-blur-2xl backdrop-saturate-150'
+
+const darkPill =
+  'border border-text-inverse/15 bg-page-dark/90 text-text-inverse shadow-[0_12px_40px_rgb(13_18_31/0.35)] backdrop-blur-2xl'
+
+function Logo({ onDark = false }: { onDark?: boolean }) {
   return (
-    <div className="rounded-full border border-border/80 bg-bg/90 px-3 py-1.5 shadow-sm backdrop-blur-md">
+    <div
+      className={cn(
+        'rounded-full px-3.5 py-1.5',
+        onDark ? 'border border-surface bg-surface shadow-[0_8px_28px_rgb(13_18_31/0.22)]' : glassPill,
+      )}
+    >
       <BrandLogo imgClassName="h-7 w-auto" />
     </div>
   )
 }
 
-function CallLink({ onClick }: { onClick?: () => void }) {
+function CallLink({ onClick, onDark = false }: { onClick?: () => void; onDark?: boolean }) {
   return (
     <Link
       to={bookCall.to}
       onClick={onClick}
-      className="inline-flex h-11 shrink-0 items-center rounded-button bg-[#F66C2A] px-5 text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-[#17212B] no-underline shadow-md transition-colors duration-(--duration-standard) ease-standard hover:bg-[#FF7A3C] hover:text-[#17212B]"
+      className={cn(
+        'inline-flex h-11 shrink-0 items-center rounded-button px-5 text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap no-underline shadow-md transition-colors duration-(--duration-standard) ease-standard',
+        onDark
+          ? 'bg-brand text-text-inverse hover:bg-brand-hover'
+          : 'bg-button-primary text-text-inverse hover:bg-button-primary-hover',
+      )}
     >
       {bookCall.label}
     </Link>
   )
 }
 
-function linkClass(layout: string, active: boolean) {
+function linkClass(layout: string, active: boolean, onDark = false) {
   return cn(
-    'group relative items-center font-medium whitespace-nowrap no-underline transition-colors duration-(--duration-standard) ease-standard hover:text-text',
-    active ? 'text-text' : 'text-text-secondary',
+    'group relative items-center font-medium whitespace-nowrap no-underline transition-colors duration-(--duration-standard) ease-standard',
+    onDark
+      ? active
+        ? 'text-text-inverse hover:text-text-inverse'
+        : 'text-mist hover:text-text-inverse'
+      : active
+        ? 'text-text hover:text-text'
+        : 'text-text-secondary hover:text-text',
     layout,
   )
 }
@@ -105,6 +127,7 @@ export function Header() {
   const reduced = useReducedMotion() === true
   const { scrollY } = useScroll()
   const { pathname } = useLocation()
+  const onDark = false
   const [isExpanded, setExpanded] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.scrollY <= 150,
   )
@@ -167,10 +190,10 @@ export function Header() {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="relative mx-auto flex h-[3.25rem] w-full max-w-(--container-page) items-center justify-between ps-(--page-gutter) pe-[max(var(--page-gutter),2.75rem)] pt-5">
         <motion.div {...(reduced ? {} : sideEntrance)} className="pointer-events-auto">
-          <Logo />
+          <Logo onDark={onDark} />
         </motion.div>
         <motion.div {...(reduced ? {} : sideEntrance)} className="pointer-events-auto">
-          <CallLink onClick={closeMenu} />
+          <CallLink onClick={closeMenu} onDark={onDark} />
         </motion.div>
       </div>
 
@@ -182,14 +205,17 @@ export function Header() {
           whileHover={!reduced && !isExpanded ? { scale: 1.06 } : undefined}
           whileTap={!reduced && !isExpanded ? { scale: 0.96 } : undefined}
           className={cn(
-            'relative hidden h-[3.25rem] items-center overflow-hidden rounded-full border bg-bg/95 shadow-md backdrop-blur-md min-[960px]:flex',
-            isExpanded ? 'border-border' : 'cursor-pointer border-[#F66C2A]/45',
+            'relative hidden h-[3.25rem] items-center overflow-hidden rounded-full min-[960px]:flex',
+            onDark ? darkPill : glassPill,
+            isExpanded ? (onDark ? '' : 'border-white/50') : 'cursor-pointer',
+            !onDark && !isExpanded && 'border-brand/25',
           )}
         >
           <button
             type="button"
             className={cn(
-              'absolute inset-0 z-10 flex items-center justify-center rounded-full text-text',
+              'absolute inset-0 z-10 flex items-center justify-center rounded-full',
+              onDark ? 'text-text-inverse' : 'text-text',
               isExpanded && 'pointer-events-none',
             )}
             aria-label="Open navigation"
@@ -221,7 +247,11 @@ export function Header() {
                       end
                       onClick={closeMenu}
                       className={({ isActive }) =>
-                        linkClass('inline-flex px-2.5 py-1 text-[0.875rem] tracking-[-0.01em]', isActive)
+                        linkClass(
+                          'inline-flex px-2.5 py-1 text-[0.875rem] tracking-[-0.01em]',
+                          isActive,
+                          onDark,
+                        )
                       }
                     >
                       {({ isActive }) => (
@@ -230,7 +260,7 @@ export function Header() {
                           <span
                             aria-hidden="true"
                             className={cn(
-                              'absolute -bottom-0.5 left-2.5 h-px w-[calc(100%-1.25rem)] origin-left bg-[#F66C2A] motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-standard',
+                              'absolute -bottom-0.5 left-2.5 h-px w-[calc(100%-1.25rem)] origin-left bg-brand motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-standard',
                               isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100',
                             )}
                           />
@@ -248,8 +278,9 @@ export function Header() {
           ref={menuButtonRef}
           type="button"
           className={cn(
-            'inline-flex size-[3.25rem] items-center justify-center rounded-full border bg-bg/95 text-text shadow-md backdrop-blur-md min-[960px]:hidden',
-            menuOpen ? 'border-[#F66C2A]/45' : 'border-border',
+            'inline-flex size-[3.25rem] items-center justify-center rounded-full min-[960px]:hidden',
+            onDark ? cn(darkPill, 'text-text-inverse') : cn(glassPill, 'text-text'),
+            !onDark && menuOpen ? 'border-brand/35' : '',
           )}
           aria-expanded={menuOpen}
           aria-controls={menuId}
@@ -263,7 +294,10 @@ export function Header() {
           id={menuId}
           hidden={!menuOpen}
           inert={!menuOpen ? true : undefined}
-          className="absolute top-[calc(100%+0.5rem)] left-1/2 w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-border bg-bg p-2 shadow-md min-[960px]:hidden"
+          className={cn(
+            'absolute top-[calc(100%+0.5rem)] left-1/2 w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl p-2 min-[960px]:hidden',
+            onDark ? darkPill : glassPill,
+          )}
         >
           <ul className="flex flex-col">
             {primaryNavigation.map((item) => (
@@ -273,7 +307,11 @@ export function Header() {
                   end
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    linkClass('flex min-h-12 w-full rounded-lg px-3 text-[1.0625rem] tracking-[-0.02em]', isActive)
+                    linkClass(
+                      'flex min-h-12 w-full rounded-lg px-3 text-[1.0625rem] tracking-[-0.02em]',
+                      isActive,
+                      onDark,
+                    )
                   }
                 >
                   {({ isActive }) => (
@@ -281,7 +319,7 @@ export function Header() {
                       <span
                         aria-hidden="true"
                         className={cn(
-                          'mr-3 h-5 w-px origin-center bg-[#F66C2A] motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-standard',
+                          'mr-3 h-5 w-px origin-center bg-brand motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-standard',
                           isActive ? 'scale-y-100' : 'scale-y-0 group-hover:scale-y-100',
                         )}
                       />

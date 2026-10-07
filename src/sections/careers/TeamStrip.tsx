@@ -66,7 +66,7 @@ export function TeamStrip() {
     <section className="overflow-hidden bg-page-white py-24 md:py-32" aria-labelledby="team-title">
       <Container variant="page" className="w-full">
         <Reveal className="max-w-[34rem]">
-          <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+          <Eyebrow>
             {careersCopy.team.eyebrow}
           </Eyebrow>
           <h2

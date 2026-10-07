@@ -5,12 +5,107 @@
 
 export const homeContent = {
   hero: {
-    eyebrow: 'AI Product Studio',
-    title: 'We build what’s next.',
-    body: 'Bizaffix designs and engineers digital products that turn ambitious ideas into real-world experiences — from strategy and product design to engineering and launch.',
+    badge: 'HealthTech studio',
+    support: 'Healthcare solutions, from day one',
+    titleLead: 'Digital products that',
+    titleMid: 'move healthcare',
+    titleEnd: 'forward for',
+    titleAccent: 'care teams.',
+    body: 'We design and engineer mobile apps, web platforms, and healthcare solutions, from idea to reality, with clarity people can use.',
     primaryCta: 'Book a call',
-    secondaryCta: 'Explore our work',
-    positioning: 'Healthcare · AI · Digital Products',
+    secondaryCta: 'See our work',
+    stats: [
+      {
+        id: 'focus',
+        value: 'Healthcare',
+        label: 'Lead industry we build for',
+        tone: 'light' as const,
+      },
+      {
+        id: 'offers',
+        value: 'CDS · EHR · HIE',
+        label: 'Digital health capabilities',
+        tone: 'brand' as const,
+      },
+      {
+        id: 'rating',
+        value: '5/5',
+        label: 'Stated rating on overall platforms',
+        tone: 'light' as const,
+      },
+    ],
+  },
+  studioOfferings: {
+    index: 'What we do',
+    title: 'One studio. Every layer of your product.',
+    body: 'Strategy, design, engineering and delivery, under one roof, tuned for healthcare and ambitious digital products.',
+    cards: [
+      {
+        id: 'product-design',
+        number: '01',
+        label: 'Product design',
+        title: 'Patient & clinician experiences people trust.',
+        body: 'UI/UX and product design for apps where clarity supports real care workflows.',
+        tone: 'brand' as const,
+        tags: [] as string[],
+      },
+      {
+        id: 'web-app',
+        number: '02',
+        label: 'Web & app development',
+        title: 'iOS, Android & web, built to scale.',
+        body: null,
+        tone: 'accent' as const,
+        tags: ['Telemedicine', 'EHR', 'Flutter'] as string[],
+      },
+      {
+        id: 'cloud',
+        number: '03',
+        label: 'Cloud development',
+        title: 'Secure cloud systems that keep information moving.',
+        body: 'Scalable cloud development for healthcare data exchange and connected platforms.',
+        tone: 'light' as const,
+        tags: [] as string[],
+      },
+      {
+        id: 'brand',
+        number: '04',
+        label: 'Branding & web',
+        title: 'Brand, websites and campaigns that strengthen your digital presence.',
+        body: 'From creative design to captivating websites, built to connect with your audience.',
+        tone: 'soft' as const,
+        tags: [] as string[],
+      },
+    ],
+  },
+  approach: {
+    index: 'Approach',
+    titleBefore: 'Built fast',
+    titleAccent: 'and',
+    titleAfter: 'built right.',
+    items: [
+      {
+        number: '01',
+        title: 'Understand before we build',
+        body: 'We start with understanding, research, and analysis, so the product fits the people and the problem.',
+      },
+      {
+        number: '02',
+        title: 'Design for real workflows',
+        body: 'Experiences shaped around clinicians, patients, and the systems care already relies on.',
+      },
+      {
+        number: '03',
+        title: 'Test before it meets the world',
+        body: 'From design through testing, we validate that the product works as intended.',
+      },
+    ],
+  },
+  caseHighlight: {
+    quote:
+      'In fitness, motivation is common. A consolidated, intuitive, personalized tool is not. Optimized Strength was built to close that gap.',
+    role: 'Case study',
+    meta: 'Optimized Strength · Fitness',
   },
   pointOfView: {
     eyebrow: 'Built for complexity',
@@ -87,32 +182,47 @@ export const homeContent = {
   process: {
     eyebrow: 'How we work',
     title: 'From understanding to something real.',
-    body: 'The best products aren’t built by jumping straight into code. We start by understanding the problem, the people, and the opportunity — then turn that understanding into something useful.',
+    body: 'The best products aren’t built by jumping straight into code. We start by understanding the problem, the people, and the opportunity, then turn that understanding into something useful.',
     stages: [
       {
         number: '01',
         title: 'Understand',
         body: 'Understand the problem, users, business, and context.',
+        tags: ['Problem', 'Users', 'Business'] as const,
+        image: '/images/process/understand.webp',
+        alt: 'Understanding the problem and context',
       },
       {
         number: '02',
         title: 'Research',
         body: 'Explore the users, workflows, constraints, and opportunities.',
+        tags: ['Workflows', 'Constraints', 'Opportunity'] as const,
+        image: '/images/process/research.webp',
+        alt: 'Researching users and opportunities',
       },
       {
         number: '03',
         title: 'Analyze',
         body: 'Turn findings into clear product direction and priorities.',
+        tags: ['Direction', 'Priorities', 'Clarity'] as const,
+        image: '/images/process/analyze.webp',
+        alt: 'Analyzing findings into product direction',
       },
       {
         number: '04',
         title: 'Design',
         body: 'Shape the experience, interaction, and product system.',
+        tags: ['Experience', 'Interaction', 'System'] as const,
+        image: '/images/process/design.webp',
+        alt: 'Designing the product experience',
       },
       {
         number: '05',
         title: 'Testing',
         body: 'Validate that the product works as intended before it meets the world.',
+        tags: ['Validate', 'Quality', 'Launch-ready'] as const,
+        image: '/images/process/testing.webp',
+        alt: 'Testing before launch',
       },
     ],
   },
@@ -136,7 +246,7 @@ export const homeContent = {
   why: {
     eyebrow: 'Why Bizaffix',
     title: 'One team across product, design, and engineering.',
-    body: 'Good products don’t happen in silos. We bring strategy, design, technology, and domain understanding into the same conversation — so decisions happen faster and the product stays coherent from idea to launch.',
+    body: 'Good products don’t happen in silos. We bring strategy, design, technology, and domain understanding into the same conversation, so decisions happen faster and the product stays coherent from idea to launch.',
     concepts: [
       { word: 'PRODUCT', line: 'Think beyond features.' },
       { word: 'DESIGN', line: 'Make complexity understandable.' },
@@ -175,7 +285,7 @@ export const homeContent = {
         kind: 'stat' as const,
         eyebrow: 'Core services',
         title: 'What we build',
-        caption: 'Product, mobile, web, and cloud — one team.',
+        caption: 'Product, mobile, web, and cloud. One team.',
         value: '07',
         media: null,
       },
@@ -189,7 +299,7 @@ export const homeContent = {
     featured: {
       title: 'Driving Digital Health Success: The Power of Clinical Validation and Cultural Competency',
       meta: 'Marketing · August 4, 2025',
-      dek: 'The badge protects everyone except the one wearing it—until now, technology is changing that narrative.',
+      dek: 'The badge protects everyone except the one wearing it, until now, technology is changing that narrative.',
     },
     supporting: [
       { title: 'Future of learning', meta: 'July 17, 2023' },

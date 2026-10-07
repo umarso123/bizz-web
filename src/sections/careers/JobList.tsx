@@ -132,7 +132,7 @@ export function JobList() {
     >
       <Container variant="page" className="w-full">
         <Reveal className="max-w-[40rem]">
-          <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+          <Eyebrow>
             {careersCopy.jobs.eyebrow}
           </Eyebrow>
           <h2

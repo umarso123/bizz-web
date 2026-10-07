@@ -7,6 +7,7 @@ import {
 } from 'framer-motion'
 import { useRef, useState } from 'react'
 import { Container } from '@/components/layout/Container.tsx'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { homeJourney, useMediaQuery } from '@/sections/home/homeJourney.ts'
 import { cn } from '@/lib/cn.ts'
 
@@ -36,7 +37,7 @@ export function CapabilityStory() {
     return (
       <section className="bg-page-white py-20 md:py-28" aria-labelledby="capability-title">
         <Container variant="page" className="w-full">
-          <p className="text-eyebrow text-brand-hover uppercase tracking-[0.14em]">Capabilities</p>
+          <Eyebrow>Capabilities</Eyebrow>
           <h2 id="capability-title" className="mt-4 text-section-title text-text">
             Experience the potential of your business.
           </h2>
@@ -64,7 +65,7 @@ export function CapabilityStory() {
     <section ref={ref} className="relative h-[360vh] bg-page-white" aria-labelledby="capability-title">
       <div className="sticky top-0 flex h-svh items-center overflow-hidden">
         <Container variant="page" className="relative w-full">
-          <p className="text-eyebrow text-brand-hover uppercase tracking-[0.14em]">Capabilities</p>
+          <Eyebrow>Capabilities</Eyebrow>
           <h2 id="capability-title" className="mt-3 text-section-title text-text">
             Experience the potential of your business.
           </h2>

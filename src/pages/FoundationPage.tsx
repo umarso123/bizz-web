@@ -93,7 +93,7 @@ export function FoundationPage() {
               <div className="flex flex-col items-start gap-3">
                 <Eyebrow>Default eyebrow</Eyebrow>
                 <Eyebrow tone="brand">Brand eyebrow</Eyebrow>
-                <Eyebrow>INTERNAL PREVIEW</Eyebrow>
+                <Eyebrow>Internal preview</Eyebrow>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Badge>Neutral</Badge>
@@ -135,7 +135,7 @@ export function FoundationPage() {
         <Container variant="page">
           <SectionHeader
             align="center"
-            eyebrow="SPECIMEN"
+            eyebrow="Specimen"
             eyebrowTone="brand"
             title="Centered header"
             titleId="center-header"
@@ -150,13 +150,13 @@ export function FoundationPage() {
         </Container>
         <div className="mt-6 flex flex-col gap-4">
           <Container variant="wide" className="rounded-md border border-border-strong py-4">
-            <p className="text-body-small text-text">Wide — 1440px</p>
+            <p className="text-body-small text-text">Wide, 1440px</p>
           </Container>
           <Container variant="page" className="rounded-md border border-border py-4">
-            <p className="text-body-small text-text">Page — 1280px</p>
+            <p className="text-body-small text-text">Page, 1280px</p>
           </Container>
           <Container variant="reading" className="rounded-md border border-border-subtle py-4">
-            <p className="text-body-small text-text">Reading — 760px</p>
+            <p className="text-body-small text-text">Reading, 760px</p>
           </Container>
         </div>
       </Section>

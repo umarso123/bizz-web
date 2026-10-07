@@ -18,18 +18,18 @@ export function HealthcareProductUI({ living = true }: { living?: boolean }) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden bg-[#F8FAFC] text-[#17212B]">
+    <div className="flex h-full w-full flex-col overflow-hidden bg-[#F8FAFC] text-text">
       {/* Top bar */}
       <div className="flex shrink-0 items-center justify-between border-b border-[#E4E9ED] bg-white px-3 py-2 md:px-4">
         <div className="flex items-center gap-2">
-          <span className="h-3 w-[2px] rounded-full bg-[#F66C2A]" />
+          <span className="h-3 w-[2px] rounded-full bg-accent" />
           <span className="text-[0.55rem] font-semibold tracking-[-0.02em] md:text-[0.65rem]">
             Care workspace
           </span>
         </div>
         <div className="flex gap-1.5">
-          <span className="size-1.5 rounded-full bg-[#0A8FD8]/40" />
-          <span className="size-1.5 rounded-full bg-[#F66C2A]/50" />
+          <span className="size-1.5 rounded-full bg-brand/40" />
+          <span className="size-1.5 rounded-full bg-accent/50" />
           <span className="size-1.5 rounded-full bg-[#CBD4DB]" />
         </div>
       </div>
@@ -45,7 +45,7 @@ export function HealthcareProductUI({ living = true }: { living?: boolean }) {
               <li
                 key={item}
                 className={`rounded-md px-1.5 py-1 text-[0.5rem] font-medium md:text-[0.58rem] ${
-                  i === 0 ? 'bg-[#EAF6FC] text-[#087BB9]' : 'text-[#4B5965]'
+                  i === 0 ? 'bg-brand-soft text-brand-hover' : 'text-[#4B5965]'
                 }`}
               >
                 {item}
@@ -58,7 +58,7 @@ export function HealthcareProductUI({ living = true }: { living?: boolean }) {
         <div className="min-h-0 overflow-hidden p-2 md:p-3">
           <div className="mb-2 flex items-end justify-between gap-2">
             <div>
-              <p className="text-[0.45rem] font-semibold tracking-[0.06em] text-[#0A8FD8] uppercase md:text-[0.5rem]">
+              <p className="text-[0.45rem] font-semibold tracking-[0.06em] text-brand uppercase md:text-[0.5rem]">
                 Patient overview
               </p>
               <p className="mt-0.5 text-[0.7rem] font-semibold tracking-[-0.02em] md:text-[0.85rem]">
@@ -72,7 +72,7 @@ export function HealthcareProductUI({ living = true }: { living?: boolean }) {
 
           <div className="grid grid-cols-2 gap-1.5 md:gap-2">
             <Panel title="Upcoming appointment" delay={0} living={living}>
-              <div className="mt-1 h-1.5 w-3/5 rounded-full bg-[#0A8FD8]/25" />
+              <div className="mt-1 h-1.5 w-3/5 rounded-full bg-brand/25" />
               <div className="mt-1 h-1.5 w-2/5 rounded-full bg-[#E4E9ED]" />
             </Panel>
             <Panel title="Care plan" delay={0.15} living={living}>
@@ -86,12 +86,12 @@ export function HealthcareProductUI({ living = true }: { living?: boolean }) {
               <div className="mt-1 space-y-1">
                 <div className="h-1 w-full rounded-full bg-[#E4E9ED]" />
                 <div className="h-1 w-4/5 rounded-full bg-[#E4E9ED]" />
-                <div className="h-1 w-3/5 rounded-full bg-[#F66C2A]/30" />
+                <div className="h-1 w-3/5 rounded-full bg-accent/30" />
               </div>
             </Panel>
             <Panel title="Connected provider" delay={0.35} living={living}>
               <div className="mt-1.5 flex items-center gap-1.5">
-                <span className="size-4 rounded-full bg-[#0A8FD8]/20" />
+                <span className="size-4 rounded-full bg-brand/20" />
                 <div className="flex-1">
                   <div className="h-1.5 w-3/4 rounded-full bg-[#CBD4DB]" />
                   <div className="mt-1 h-1 w-1/2 rounded-full bg-[#E4E9ED]" />
@@ -107,7 +107,7 @@ export function HealthcareProductUI({ living = true }: { living?: boolean }) {
               <m.path
                 d="M0 28 C 20 26, 30 18, 45 20 S 70 30, 90 16 S 120 8, 140 18 S 170 28, 200 12"
                 fill="none"
-                stroke="#0A8FD8"
+                stroke="#2f5bea"
                 strokeWidth="1.6"
                 strokeLinecap="round"
                 animate={living ? { pathLength: [0.7, 1, 0.7] } : undefined}
@@ -116,7 +116,7 @@ export function HealthcareProductUI({ living = true }: { living?: boolean }) {
               <m.path
                 d="M0 30 C 25 28, 40 24, 60 26 S 95 20, 120 22 S 160 14, 200 20"
                 fill="none"
-                stroke="#F66C2A"
+                stroke="#f5c84c"
                 strokeWidth="1.2"
                 strokeLinecap="round"
                 opacity={0.7}

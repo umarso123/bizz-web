@@ -79,7 +79,7 @@ export function LifeAtBizaffix() {
     >
       <Container variant="page" className="w-full">
         <Reveal className="max-w-[38rem]">
-          <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+          <Eyebrow>
             {careersCopy.life.eyebrow}
           </Eyebrow>
           <h2

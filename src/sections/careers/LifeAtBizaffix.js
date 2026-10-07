@@ -17,20 +17,13 @@ function GalleryCell({ label, aspect, index, progress, reduced, }) {
     const tilt = useTilt({ max: 3, disabled: reduced });
     const y = useTransform(progress, [0, 1], [index % 2 === 0 ? 48 : 24, index % 2 === 0 ? -60 : -28]);
     const rotate = useTransform(progress, [0, 0.4, 1], [index % 2 === 0 ? -2.5 : 2, 0, index % 2 === 0 ? 1.5 : -1]);
-    return (_jsxs(m.figure, { ref: tilt.ref, className: cn('relative overflow-hidden rounded-xl border border-border-subtle bg-bg-muted', layoutClass[aspect]), style: {
+    return (_jsx(m.figure, { ref: tilt.ref, className: cn('relative overflow-hidden rounded-xl border border-border-subtle', index % 2 === 0 ? 'bg-page-brand' : 'bg-page-white', layoutClass[aspect]), style: {
             y: reduced ? 0 : y,
             rotate: reduced ? 0 : rotate,
             rotateX: reduced ? 0 : tilt.rotateX,
             rotateY: reduced ? 0 : tilt.rotateY,
             transformPerspective: 900,
-        }, onPointerMove: tilt.onPointerMove, onPointerLeave: tilt.onPointerLeave, children: [_jsx("div", { className: "absolute inset-0", style: {
-                    backgroundImage: index % 2 === 0
-                        ? 'linear-gradient(145deg, rgb(10 143 216 / 0.12), transparent 55%), linear-gradient(320deg, rgb(246 108 42 / 0.08), transparent 45%)'
-                        : 'linear-gradient(160deg, rgb(246 108 42 / 0.1), transparent 50%), linear-gradient(20deg, rgb(10 143 216 / 0.1), transparent 40%)',
-                }, "aria-hidden": "true" }), _jsx("div", { className: "absolute inset-0 opacity-40", style: {
-                    backgroundImage: 'radial-gradient(circle at 30% 30%, rgb(255 255 255 / 0.55), transparent 40%), linear-gradient(rgb(23 33 43 / 0.03) 1px, transparent 1px), linear-gradient(90deg, rgb(23 33 43 / 0.03) 1px, transparent 1px)',
-                    backgroundSize: 'auto, 24px 24px, 24px 24px',
-                }, "aria-hidden": "true" }), _jsx("figcaption", { className: "absolute inset-x-0 bottom-0 p-5", children: _jsx("span", { className: "inline-flex rounded-md bg-surface/85 px-3 py-1.5 text-caption text-text-secondary backdrop-blur-sm", children: label }) })] }));
+        }, onPointerMove: tilt.onPointerMove, onPointerLeave: tilt.onPointerLeave, children: _jsx("figcaption", { className: "absolute inset-x-0 bottom-0 p-5", children: _jsx("span", { className: "inline-flex rounded-md bg-surface/85 px-3 py-1.5 text-caption text-text-secondary backdrop-blur-sm", children: label }) }) }));
 }
 export function LifeAtBizaffix() {
     const reduced = useReducedMotion() === true;
@@ -39,5 +32,5 @@ export function LifeAtBizaffix() {
         target: ref,
         offset: ['start end', 'end start'],
     });
-    return (_jsx("section", { ref: ref, id: "life-at-bizaffix", className: "scroll-mt-28 overflow-hidden bg-bg-muted py-24 md:py-32", "aria-labelledby": "life-title", children: _jsxs(Container, { variant: "page", className: "w-full", children: [_jsxs(Reveal, { className: "max-w-[38rem]", children: [_jsx(Eyebrow, { tone: "brand", className: "uppercase tracking-[0.14em]", children: careersCopy.life.eyebrow }), _jsx("h2", { id: "life-title", className: "mt-4 text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text", children: careersCopy.life.headline }), _jsx("p", { className: "mt-5 text-body-large text-text-secondary", children: careersCopy.life.body })] }), _jsx("div", { className: "mt-14 grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-5", children: gallerySlots.map((slot, index) => (_jsx(GalleryCell, { label: slot.label, aspect: slot.aspect, index: index, progress: scrollYProgress, reduced: reduced }, slot.id))) })] }) }));
+    return (_jsx("section", { ref: ref, id: "life-at-bizaffix", className: "scroll-mt-28 overflow-hidden bg-page-brand py-24 md:py-32", "aria-labelledby": "life-title", children: _jsxs(Container, { variant: "page", className: "w-full", children: [_jsxs(Reveal, { className: "max-w-[38rem]", children: [_jsx(Eyebrow, { tone: "brand", className: "uppercase tracking-[0.14em]", children: careersCopy.life.eyebrow }), _jsx("h2", { id: "life-title", className: "mt-4 text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text", children: careersCopy.life.headline }), _jsx("p", { className: "mt-5 text-body-large text-text-secondary", children: careersCopy.life.body })] }), _jsx("div", { className: "mt-14 grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-5", children: gallerySlots.map((slot, index) => (_jsx(GalleryCell, { label: slot.label, aspect: slot.aspect, index: index, progress: scrollYProgress, reduced: reduced }, slot.id))) })] }) }));
 }

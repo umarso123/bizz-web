@@ -5,8 +5,8 @@ import { Container } from '@/components/layout/Container.tsx'
 const explore = [
   { label: 'Home', to: '/' },
   { label: 'Services', to: '/#services' },
-  { label: 'Work', to: '/#featured-projects' },
-  { label: 'Process', to: '/#how-we-work' },
+  { label: 'Work', to: '/work' },
+  { label: 'Approach', to: '/#approach' },
 ] as const
 
 const company = [

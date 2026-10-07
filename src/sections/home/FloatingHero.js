@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -8,13 +8,14 @@ import { bookCall } from '@/app/navigation.ts';
 import { homeContent } from '@/content/home.ts';
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 /** The zoomed sticker opens into this color, and the following hero uses it as its background. */
-export const floatingPortalColor = '#E8F5FC';
-const line = '#D6F25C';
-const ink = '#16082E';
-const type = '#D9CCF8';
-const titleWords = homeContent.hero.title.split(' ');
-const lineOne = titleWords.slice(0, 2).join(' ');
-const lineTwo = titleWords.slice(2).join(' ');
+export const floatingPortalColor = '#e8eefc';
+const line = '#f5c84c';
+const ink = '#0d121f';
+const type = '#eef2fc';
+const brand = '#2f5bea';
+const brandDeep = '#2549c9';
+const lineOne = `${homeContent.hero.titleLead} ${homeContent.hero.titleMid}`;
+const lineTwo = `${homeContent.hero.titleEnd} ${homeContent.hero.titleAccent}`;
 export function FloatingHero() {
     const rootRef = useRef(null);
     const stageRef = useRef(null);
@@ -26,23 +27,24 @@ export function FloatingHero() {
         const zoom = zoomRef.current;
         if (!root || !stage || !zoom || reduced)
             return;
-        const path = root.querySelector('[data-scribble]');
-        const label = zoom.querySelector('[data-zoom-label]');
+        const path = gsap.utils
+            .toArray('[data-scribble]', root)
+            .find((candidate) => candidate.getClientRects().length > 0);
+        const svg = path?.ownerSVGElement ?? null;
         const fadeEls = gsap.utils.toArray('[data-fade]', root);
-        const nodes = gsap.utils.toArray('[data-node]', root);
-        if (path) {
+        const nodes = svg ? gsap.utils.toArray('[data-node]', svg) : [];
+        if (path && svg) {
             const length = path.getTotalLength();
             nodes.forEach((node, index) => {
                 const point = path.getPointAtLength((length * (index + 1)) / (nodes.length + 1));
                 node.setAttribute('cx', String(point.x));
                 node.setAttribute('cy', String(point.y));
             });
-            gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
-            gsap.to(path, {
-                strokeDashoffset: 0,
-                duration: 2.4,
-                ease: 'power2.out',
-            });
+            const pen = svg?.querySelector('[data-pen-anchor]');
+            if (pen) {
+                const point = path.getPointAtLength(length * 0.46);
+                pen.setAttribute('transform', `translate(${point.x} ${point.y})`);
+            }
         }
         gsap.to(nodes, {
             scale: 1.45,
@@ -55,42 +57,45 @@ export function FloatingHero() {
         });
         gsap.utils.toArray('[data-float]', root).forEach((el, index) => {
             gsap.to(el, {
-                y: index % 2 === 0 ? -16 : 14,
-                x: index % 3 === 0 ? 8 : -7,
-                rotation: index % 2 === 0 ? 4 : -5,
-                duration: 2.7 + (index % 5) * 0.38,
-                delay: index * 0.14,
+                y: index % 2 === 0 ? -22 : 18,
+                x: index % 3 === 0 ? 12 : -10,
+                rotation: index % 2 === 0 ? 6 : -7,
+                duration: 2.5 + (index % 5) * 0.35,
+                delay: index * 0.12,
                 ease: 'sine.inOut',
                 yoyo: true,
                 repeat: -1,
             });
         });
+        const specialize = root.querySelector('[data-specialize]');
         const trigger = ScrollTrigger.create({
             trigger: root,
             start: 'top top',
             end: 'bottom bottom',
         });
         const apply = () => {
-            const raw = gsap.utils.clamp(0, 1, (trigger.progress - 0.06) / 0.94);
-            const t = gsap.parseEase('power2.inOut')(raw);
+            const zoomT = gsap.utils.clamp(0, 1, trigger.progress / 0.6);
+            const t = gsap.parseEase('power2.inOut')(zoomT);
             const w = zoom.offsetWidth;
             const h = zoom.offsetHeight;
             if (w < 1 || h < 1)
                 return;
             const cx = zoom.offsetLeft + w / 2;
             const cy = zoom.offsetTop + h / 2;
-            const cover = (Math.hypot(stage.clientWidth, stage.clientHeight) / Math.min(w, h)) * 1.2;
-            const bob = Math.sin(gsap.ticker.time * 2.05) * 12 * (1 - t);
-            const drift = Math.cos(gsap.ticker.time * 1.35) * 6 * (1 - t);
-            gsap.set(zoom, {
-                x: (stage.clientWidth / 2 - cx) * t + drift,
-                y: (stage.clientHeight / 2 - cy) * t + bob,
-                scale: 1 + (cover - 1) * t,
-                force3D: true,
-            });
-            if (label)
-                gsap.set(label, { opacity: 1 - Math.min(1, t / 0.42) });
+            const startR = Math.min(w, h) / 2;
+            const endR = Math.hypot(stage.clientWidth, stage.clientHeight) / 2;
+            const radius = startR + (endR - startR) * t;
+            const bob = Math.sin(gsap.ticker.time * 2.05) * 10 * (1 - t);
+            const x = cx + (stage.clientWidth / 2 - cx) * t;
+            const y = cy + (stage.clientHeight / 2 - cy) * t + bob;
+            gsap.set(zoom, { opacity: 1 - Math.min(1, t / 0.16) });
             gsap.set(fadeEls, { opacity: 1 - Math.min(1, Math.max(0, (t - 0.08) / 0.5)) });
+            if (specialize) {
+                gsap.set(specialize, { clipPath: `circle(${radius}px at ${x}px ${y}px)` });
+                const shown = t > 0.22;
+                specialize.inert = !shown;
+                specialize.setAttribute('aria-hidden', shown ? 'false' : 'true');
+            }
         };
         gsap.ticker.add(apply);
         apply();
@@ -98,16 +103,40 @@ export function FloatingHero() {
             gsap.ticker.remove(apply);
         };
     }, { scope: rootRef });
-    return (_jsx("section", { ref: rootRef, className: `relative -mt-(--header-clearance) bg-[#16082E] ${reduced ? 'min-h-svh' : 'h-[260vh]'}`, children: _jsxs("div", { ref: stageRef, className: "sticky top-0 h-svh overflow-hidden", children: [_jsx("div", { "aria-hidden": "true", "data-fade": true, className: "pointer-events-none absolute inset-0", style: {
-                        background: 'radial-gradient(ellipse at 50% 46%, rgb(92 48 168 / 0.45), transparent 58%)',
-                    } }), _jsxs("h1", { "data-fade": true, className: "pointer-events-none absolute inset-x-0 top-[47%] z-10 -translate-y-1/2 px-[2.5vw] text-center leading-[0.78] font-black tracking-[-0.06em] uppercase", style: { color: type }, children: [_jsx("span", { className: "block whitespace-nowrap", style: { fontSize: 'clamp(3.4rem, 14.6vw, 13.4rem)' }, children: lineOne }), _jsx("span", { className: "-mt-[0.05em] block whitespace-nowrap", style: { fontSize: 'clamp(2.65rem, 10.15vw, 9.6rem)' }, children: lineTwo })] }), _jsxs("svg", { "data-fade": true, "aria-hidden": "true", className: "pointer-events-none absolute inset-0 z-20 h-full w-full", viewBox: "0 0 1440 900", preserveAspectRatio: "xMidYMid slice", fill: "none", children: [_jsx("path", { "data-scribble": true, d: "M-80 390C40 360 90 150 250 190C430 236 360 470 540 430C730 388 690 180 900 220C1110 260 1040 480 1200 420C1360 360 1290 590 1100 630C900 672 980 830 1180 850C1360 868 1540 700 1470 540", stroke: line, strokeWidth: "3.5", strokeLinecap: "round" }), Array.from({ length: 7 }, (_, index) => (_jsx("circle", { "data-node": true, cx: "0", cy: "0", r: "5.5", fill: line }, index)))] }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[16%] left-[5%] z-30 max-sm:top-[13%] max-sm:left-[3%]", children: _jsx("div", { className: "grid size-[6.6rem] place-items-center px-3 text-center text-white shadow-lg max-sm:size-[5.4rem]", style: {
-                            background: '#FF4B88',
-                            borderRadius: '58% 42% 60% 40% / 40% 58% 42% 60%',
-                        }, children: _jsxs("span", { children: [_jsx("span", { className: "block text-[1.35rem] leading-none font-black max-sm:text-[1.05rem]", children: "5/5" }), _jsx("span", { className: "mt-1 block text-[0.68rem] leading-tight font-semibold max-sm:text-[0.6rem]", children: "overall platforms" })] }) }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[33%] right-[16%] z-30 max-sm:top-[28%] max-sm:right-[3%]", children: _jsx("div", { className: "rounded-full px-4 py-2 text-[0.92rem] font-bold shadow-lg max-sm:px-3 max-sm:text-[0.78rem]", style: { background: line, color: ink }, children: homeContent.hero.primaryCta }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[18%] right-[4%] z-30 max-sm:top-[16%] max-sm:right-[2%]", children: _jsx("div", { className: "grid size-[6.4rem] place-items-center rounded-full bg-[#F2382F] px-3 text-center text-[0.95rem] leading-tight font-bold text-white shadow-lg max-sm:size-[5.1rem] max-sm:text-[0.78rem]", children: "iOS" }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[63%] left-[4%] z-30 max-sm:top-[57%] max-sm:left-[2%]", children: _jsx("div", { className: "-rotate-6 rounded-full bg-[#3D7CFF] px-4 py-2.5 text-[0.92rem] font-bold text-white shadow-lg max-sm:px-3 max-sm:text-[0.75rem]", children: "Web Development" }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[68%] right-[6%] z-30 max-sm:top-[62%] max-sm:right-[2%]", children: _jsx("div", { className: "rotate-3 px-4 py-2.5 text-[0.92rem] font-bold text-white shadow-lg max-sm:px-3 max-sm:text-[0.75rem]", style: { background: '#6C46F5', borderRadius: '1.1rem 0.45rem 1rem 0.4rem' }, children: "Flutter" }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[7%] right-[14%] z-30 max-sm:top-[8%] max-sm:right-[8%]", children: _jsx(YouMark, {}) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute right-[9%] bottom-[16%] z-30 max-sm:right-[6%] max-sm:bottom-[20%]", children: _jsx(YouMark, {}) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[47%] left-[43%] z-30 max-sm:top-[44%] max-sm:left-[38%]", children: _jsx(PenNib, {}) }), _jsxs("div", { ref: zoomRef, className: "absolute top-[73%] left-[24%] z-40 size-[9.4rem] max-sm:top-[76%] max-sm:left-[28%] max-sm:size-[7.4rem]", children: [_jsx("div", { className: "size-full rounded-full", style: { backgroundColor: floatingPortalColor } }), _jsx("div", { "data-zoom-label": true, className: "absolute inset-0 grid place-items-center rounded-full px-3 text-center shadow-lg ring-2 ring-white/70", children: _jsx("span", { className: "text-[1.02rem] leading-tight font-bold text-[#17212b] max-sm:text-[0.85rem]", children: "Healthcare" }) })] }), _jsxs("div", { "data-fade": true, className: "absolute bottom-[4.5%] left-1/2 z-30 flex -translate-x-1/2 items-center gap-1 rounded-full bg-[#241433]/85 p-1.5 shadow-lg backdrop-blur-md max-sm:bottom-[3%]", children: [_jsxs("span", { className: "hidden items-center gap-2 px-3 text-[0.8125rem] font-medium text-white/90 sm:inline-flex", children: [_jsx("span", { className: "size-1.5 rounded-full", style: { background: line } }), "Healthcare"] }), _jsx(Link, { to: bookCall.to, className: "rounded-full bg-white px-4 py-2 text-[0.875rem] font-semibold text-[#17212b] no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#D6F25C]", children: homeContent.hero.primaryCta }), _jsx(Link, { to: "/work", className: "rounded-full px-3 py-2 text-[0.875rem] font-medium text-white/90 no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#D6F25C]", children: homeContent.hero.secondaryCta })] })] }) }));
+    return (_jsxs(_Fragment, { children: [_jsx("section", { ref: rootRef, className: `relative -mt-(--header-clearance) bg-page-dark ${reduced ? 'min-h-svh' : 'h-[380vh]'}`, children: _jsxs("div", { ref: stageRef, className: "sticky top-0 h-svh overflow-hidden", children: [_jsx("div", { "aria-hidden": "true", "data-fade": true, className: "pointer-events-none absolute inset-0", style: {
+                                background: 'radial-gradient(ellipse at 50% 46%, rgb(47 91 234 / 0.38), transparent 58%)',
+                            } }), _jsxs("h1", { "data-fade": true, className: "pointer-events-none absolute inset-x-0 top-[47%] z-10 -translate-y-1/2 px-[2.5vw] text-center leading-[0.78] font-black tracking-[-0.06em] uppercase", style: { color: type }, children: [_jsx("span", { className: "block whitespace-nowrap", style: { fontSize: 'clamp(3.4rem, 14.6vw, 13.4rem)' }, children: lineOne }), _jsx("span", { className: "mt-[-0.05em] block whitespace-nowrap", style: { fontSize: 'clamp(2.65rem, 10.15vw, 9.6rem)' }, children: lineTwo })] }), _jsx(Scribble, { className: "max-sm:hidden", viewBox: "0 0 1440 900", nodes: 8, d: "M-30 250C140 40 300 70 280 250C260 430 60 500 150 300C250 80 520 90 600 280C690 490 430 640 640 540C850 440 780 160 1020 230C1240 290 1160 540 1320 450C1480 360 1360 680 1140 730C900 790 980 900 1220 860" }), _jsx(Scribble, { className: "sm:hidden", viewBox: "0 0 390 844", nodes: 6, d: "M-16 240C70 70 190 80 220 230C260 420 70 470 130 300C190 140 310 220 290 400C270 580 90 660 160 740C230 820 360 760 370 600" }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[16%] left-[8%] z-30 max-sm:top-[13%] max-sm:left-[4%]", children: _jsx("div", { className: "grid size-[6.6rem] place-items-center px-3 text-center shadow-lg max-sm:size-[5.4rem]", style: {
+                                    background: line,
+                                    color: ink,
+                                    borderRadius: '58% 42% 60% 40% / 40% 58% 42% 60%',
+                                }, children: _jsxs("span", { children: [_jsx("span", { className: "block text-[1.35rem] leading-none font-black max-sm:text-[1.05rem]", children: "5/5" }), _jsx("span", { className: "mt-1 block text-[0.68rem] leading-tight font-semibold max-sm:text-[0.6rem]", children: "overall platforms" })] }) }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[33%] right-[16%] z-30 max-sm:top-[28%] max-sm:right-[3%]", children: _jsx("div", { className: "rounded-full px-4 py-2 text-[0.92rem] font-bold shadow-lg max-sm:px-3 max-sm:text-[0.78rem]", style: { background: line, color: ink }, children: homeContent.hero.primaryCta }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[18%] right-[4%] z-30 max-sm:top-[16%] max-sm:right-[2%]", children: _jsx("div", { className: "grid size-[6.4rem] place-items-center rounded-full px-3 text-center text-[0.95rem] leading-tight font-bold shadow-lg max-sm:size-[5.1rem] max-sm:text-[0.78rem]", style: { background: brand, color: '#ffffff' }, children: "iOS" }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[63%] left-[4%] z-30 max-sm:top-[57%] max-sm:left-[2%]", children: _jsx("div", { className: "-rotate-6 rounded-full px-4 py-2.5 text-[0.92rem] font-bold shadow-lg max-sm:px-3 max-sm:text-[0.75rem]", style: { background: brandDeep, color: '#ffffff' }, children: "Web Development" }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[68%] right-[6%] z-30 max-sm:top-[62%] max-sm:right-[2%]", children: _jsx("div", { className: "rotate-3 px-4 py-2.5 text-[0.92rem] font-bold shadow-lg max-sm:px-3 max-sm:text-[0.75rem]", style: { background: type, color: ink, borderRadius: '1.1rem 0.45rem 1rem 0.4rem' }, children: "Flutter" }) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute top-[7%] right-[14%] z-30 max-sm:top-[8%] max-sm:right-[8%]", children: _jsx(YouMark, {}) }), _jsx("div", { "data-float": true, "data-fade": true, className: "absolute right-[9%] bottom-[16%] z-30 max-sm:right-[6%] max-sm:bottom-[22%]", children: _jsx(YouMark, {}) }), _jsxs("div", { ref: zoomRef, className: "absolute top-[73%] left-[24%] z-50 size-[9.4rem] max-sm:top-[76%] max-sm:left-[28%] max-sm:size-[7.4rem]", children: [_jsx("div", { className: "size-full rounded-full", style: { backgroundColor: floatingPortalColor } }), _jsx("div", { "data-zoom-label": true, className: "absolute inset-0 grid place-items-center rounded-full px-3 text-center shadow-lg ring-2 ring-[#ffffff]/70", children: _jsx("span", { className: "text-[1.02rem] leading-tight font-bold text-text max-sm:text-[0.85rem]", children: "Healthcare" }) })] }), _jsxs("div", { "data-fade": true, className: "absolute bottom-[6%] left-1/2 z-30 flex max-w-[calc(100%-1.25rem)] -translate-x-1/2 items-center gap-1 rounded-full bg-[#0E1A24] p-1.5 shadow-lg max-sm:bottom-[8%]", children: [_jsxs("span", { className: "hidden items-center gap-2 px-3 text-[0.8125rem] font-medium whitespace-nowrap sm:inline-flex", style: { color: '#ffffff' }, children: [_jsx("span", { className: "size-1.5 rounded-full", style: { background: line } }), "Healthcare"] }), _jsx(Link, { to: bookCall.to, className: "rounded-full px-4 py-2 text-[0.8125rem] font-semibold whitespace-nowrap no-underline shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-[0.875rem]", style: { backgroundColor: line, color: ink, textDecoration: 'none' }, children: homeContent.hero.primaryCta }), _jsx(Link, { to: "/#featured-projects", className: "rounded-full px-3 py-2 text-[0.8125rem] font-medium whitespace-nowrap no-underline outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-[0.875rem]", style: { color: '#ffffff', textDecoration: 'none' }, children: homeContent.hero.secondaryCta })] }), _jsx(HealthcareFocus, {})] }) }), reduced ? (_jsx("section", { className: "px-[clamp(1.25rem,5vw,6rem)] py-24", style: { backgroundColor: floatingPortalColor }, children: _jsx(HealthcareFocus, { visible: true }) })) : null] }));
+}
+const floatingKeywords = [
+    { label: 'HealthTech Solutions', className: 'top-[2%] left-[18%]', opacity: 0.42 },
+    { label: 'FemTech Software', className: 'top-[8%] left-[58%]', opacity: 0.95 },
+    { label: 'Medical Software Development', className: 'top-[18%] left-[0%]', opacity: 0.55 },
+    { label: 'mHealth Applications', className: 'top-[24%] left-[42%]', opacity: 1 },
+    { label: 'Patient-Facing Apps', className: 'top-[34%] left-[70%]', opacity: 0.48 },
+    { label: 'Connected Health Tech', className: 'top-[40%] left-[12%]', opacity: 0.88 },
+    { label: 'Clinically Reviewed Content', className: 'top-[48%] left-[48%]', opacity: 0.5 },
+    { label: 'Healthcare Branding', className: 'top-[12%] left-[78%]', opacity: 0.72 },
+    { label: 'HIPAA Compliance', className: 'top-[56%] left-[2%]', opacity: 0.9 },
+    { label: 'GDPR / DSGVO Privacy', className: 'top-[62%] left-[38%]', opacity: 0.44 },
+    { label: 'ISO 13485 Standards', className: 'top-[58%] left-[68%]', opacity: 0.8 },
+    { label: 'FDA Regulatory Alignment', className: 'top-[72%] left-[18%]', opacity: 0.52 },
+    { label: 'Data Privacy Protocols', className: 'top-[76%] left-[54%]', opacity: 1 },
+    { label: 'Secure Cloud Engineering', className: 'top-[84%] left-[6%]', opacity: 0.6 },
+    { label: 'Protected Health Information (PHI)', className: 'top-[86%] left-[44%]', opacity: 0.4 },
+    { label: 'Compliance-First Framework', className: 'top-[70%] left-[78%]', opacity: 0.75 },
+];
+function HealthcareFocus({ visible = false }) {
+    return (_jsxs("div", { "data-specialize": visible ? undefined : '', "aria-hidden": visible ? undefined : true, className: visible
+            ? 'grid items-center gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)]'
+            : 'pointer-events-none absolute inset-0 z-40 grid items-center gap-8 px-[clamp(1.25rem,4vw,5rem)] pt-(--header-clearance) lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)]', style: visible ? undefined : { backgroundColor: floatingPortalColor, clipPath: 'circle(0px at 30% 80%)' }, children: [_jsxs("div", { children: [_jsxs("p", { className: "mb-4 inline-flex items-center gap-2 rounded-full border border-text/10 bg-[#ffffff]/70 px-3 py-1 text-[0.75rem] font-semibold tracking-[0.14em] text-text uppercase", children: [_jsx("span", { className: "size-1.5 rounded-full", style: { background: line } }), "Healthcare"] }), _jsxs("h2", { className: "max-w-[12ch] leading-[0.96] font-semibold tracking-[-0.045em] text-text", style: { fontSize: 'clamp(2.35rem, 4.2vw, 4.4rem)' }, children: ["We specialize", _jsx("br", {}), "in healthcare"] })] }), _jsx("div", { className: "relative min-h-[20rem] sm:min-h-[26rem] lg:min-h-[34rem]", children: floatingKeywords.map((item, index) => (_jsxs("p", { "data-float": true, className: `absolute max-w-[14rem] text-[clamp(0.88rem,1.15vw,1.2rem)] leading-tight font-semibold tracking-[-0.03em] text-text max-sm:max-w-[11rem] ${item.className}`, style: { opacity: item.opacity }, children: [_jsx("span", { className: "mr-2 inline-block size-2 translate-y-[-0.12em] rounded-full align-middle", style: { background: index % 2 === 0 ? brand : line } }), item.label] }, item.label))) })] }));
 }
 function YouMark() {
     return (_jsxs("div", { className: "flex items-start", children: [_jsx("svg", { width: "22", height: "22", viewBox: "0 0 22 22", "aria-hidden": "true", className: "-mt-0.5 shrink-0", children: _jsx("path", { d: "M3 2.2 17.2 10l-6 .7 3.1 6.5-2.5 1.2-3.2-6.6L3.2 16V2.2Z", fill: line }) }), _jsx("span", { className: "rounded-full px-2.5 py-1 text-[0.8125rem] font-bold shadow-md", style: { background: line, color: ink }, children: "You" })] }));
 }
-function PenNib() {
-    return (_jsxs("svg", { width: "46", height: "46", viewBox: "0 0 46 46", "aria-hidden": "true", className: "-rotate-12", children: [_jsx("path", { d: "M10 31c7-2 11-9 13-18 1.2 9 6.5 15 15 17-7 1.2-11 6-13 12-2.2-6.2-6.6-10-15-11Z", fill: "#14081F", stroke: line, strokeWidth: "1.6", strokeLinejoin: "round" }), _jsx("path", { d: "M23 16c.3 4.2.1 8.2-.2 12", stroke: line, strokeWidth: "1.3", strokeLinecap: "round" })] }));
+function Scribble({ d, viewBox, className, nodes, }) {
+    return (_jsxs("svg", { "data-fade": true, "aria-hidden": "true", className: `pointer-events-none absolute inset-0 z-20 h-full w-full ${className}`, viewBox: viewBox, preserveAspectRatio: "xMidYMid slice", fill: "none", children: [_jsx("path", { "data-scribble": true, d: d, stroke: line, strokeWidth: "5", strokeLinecap: "round" }), Array.from({ length: nodes }, (_, index) => (_jsx("circle", { "data-node": true, cx: "0", cy: "0", r: "6", fill: line }, index))), _jsx("g", { "data-pen-anchor": true, children: _jsxs("g", { "data-float": true, children: [_jsx("path", { d: "M0 6c8 14 10 32 0 52-10-20-8-38 0-52z", fill: ink, stroke: line, strokeWidth: "2.4" }), _jsx("path", { d: "M0 18v22", stroke: line, strokeWidth: "1.7", strokeLinecap: "round" }), _jsx("circle", { cy: "12", r: "2.6", fill: line })] }) })] }));
 }

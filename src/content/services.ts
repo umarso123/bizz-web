@@ -72,6 +72,6 @@ export const servicesPage = {
   },
   cta: {
     title: 'Want to collaborate?',
-    body: 'Reach out to us. Let’s connect — and propel your business to new heights.',
+    body: 'Reach out to us. Let’s connect, and propel your business to new heights.',
   },
 } as const

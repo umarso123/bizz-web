@@ -4,13 +4,7 @@ import { useRef, useState } from 'react';
 import { Container } from '@/components/layout/Container.tsx';
 import { homeJourney, useMediaQuery } from '@/sections/home/homeJourney.ts';
 import { cn } from '@/lib/cn.ts';
-const atmospheres = [
-    'radial-gradient(ellipse at 18% 28%, rgb(10 143 216 / 0.32), transparent 55%), linear-gradient(160deg, #eaf6fc, #ffffff)',
-    'radial-gradient(ellipse at 78% 22%, rgb(246 108 42 / 0.28), transparent 50%), linear-gradient(160deg, #fff4ee, #ffffff)',
-    'radial-gradient(ellipse at 50% 70%, rgb(10 143 216 / 0.28), transparent 55%), linear-gradient(160deg, #f3f9fc, #ffffff)',
-    'radial-gradient(ellipse at 30% 40%, rgb(246 108 42 / 0.22), transparent 50%), linear-gradient(160deg, #fff8f4, #ffffff)',
-    'radial-gradient(ellipse at 65% 35%, rgb(10 143 216 / 0.3), transparent 52%), linear-gradient(160deg, #eaf6fc, #ffffff)',
-];
+const atmospheres = ['#E8F5FC', '#FFFFFF', '#E8F5FC', '#FFFFFF', '#E8F5FC'];
 /**
  * Motion identity: STACKED PEEL / CLIP WIPE
  * Panels sit in a deck. Scroll peels the top layer upward via clip-path.
@@ -30,9 +24,9 @@ export function CapabilityStory() {
         setActive(Math.min(count - 1, Math.max(0, Math.floor(value * count))));
     });
     if (!desktop || reduced) {
-        return (_jsx("section", { className: "bg-[#FFF1E8] py-20 md:py-28", "aria-labelledby": "capability-title", children: _jsxs(Container, { variant: "page", className: "w-full", children: [_jsx("p", { className: "text-eyebrow text-brand-hover uppercase tracking-[0.14em]", children: "Capabilities" }), _jsx("h2", { id: "capability-title", className: "mt-4 text-section-title text-text", children: "Experience the potential of your business." }), _jsx("div", { className: "mt-12 space-y-8", children: homeJourney.capabilities.map((panel, index) => (_jsxs("article", { className: "overflow-hidden rounded-xl border border-brand/20 bg-white p-8 shadow-sm md:p-12", style: { backgroundImage: atmospheres[index] }, children: [_jsxs("p", { className: "text-caption font-semibold text-brand-hover", children: ["0", index + 1] }), _jsx("h3", { className: "mt-4 text-[clamp(2rem,1.4rem+2vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-text", children: panel.title }), _jsx("p", { className: "mt-4 max-w-[34rem] text-body-large text-text-secondary", children: panel.body })] }, panel.id))) })] }) }));
+        return (_jsx("section", { className: "bg-page-white py-20 md:py-28", "aria-labelledby": "capability-title", children: _jsxs(Container, { variant: "page", className: "w-full", children: [_jsx("p", { className: "text-eyebrow text-brand-hover uppercase tracking-[0.14em]", children: "Capabilities" }), _jsx("h2", { id: "capability-title", className: "mt-4 text-section-title text-text", children: "Experience the potential of your business." }), _jsx("div", { className: "mt-12 space-y-8", children: homeJourney.capabilities.map((panel, index) => (_jsxs("article", { className: "overflow-hidden rounded-xl border border-brand/20 bg-white p-8 shadow-sm md:p-12", style: { backgroundColor: atmospheres[index] }, children: [_jsxs("p", { className: "text-caption font-semibold text-brand-hover", children: ["0", index + 1] }), _jsx("h3", { className: "mt-4 text-[clamp(2rem,1.4rem+2vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-text", children: panel.title }), _jsx("p", { className: "mt-4 max-w-[34rem] text-body-large text-text-secondary", children: panel.body })] }, panel.id))) })] }) }));
     }
-    return (_jsx("section", { ref: ref, className: "relative h-[360vh] bg-[#FFF1E8]", "aria-labelledby": "capability-title", children: _jsx("div", { className: "sticky top-0 flex h-svh items-center overflow-hidden", children: _jsxs(Container, { variant: "page", className: "relative w-full", children: [_jsx("p", { className: "text-eyebrow text-brand-hover uppercase tracking-[0.14em]", children: "Capabilities" }), _jsx("h2", { id: "capability-title", className: "mt-3 text-section-title text-text", children: "Experience the potential of your business." }), _jsx("div", { className: "relative mt-10 h-[min(58vh,32rem)]", children: homeJourney.capabilities.map((panel, index) => (_jsx(PeelPanel, { panel: panel, index: index, count: count, progress: scrollYProgress, active: active, atmosphere: atmospheres[index] ?? atmospheres[0] }, panel.id))) }), _jsx("div", { className: "mt-6 flex gap-2", "aria-hidden": "true", children: homeJourney.capabilities.map((panel, index) => (_jsx("span", { className: cn('h-1.5 flex-1 rounded-full transition-colors duration-300', index <= active ? 'bg-brand' : 'bg-white/80') }, panel.id))) })] }) }) }));
+    return (_jsx("section", { ref: ref, className: "relative h-[360vh] bg-page-white", "aria-labelledby": "capability-title", children: _jsx("div", { className: "sticky top-0 flex h-svh items-center overflow-hidden", children: _jsxs(Container, { variant: "page", className: "relative w-full", children: [_jsx("p", { className: "text-eyebrow text-brand-hover uppercase tracking-[0.14em]", children: "Capabilities" }), _jsx("h2", { id: "capability-title", className: "mt-3 text-section-title text-text", children: "Experience the potential of your business." }), _jsx("div", { className: "relative mt-10 h-[min(58vh,32rem)]", children: homeJourney.capabilities.map((panel, index) => (_jsx(PeelPanel, { panel: panel, index: index, count: count, progress: scrollYProgress, active: active, atmosphere: atmospheres[index] ?? atmospheres[0] }, panel.id))) }), _jsx("div", { className: "mt-6 flex gap-2", "aria-hidden": "true", children: homeJourney.capabilities.map((panel, index) => (_jsx("span", { className: cn('h-1.5 flex-1 rounded-full transition-colors duration-300', index <= active ? 'bg-brand' : 'bg-white/80') }, panel.id))) })] }) }) }));
 }
 function PeelPanel({ panel, index, count, progress, active, atmosphere, }) {
     const start = index / count;
@@ -43,9 +37,9 @@ function PeelPanel({ panel, index, count, progress, active, atmosphere, }) {
     const scale = useTransform(progress, [start, end], [1, 0.96]);
     const isTop = index === active;
     const isPast = index < active;
-    return (_jsxs(m.article, { className: "absolute inset-0 overflow-hidden rounded-2xl border border-border-subtle bg-bg p-10 md:p-14", style: {
+    return (_jsxs(m.article, { className: "absolute inset-0 overflow-hidden rounded-2xl border border-border-subtle p-10 md:p-14", style: {
             zIndex: count - index,
-            backgroundImage: atmosphere,
+            backgroundColor: atmosphere,
             clipPath: isPast ? 'inset(0% 0% 100% 0%)' : clip,
             y: isPast ? -48 : y,
             scale: isPast ? 0.96 : scale,

@@ -275,7 +275,7 @@ export function CareerHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.1, ease }}
             >
-              <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+              <Eyebrow>
                 {careersCopy.hero.eyebrow}
               </Eyebrow>
             </m.div>

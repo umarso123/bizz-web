@@ -9,6 +9,7 @@ import {
 import { Link } from 'react-router'
 import { useRef } from 'react'
 import { Container } from '@/components/layout/Container.tsx'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { useMediaQuery } from '@/sections/home/homeJourney.ts'
 import { BackgroundAtmosphere } from '@/sections/home/laptop-zoom/BackgroundAtmosphere.tsx'
 import { laptopZoomCopy } from '@/sections/home/laptop-zoom/config.ts'
@@ -91,12 +92,10 @@ function DesktopLaptopZoom() {
           style={{ opacity: copyOpacity, y: copyY }}
         >
           <Container variant="page" className="pointer-events-auto w-full pt-8">
-            <p className="text-[0.68rem] font-semibold tracking-[0.16em] text-[#0A8FD8] uppercase">
-              {laptopZoomCopy.eyebrow}
-            </p>
+            <Eyebrow>{laptopZoomCopy.eyebrow}</Eyebrow>
             <h2
               id="laptop-zoom-title"
-              className="mt-3 max-w-[10ch] text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.02] font-semibold tracking-[-0.03em] text-[#17212B]"
+              className="mt-3 max-w-[10ch] text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.02] font-semibold tracking-[-0.03em] text-text"
             >
               {laptopZoomCopy.title}
             </h2>
@@ -179,12 +178,10 @@ function MobileLaptopZoom({ dense }: { dense: boolean }) {
         <BackgroundAtmosphere progress={p} reduced={false} pointerX={zero} pointerY={zero} />
 
         <m.div className="relative z-20 px-(--page-gutter)" style={{ opacity: copyOpacity }}>
-          <p className="text-[0.68rem] font-semibold tracking-[0.14em] text-[#0A8FD8] uppercase">
-            {laptopZoomCopy.eyebrow}
-          </p>
+          <Eyebrow>{laptopZoomCopy.eyebrow}</Eyebrow>
           <h2
             id="laptop-zoom-title"
-            className="mt-2 max-w-[10ch] text-[clamp(1.75rem,1.2rem+1.4vw,2.25rem)] font-semibold tracking-[-0.03em] text-[#17212B]"
+            className="mt-2 max-w-[10ch] text-[clamp(1.75rem,1.2rem+1.4vw,2.25rem)] font-semibold tracking-[-0.03em] text-text"
           >
             {laptopZoomCopy.title}
           </h2>
@@ -225,18 +222,16 @@ function ReducedLaptopZoom() {
       <Container variant="page" className="relative z-10 w-full">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <div>
-            <p className="text-[0.68rem] font-semibold tracking-[0.16em] text-[#0A8FD8] uppercase">
-              {laptopZoomCopy.eyebrow}
-            </p>
+            <Eyebrow>{laptopZoomCopy.eyebrow}</Eyebrow>
             <h2
               id="laptop-zoom-title"
-              className="mt-3 max-w-[10ch] text-section-title text-[#17212B]"
+              className="mt-3 max-w-[10ch] text-section-title text-text"
             >
               {laptopZoomCopy.title}
             </h2>
             <Link
               to={laptopZoomCopy.ctaTo}
-              className="mt-5 inline-flex text-body-small font-semibold text-[#087BB9] underline underline-offset-[0.22em]"
+              className="mt-5 inline-flex text-body-small font-semibold text-brand-hover underline underline-offset-[0.22em]"
             >
               {laptopZoomCopy.cta} →
             </Link>

@@ -23,7 +23,7 @@ const notes = [
   },
   {
     title: 'Relationships',
-    body: 'Not just lines of code — your vision is our inspiration.',
+    body: 'Not just lines of code. Your vision is our inspiration.',
     dot: '#F66C2A',
     place: 'right-[2%] bottom-[16%]',
   },

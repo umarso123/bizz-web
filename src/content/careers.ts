@@ -41,7 +41,7 @@ export const careersCopy = {
   life: {
     eyebrow: 'Studio life',
     headline: 'Life at Bizaffix',
-    body: 'Moments from the work — collaboration, craft, and the quiet focus that shapes healthcare products.',
+    body: 'Moments from the work: collaboration, craft, and the quiet focus that shapes healthcare products.',
   },
   team: {
     eyebrow: 'People',
@@ -86,7 +86,7 @@ export const cultureThemes: CultureTheme[] = [
   {
     id: 'learn',
     label: 'Keep learning',
-    detail: 'Healthcare and technology move — so do we.',
+    detail: 'Healthcare and technology move, so do we.',
   },
   {
     id: 'together',
@@ -117,7 +117,7 @@ export const workStages: WorkStage[] = [
     id: 'build',
     number: '03',
     title: 'Build',
-    body: 'Design and engineering move together — interfaces, systems, and integrations that hold under real use.',
+    body: 'Design and engineering move together: interfaces, systems, and integrations that hold under real use.',
   },
   {
     id: 'refine',
@@ -162,7 +162,7 @@ export const jobPostings: JobPosting[] = [
       'Motion and microinteraction craft',
       'Familiarity with design systems at scale',
     ],
-    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%E2%80%94%20Product%20Designer',
+    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Product%20Designer',
     status: 'placeholder',
   },
   {
@@ -174,7 +174,7 @@ export const jobPostings: JobPosting[] = [
     employmentType: 'Full-time',
     experience: '3+ years',
     description:
-      'Build the interfaces people rely on — performant, accessible React experiences for healthcare products that must feel calm under pressure.',
+      'Build the interfaces people rely on: performant, accessible React experiences for healthcare products that must feel calm under pressure.',
     responsibilities: [
       'Implement product UI with React, TypeScript, and modern tooling',
       'Collaborate with design on interaction quality and motion',
@@ -192,7 +192,7 @@ export const jobPostings: JobPosting[] = [
       'Design system contribution',
       'Healthcare or complex domain product experience',
     ],
-    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%E2%80%94%20Frontend%20Engineer',
+    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Frontend%20Engineer',
     status: 'placeholder',
   },
   {
@@ -204,7 +204,7 @@ export const jobPostings: JobPosting[] = [
     employmentType: 'Full-time',
     experience: '4+ years',
     description:
-      'Design and build the systems behind healthcare products — secure APIs, data flows, and integrations that clinicians and patients can trust.',
+      'Design and build the systems behind healthcare products: secure APIs, data flows, and integrations that clinicians and patients can trust.',
     responsibilities: [
       'Design and maintain APIs and services for product features',
       'Integrate with healthcare and third-party systems thoughtfully',
@@ -222,7 +222,7 @@ export const jobPostings: JobPosting[] = [
       'Experience with Python, C#, or similar stacks',
       'Event-driven or distributed systems experience',
     ],
-    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%E2%80%94%20Backend%20Engineer',
+    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Backend%20Engineer',
     status: 'placeholder',
   },
   {
@@ -252,7 +252,7 @@ export const jobPostings: JobPosting[] = [
       'Health, wellness, or regulated app experience',
       'CI/CD for mobile releases',
     ],
-    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%E2%80%94%20Mobile%20App%20Developer',
+    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Mobile%20App%20Developer',
     status: 'placeholder',
   },
   {
@@ -264,7 +264,7 @@ export const jobPostings: JobPosting[] = [
     employmentType: 'Full-time',
     experience: '4+ years',
     description:
-      'Bring machine learning into healthcare products with rigor — models and pipelines that improve decisions without sacrificing trust.',
+      'Bring machine learning into healthcare products with rigor: models and pipelines that improve decisions without sacrificing trust.',
     responsibilities: [
       'Design and implement ML features for product workflows',
       'Evaluate model quality, bias, and clinical usefulness',
@@ -282,7 +282,7 @@ export const jobPostings: JobPosting[] = [
       'LLM application experience with grounding and safety',
       'MLOps and monitoring practice',
     ],
-    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%E2%80%94%20AI%20%2F%20ML%20Engineer',
+    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20AI%20%2F%20ML%20Engineer',
     status: 'placeholder',
   },
   {
@@ -294,7 +294,7 @@ export const jobPostings: JobPosting[] = [
     employmentType: 'Full-time',
     experience: '5+ years',
     description:
-      'Lead product direction for healthcare experiences — from problem framing to shipped outcomes that clinicians and patients can feel.',
+      'Lead product direction for healthcare experiences, from problem framing to shipped outcomes that clinicians and patients can feel.',
     responsibilities: [
       'Define roadmaps grounded in user need and business clarity',
       'Facilitate discovery with design, engineering, and domain experts',
@@ -312,18 +312,18 @@ export const jobPostings: JobPosting[] = [
       'Familiarity with clinical workflows',
       'Technical background that aids collaboration with engineering',
     ],
-    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%E2%80%94%20Product%20Manager',
+    applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Product%20Manager',
     status: 'placeholder',
   },
 ]
 
 export const gallerySlots: GallerySlot[] = [
-  { id: 'g1', label: 'Team workshop — photo placeholder', aspect: 'large' },
-  { id: 'g2', label: 'Desk detail — photo placeholder', aspect: 'square' },
-  { id: 'g3', label: 'Studio corner — photo placeholder', aspect: 'tall' },
-  { id: 'g4', label: 'Collaboration moment — photo placeholder', aspect: 'wide' },
-  { id: 'g5', label: 'Focus session — photo placeholder', aspect: 'square' },
-  { id: 'g6', label: 'Whiteboard session — photo placeholder', aspect: 'wide' },
+  { id: 'g1', label: 'Team workshop, photo placeholder', aspect: 'large' },
+  { id: 'g2', label: 'Desk detail, photo placeholder', aspect: 'square' },
+  { id: 'g3', label: 'Studio corner, photo placeholder', aspect: 'tall' },
+  { id: 'g4', label: 'Collaboration moment, photo placeholder', aspect: 'wide' },
+  { id: 'g5', label: 'Focus session, photo placeholder', aspect: 'square' },
+  { id: 'g6', label: 'Whiteboard session, photo placeholder', aspect: 'wide' },
 ]
 
 export const teamMembers: TeamMember[] = [

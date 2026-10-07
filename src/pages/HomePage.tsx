@@ -1,24 +1,26 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
+import { Approach } from '@/sections/home/Approach.tsx'
+import { CaseHighlight } from '@/sections/home/CaseHighlight.tsx'
 import { FactsSnapshot } from '@/sections/home/FactsSnapshot.tsx'
 import { FeaturedProjects } from '@/sections/home/FeaturedProjects.tsx'
-import { HealthcareExpertise } from '@/sections/home/HealthcareExpertise.tsx'
+import { FloatingScrollText } from '@/sections/home/FloatingScrollText.tsx'
 import { HowWeWork } from '@/sections/home/HowWeWork.tsx'
+import { PremiumHero } from '@/sections/home/PremiumHero.tsx'
 import { ServiceOrbit } from '@/sections/home/ServiceOrbit.tsx'
-import { LaptopZoomExperience } from '@/sections/home/laptop-zoom/LaptopZoomExperience.tsx'
-import { FloatingHero } from '@/sections/home/FloatingHero.tsx'
-import { Hero } from '@/sections/Hero.tsx'
+import { WhatWeDo } from '@/sections/home/WhatWeDo.tsx'
 
 export function HomePage() {
   return (
     <LazyMotion features={domAnimation}>
-      <main>
-        <FloatingHero />
-        <Hero />
-        <LaptopZoomExperience />
-        <HealthcareExpertise />
-        <ServiceOrbit />
+      <main className="bg-page-white">
+        <PremiumHero />
+        <WhatWeDo />
+        <Approach />
         <HowWeWork />
+        <FloatingScrollText />
+        <CaseHighlight />
         <FeaturedProjects />
+        <ServiceOrbit />
         <FactsSnapshot />
       </main>
     </LazyMotion>

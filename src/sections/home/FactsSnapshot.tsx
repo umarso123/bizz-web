@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 type FactCard = (typeof homeContent.facts.cards)[number]
 
 const scenes: Record<string, string> = {
-  focus: 'bg-[#17212B]',
+  focus: 'bg-page-dark',
   rating: 'bg-[#F7F6F4]',
   services: 'bg-[#0E1A24]',
 }
@@ -99,7 +99,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           className="pointer-events-none absolute inset-0 opacity-70"
           style={{
             background:
-              'radial-gradient(ellipse at 70% 28%, rgb(10 143 216 / 0.38), transparent 55%), radial-gradient(ellipse at 18% 78%, rgb(246 108 42 / 0.22), transparent 50%)',
+              'radial-gradient(ellipse at 70% 28%, rgb(47 91 234 / 0.38), transparent 55%), radial-gradient(ellipse at 18% 78%, rgb(245 200 76 / 0.22), transparent 50%)',
           }}
         />
       ) : null}
@@ -109,7 +109,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at 30% 20%, rgb(10 143 216 / 0.22), transparent 48%)',
+              'radial-gradient(ellipse at 30% 20%, rgb(47 91 234 / 0.22), transparent 48%)',
           }}
         />
       ) : null}
@@ -160,12 +160,12 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
         <span
           className={cn(
             'mt-[0.45em] size-1.5 shrink-0 rounded-full',
-            hasVideo || dark ? 'bg-[#F66C2A]' : 'bg-[#0A8FD8]',
+            hasVideo || dark ? 'bg-accent' : 'bg-brand',
           )}
           aria-hidden="true"
         />
         <span className="line-clamp-2 text-[0.92rem] leading-snug font-medium tracking-tight">
-          {lead} — {card.caption}
+          {lead}: {card.caption}
         </span>
       </p>
     </>
@@ -241,23 +241,23 @@ export function FactsSnapshot() {
       id="facts"
       ref={sectionRef}
       className={cn(
-        'relative overflow-x-clip bg-[#FFFFFF] [overflow-anchor:none]',
+        'relative overflow-x-clip bg-page-white [overflow-anchor:none]',
         reduced ? 'min-h-svh' : 'h-[280vh]',
       )}
       aria-labelledby="facts-title"
     >
       <div
         className={cn(
-          'flex flex-col justify-center overflow-x-clip bg-[#FFFFFF] sticky-section',
+          'flex flex-col justify-center overflow-x-clip bg-page-white sticky-section',
           reduced ? 'min-h-svh py-16' : 'sticky top-0 h-svh',
         )}
       >
         <Container variant="wide" className="relative w-full">
           <div className="mx-auto max-w-160 text-center">
-            <h2 id="facts-title" className="text-section-title text-[#171717]">
+            <h2 id="facts-title" className="text-section-title text-text">
               {copy.title}
             </h2>
-            <p className="mt-3 text-body text-[#171717]/65 md:mt-4">{copy.subtitle}</p>
+            <p className="mt-3 text-body text-text-secondary md:mt-4">{copy.subtitle}</p>
           </div>
         </Container>
 

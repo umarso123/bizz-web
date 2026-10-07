@@ -32,7 +32,7 @@ export function ConnectedExperiences() {
         <Container variant="page" className="relative w-full">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <m.div className="max-w-[34rem]" style={{ y: copyY, opacity: copyOpacity }}>
-              <Eyebrow tone="brand">CONNECTED HEALTHCARE EXPERIENCES</Eyebrow>
+              <Eyebrow>Connected healthcare experiences</Eyebrow>
               <h2 id="connected-experiences-title" className="mt-4 text-section-title">
                 Turning healthcare complexity into connected digital products.
               </h2>

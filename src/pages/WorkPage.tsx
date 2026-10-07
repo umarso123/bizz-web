@@ -1,0 +1,232 @@
+import { LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
+import { workBuiltContent, workIndustries, workPageContent, type WorkIndustry } from '@/content/work.ts'
+import { cn } from '@/lib/cn.ts'
+import { WorkStill } from '@/sections/work/WorkStill.tsx'
+
+const ease = [0.22, 1, 0.36, 1] as const
+
+type WorkFilter = 'All' | WorkIndustry
+
+const filters: WorkFilter[] = ['All', ...workIndustries]
+
+function ArrowMark() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
+      <path
+        d="M7 17 17 7M9 7h8v8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+/**
+ * Portfolio index on the paper field:
+ * centered title, industry filters, large media cards, then a story band.
+ */
+export function WorkPage() {
+  const reduced = useReducedMotion() === true
+  const copy = workPageContent
+  const [filter, setFilter] = useState<WorkFilter>('All')
+  const studies =
+    filter === 'All' ? copy.studies : copy.studies.filter((study) => study.industry === filter)
+
+  useEffect(() => {
+    const previous = document.title
+    document.title = 'Case studies · Bizaffix'
+    return () => {
+      document.title = previous
+    }
+  }, [])
+
+  return (
+    <LazyMotion features={domAnimation}>
+      <main className="relative -mt-(--header-clearance) bg-page-white text-text">
+        <section className="relative overflow-hidden pt-(--header-clearance)" aria-labelledby="work-title">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                'linear-gradient(to right, rgb(13 18 31 / 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgb(13 18 31 / 0.06) 1px, transparent 1px)',
+              backgroundSize: '72px 72px',
+              maskImage: 'radial-gradient(ellipse 80% 70% at 50% 30%, black 40%, transparent 100%)',
+            }}
+          />
+
+          <div className="relative z-10 mx-auto w-full max-w-[90rem] px-[clamp(1.5rem,4vw,4.5rem)] pt-14 pb-16 md:pt-20 md:pb-20">
+            <m.div
+              className="mx-auto max-w-3xl text-center"
+              initial={reduced ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease }}
+            >
+              <h1
+                id="work-title"
+                className="text-[clamp(3.25rem,1.6rem+6vw,6.25rem)] leading-[0.95] font-semibold tracking-[-0.045em]"
+              >
+                {copy.title}
+              </h1>
+              <p className="mx-auto mt-5 max-w-[34rem] text-[1.125rem] leading-relaxed text-text-secondary">
+                {copy.intro}
+              </p>
+            </m.div>
+
+            <div
+              role="group"
+              aria-label={copy.filtersLabel}
+              className="mx-auto mt-10 flex max-w-4xl flex-wrap justify-center gap-2 md:mt-12"
+            >
+              {filters.map((item) => {
+                const selected = item === filter
+                return (
+                  <button
+                    key={item}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setFilter(item)}
+                    className={cn(
+                      'inline-flex h-10 items-center rounded-full px-4 text-[0.9375rem] font-medium transition-colors',
+                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text',
+                      selected
+                        ? 'bg-button-primary text-text-inverse'
+                        : 'border border-border bg-surface text-text-secondary hover:bg-bg-muted',
+                    )}
+                  >
+                    {item}
+                  </button>
+                )
+              })}
+              <p className="sr-only" aria-live="polite">
+                {studies.length === 1 ? '1 case study' : `${studies.length} case studies`}
+              </p>
+            </div>
+
+            {studies.length === 0 ? (
+              <p className="mt-16 text-center text-text-secondary">{copy.emptyLabel}</p>
+            ) : (
+              <ul className="mt-10 grid gap-3 md:mt-12 md:grid-cols-2 md:gap-4">
+                {studies.map((study) => (
+                  <li key={study.slug}>
+                    <Link
+                      to={`/work/${study.slug}`}
+                      className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-surface text-text no-underline outline-none hover:text-text focus-visible:ring-2 focus-visible:ring-text focus-visible:ring-offset-2 focus-visible:ring-offset-page-white"
+                    >
+                      <div className="relative aspect-16/10">
+                        <WorkStill slug={study.slug} />
+                        <StudyPhoto src={study.image} alt="" />
+                        <span className="absolute bottom-4 left-4 inline-flex max-w-[calc(100%-5.5rem)] items-center gap-2 rounded-full bg-surface/90 px-3 py-1.5 text-[0.8125rem] font-medium text-text backdrop-blur-md">
+                          <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-text" />
+                          <span className="truncate">{study.category}</span>
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            'absolute right-4 bottom-4 grid size-11 place-items-center rounded-full shadow-[0_8px_20px_rgb(13_18_31/0.28)] transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none',
+                            'bg-button-primary text-text-inverse',
+                          )}
+                        >
+                          <ArrowMark />
+                        </span>
+                      </div>
+                      <div className="px-6 pt-5 pb-6">
+                        <h2 className="text-[1.65rem] leading-tight font-semibold tracking-[-0.03em] text-text">
+                          {study.title}
+                        </h2>
+                        <p className="mt-2 max-w-[48ch] text-[1.02rem] leading-relaxed text-text-secondary">
+                          {study.summary}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+
+        <section className="bg-page-white text-text" aria-labelledby="built-title">
+          <div className="mx-auto w-full max-w-[90rem] px-[clamp(1.5rem,4vw,4.5rem)] py-16 md:py-24">
+            <div>
+              <h2
+                id="built-title"
+                className="max-w-[9em] font-[Iowan_Old_Style,Palatino_Linotype,Palatino,Georgia,serif] text-[clamp(2.8rem,1.4rem+4vw,5rem)] leading-[0.98] font-medium tracking-[-0.03em] wrap-normal"
+              >
+                {workBuiltContent.title}
+              </h2>
+              <p className="mt-5 max-w-[36ch] text-body-large text-text-secondary wrap-normal">{workBuiltContent.lede}</p>
+            </div>
+
+            <ul className="mt-10 grid gap-4 md:mt-12 md:grid-cols-[1.15fr_0.85fr] md:gap-5">
+              {workBuiltContent.stories.map((story) => {
+                const paper = story.tone === 'blue'
+                return (
+                  <li key={story.slug}>
+                    <Link
+                      to={`/work/${story.slug}`}
+                      className={cn(
+                        'group flex h-full min-h-[28rem] flex-col justify-between rounded-[1.75rem] p-7 no-underline outline-none md:min-h-[32rem] md:p-9',
+                        'text-text hover:text-text focus-visible:ring-2 focus-visible:ring-text focus-visible:ring-offset-2',
+                        paper ? 'border border-border bg-surface' : 'bg-bg-muted',
+                      )}
+                    >
+                      <div className="flex justify-end">
+                        <span
+                          className={cn(
+                            'rounded-full px-3 py-1 text-[0.8125rem] font-medium text-text-secondary',
+                            paper ? 'bg-bg-muted' : 'bg-surface',
+                          )}
+                        >
+                          {story.industry}
+                        </span>
+                      </div>
+                      <p className="max-w-[10ch] text-[clamp(2.6rem,1.5rem+2.6vw,4rem)] leading-[0.96] font-semibold tracking-[-0.045em]">
+                        {story.title}
+                      </p>
+                      <div className="flex items-end justify-between gap-6">
+                        <p className="min-w-0 flex-1 text-[1.02rem] leading-relaxed text-text-secondary">
+                          {story.body}
+                        </p>
+                        <span
+                          aria-hidden="true"
+                          className="grid size-11 shrink-0 place-items-center rounded-full bg-button-primary text-text-inverse transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
+                        >
+                          <ArrowMark />
+                        </span>
+                      </div>
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        </section>
+      </main>
+    </LazyMotion>
+  )
+}
+
+function StudyPhoto({ src, alt }: { src: string | null; alt: string }) {
+  const [visible, setVisible] = useState(false)
+
+  if (!src) return null
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={cn(
+        'pointer-events-none absolute inset-0 h-full w-full object-cover',
+        visible ? 'opacity-100' : 'opacity-0',
+      )}
+      onLoad={() => setVisible(true)}
+      onError={() => setVisible(false)}
+    />
+  )
+}

@@ -34,16 +34,16 @@ export function ConnectBanner() {
       <div className="mx-auto w-full max-w-[96rem] px-(--page-gutter)">
         <Link
           to={bookCall.to}
-          className="flex flex-col items-start gap-6 rounded-[2.75rem] bg-[#F66C2A] px-7 py-7 no-underline transition-transform duration-300 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between sm:rounded-full sm:px-10 sm:py-8 md:px-14 md:py-9"
+          className="flex flex-col items-start gap-6 rounded-[2.75rem] bg-brand px-7 py-7 no-underline transition-transform duration-300 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between sm:rounded-full sm:px-10 sm:py-8 md:px-14 md:py-9"
         >
-          <p className="max-w-[46rem] text-[clamp(1.45rem,2.5vw,2.55rem)] leading-[1.05] font-bold tracking-[-0.03em] text-[#fff] uppercase">
+          <p className="max-w-[46rem] text-[clamp(1.45rem,2.5vw,2.55rem)] leading-[1.05] font-bold tracking-tighter text-white uppercase">
             Want to collaborate? Reach out to us. Let’s connect.
           </p>
           <span className="relative grid size-28 shrink-0 place-items-center sm:size-32 md:size-36">
             <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
-              <path d={scallop} fill="#0A8FD8" />
+              <path d={scallop} fill="#F5C84C" />
             </svg>
-            <span className="relative px-4 text-center text-[0.78rem] leading-[1.05] font-bold tracking-[-0.03em] text-[#fff] uppercase md:text-[0.9rem]">
+            <span className="relative px-4 text-center text-[0.78rem] leading-[1.05] font-bold tracking-tighter text-text uppercase md:text-[0.9rem]">
               Book
               <br />
               a call

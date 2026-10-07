@@ -79,7 +79,7 @@ export function JobDetail({ job }: { job: JobPosting }) {
           <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-16">
             <div>
               <Reveal>
-                <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+                <Eyebrow>
                   {job.department}
                 </Eyebrow>
                 <h1 className="mt-4 text-[clamp(2.25rem,1.4rem+2.4vw,3.75rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-text">
@@ -98,7 +98,7 @@ export function JobDetail({ job }: { job: JobPosting }) {
                 </p>
                 {job.status === 'placeholder' ? (
                   <p className="mt-4 text-body-small text-text-muted">
-                    Example role listing — replace with a live opening when available.
+                    Example role listing. Replace with a live opening when available.
                   </p>
                 ) : null}
               </Reveal>

@@ -11,6 +11,7 @@ import {
 } from 'framer-motion'
 import { useId, useRef, useState } from 'react'
 import { Container } from '@/components/layout/Container.tsx'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { homeContent } from '@/content/home.ts'
 import { useMediaQuery } from '@/sections/home/homeJourney.ts'
 import { cn } from '@/lib/cn.ts'
@@ -431,9 +432,7 @@ function ReducedWhatWeBuild() {
       aria-labelledby="what-we-build-title"
     >
       <Container variant="page" className="relative z-10 w-full">
-        <p className="text-[0.75rem] font-semibold tracking-[0.14em] text-[#0A8FD8] uppercase">
-          {copy.eyebrow}
-        </p>
+        <Eyebrow>{copy.eyebrow}</Eyebrow>
         <p className="mt-3 max-w-[36rem] text-body-large text-[#4B5965]">{copy.body}</p>
 
         <div className="mt-12 grid items-center gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">

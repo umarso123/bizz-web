@@ -43,7 +43,7 @@ export function WorkProcess() {
     return (
       <section className="bg-page-white py-24 md:py-32" aria-labelledby="how-we-work-title">
         <Container variant="page" className="w-full">
-          <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+          <Eyebrow>
             {careersCopy.process.eyebrow}
           </Eyebrow>
           <h2
@@ -86,7 +86,7 @@ export function WorkProcess() {
     >
       <div className="sticky top-0 flex min-h-svh flex-col justify-center overflow-hidden py-20">
         <Container variant="page" className="relative z-10 w-full">
-          <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+          <Eyebrow>
             {careersCopy.process.eyebrow}
           </Eyebrow>
           <div className="mt-4 flex flex-wrap items-end justify-between gap-6">

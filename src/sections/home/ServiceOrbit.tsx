@@ -9,6 +9,7 @@ import {
 import { useId, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { servicesPage } from '@/content/services.ts'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { useMediaQuery } from '@/sections/home/homeJourney.ts'
 
 const services = servicesPage.services
@@ -39,7 +40,7 @@ function ServiceMark({ kind }: { kind: (typeof services)[number]['id'] }) {
     <svg viewBox="0 0 640 640" className="h-full w-full" aria-hidden="true">
       <defs>
         <filter id={soft} x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="22" stdDeviation="16" floodColor="#17212B" floodOpacity="0.16" />
+          <feDropShadow dx="0" dy="22" stdDeviation="16" floodColor="#0d121f" floodOpacity="0.16" />
         </filter>
       </defs>
       <g filter={`url(#${soft})`} fill="#E8E7E4" stroke="#C9C7C2" strokeWidth="2.5">
@@ -168,7 +169,7 @@ function ArcNumber({
       <div className="relative -translate-x-1/2 -translate-y-1/2">
         <m.span
           style={{ opacity: dot }}
-          className="absolute top-1/2 right-[calc(100%+0.85rem)] size-2.5 -translate-y-1/2 rounded-full bg-[#F66C2A]"
+          className="absolute top-1/2 right-[calc(100%+0.85rem)] size-2.5 -translate-y-1/2 rounded-full bg-accent"
         />
         <m.span
           style={{ color }}
@@ -326,9 +327,9 @@ export function ServiceOrbit() {
           className="absolute top-[34%] left-0 z-20 flex h-48 w-12 -translate-y-1/2 flex-col items-center bg-page-dark pt-3.5 text-[#fff]"
         >
           <span className="text-[1.15rem] leading-none font-medium font-[Georgia,Palatino,serif]">S.</span>
-          <span className="mt-4 text-[0.68rem] font-semibold tracking-[0.18em] uppercase [writing-mode:vertical-rl] rotate-180">
+          <Eyebrow as="span" inverse className="mt-4 [writing-mode:vertical-rl] rotate-180">
             Services
-          </span>
+          </Eyebrow>
         </div>
 
         {services.map((item, index) => (

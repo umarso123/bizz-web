@@ -1,171 +1,196 @@
-import {
-  AnimatePresence,
-  m,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from 'framer-motion'
-import { useRef, useState } from 'react'
+import { m, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
+import { useCallback, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { Container } from '@/components/layout/Container.tsx'
 import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { homeContent } from '@/content/home.ts'
-import { useMediaQuery } from '@/sections/home/homeJourney.ts'
 import { cn } from '@/lib/cn.ts'
 
+type Stage = (typeof homeContent.process.stages)[number]
+
+function StageImage({ stage, visible }: { stage: Stage; visible: boolean }) {
+  const [failed, setFailed] = useState(false)
+
+  return (
+    <div
+      className={cn(
+        'relative h-full w-full overflow-hidden rounded-2xl bg-brand-soft shadow-lg ring-1 ring-border-subtle',
+        !visible && 'opacity-0',
+      )}
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background: `
+            linear-gradient(145deg, #e8eefc 0%, #fef6d8 48%, #d9e3fb 100%)
+          `,
+        }}
+      />
+      {!failed ? (
+        <img
+          src={stage.image}
+          alt={stage.alt}
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
+          <p className="text-[0.7rem] font-semibold tracking-[0.16em] text-brand uppercase">
+            {stage.number}
+          </p>
+          <p className="text-[1.15rem] font-bold tracking-tight text-text">{stage.title}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/**
+ * Focus-areas style process list.
+ * Hover a row → dim siblings, reveal a floating image that follows the cursor.
+ */
 export function HowWeWork() {
   const reduced = useReducedMotion() === true
-  const desktop = useMediaQuery('(min-width: 960px)')
-  const ref = useRef<HTMLElement>(null)
-  const stages = homeContent.process.stages
   const copy = homeContent.process
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end end'],
-  })
+  const stages = copy.stages
+  const listRef = useRef<HTMLDivElement>(null)
+
   const [active, setActive] = useState(0)
-  const x = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ['0%', `-${((stages.length - 1) / stages.length) * 100}%`],
+  const [hovering, setHovering] = useState(false)
+
+  const rawX = useMotionValue(0)
+  const rawY = useMotionValue(0)
+  const x = useSpring(rawX, { stiffness: 280, damping: 28, mass: 0.4 })
+  const y = useSpring(rawY, { stiffness: 280, damping: 28, mass: 0.4 })
+
+  const onListMove = useCallback(
+    (event: ReactPointerEvent<HTMLDivElement>) => {
+      if (reduced) return
+      const root = listRef.current
+      if (!root) return
+      const rect = root.getBoundingClientRect()
+      rawX.set(event.clientX - rect.left + 28)
+      rawY.set(event.clientY - rect.top - 120)
+    },
+    [rawX, rawY, reduced],
   )
-  const pathDraw = useTransform(scrollYProgress, [0, 1], [0.08, 1])
-  const markerX = useTransform(scrollYProgress, [0, 1], ['12%', '78%'])
-
-  useMotionValueEvent(scrollYProgress, 'change', (value) => {
-    setActive(Math.min(stages.length - 1, Math.max(0, Math.round(value * (stages.length - 1)))))
-  })
-
-  if (!desktop || reduced) {
-    return (
-      <section id="how-we-work" className="relative bg-page-white section-y" aria-labelledby="process-title">
-        <Container variant="page" className="relative w-full">
-          <Eyebrow tone="brand">{copy.eyebrow}</Eyebrow>
-          <h2 id="process-title" className="mt-4 text-section-title text-text">
-            {copy.title}
-          </h2>
-          <p className="mt-5 max-w-[40rem] text-body-large text-text-secondary">{copy.body}</p>
-          <ol className="mt-12 space-y-4">
-            {stages.map((stage, index) => (
-              <li
-                key={stage.number}
-                className={cn(
-                  'rounded-xl border p-6 shadow-card transition-shadow hover:shadow-card-hover md:grid md:grid-cols-[5.5rem_minmax(0,1fr)] md:items-start md:gap-8 md:p-8',
-                  index % 2 === 0
-                    ? 'border-brand/25 bg-surface'
-                    : 'border-[#F66C2A]/25 bg-page-white',
-                )}
-              >
-                <p className="text-[clamp(2rem,1.5rem+1vw,2.75rem)] leading-none font-semibold tracking-[-0.03em] text-brand">
-                  {stage.number}
-                </p>
-                <div>
-                  <h3 className="text-title text-text">{stage.title}</h3>
-                  <p className="mt-3 max-w-[36rem] text-body text-text-secondary">{stage.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </section>
-    )
-  }
 
   return (
     <section
       id="how-we-work"
-      ref={ref}
-      className="relative h-[360vh] bg-page-white"
-      aria-labelledby="process-title"
+      className="relative overflow-x-clip bg-surface section-y"
+      aria-labelledby="how-we-work-title"
     >
-      <div className="sticky top-0 flex h-svh flex-col justify-center overflow-hidden sticky-section">
-        <Container variant="page" className="relative z-10 w-full">
-          <Eyebrow tone="brand">{copy.eyebrow}</Eyebrow>
-          <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-end">
-            <div>
-              <h2 id="process-title" className="text-section-title text-text">
-                {copy.title}
-              </h2>
-              <p className="mt-4 max-w-[34rem] text-body text-text-secondary">{copy.body}</p>
-            </div>
-            <AnimatePresence mode="wait">
-              <m.div
-                key={stages[active]?.number}
-                className="rounded-xl border border-brand/20 bg-surface/90 p-5 shadow-card backdrop-blur-md"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-caption font-semibold text-brand-hover">
-                  {stages[active]?.number} · {stages[active]?.title}
-                </p>
-                <p className="mt-2 text-body text-text-secondary">{stages[active]?.body}</p>
-              </m.div>
-            </AnimatePresence>
-          </div>
-        </Container>
+      <Container variant="wide" className="relative w-full">
+        <Eyebrow>{copy.eyebrow}</Eyebrow>
+        <h2 id="how-we-work-title" className="sr-only">
+          {copy.title}
+        </h2>
 
-        <div className="relative mt-12 overflow-hidden">
-          <div className="pointer-events-none absolute top-[48%] right-[8%] left-[8%] h-1.5 -translate-y-1/2 rounded-full bg-brand/15">
+        <div
+          ref={listRef}
+          className="relative mt-10 md:mt-12"
+          onPointerMove={onListMove}
+          onPointerLeave={() => setHovering(false)}
+        >
+          {/* Floating hover image — desktop */}
+          {!reduced ? (
             <m.div
-              className="h-full origin-left rounded-full bg-brand"
-              style={{ scaleX: pathDraw }}
-            />
-          </div>
-          <m.span
-            aria-hidden="true"
-            className="absolute top-[48%] z-20 size-4 -translate-y-1/2 rounded-full border-[3px] border-white bg-[#F66C2A] shadow-md"
-            style={{ left: markerX }}
-          />
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 left-0 z-20 hidden h-[11.5rem] w-[16rem] md:block lg:h-[13.5rem] lg:w-[19rem]"
+              style={{ x, y }}
+            >
+              <m.div
+                className="h-full w-full"
+                animate={{
+                  opacity: hovering ? 1 : 0,
+                  scale: hovering ? 1 : 0.92,
+                  rotate: hovering ? -2.5 : 0,
+                }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <StageImage stage={stages[active] ?? stages[0]} visible={hovering} />
+              </m.div>
+            </m.div>
+          ) : null}
 
-          <m.div
-            className="flex w-max gap-5 will-change-transform"
-            style={{
-              x,
-              paddingInline: 'max(var(--page-gutter), 2.5rem)',
-            }}
-          >
+          <ul className="border-t border-border">
             {stages.map((stage, index) => {
-              const on = index === active
+              const isActive = hovering ? index === active : index === 0
+              const dimmed = hovering && index !== active
+
               return (
-                <article
-                  key={stage.number}
-                  className={cn(
-                    'relative flex w-[min(18.5rem,52vw)] shrink-0 flex-col justify-center rounded-2xl border px-7 py-8 transition-all duration-500',
-                    on
-                      ? 'border-brand/35 bg-surface shadow-card-hover'
-                      : 'border-border/80 bg-surface/80 shadow-card opacity-70',
-                  )}
-                >
-                  <p
+                <li key={stage.number} className="border-b border-border">
+                  <button
+                    type="button"
                     className={cn(
-                      'text-[clamp(2.75rem,2rem+1.5vw,4rem)] leading-none font-semibold tracking-[-0.04em]',
-                      on ? 'text-brand' : 'text-brand/40',
+                      'grid w-full grid-cols-1 items-center gap-4 py-7 text-left transition-colors duration-300 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1.4fr)] md:gap-8 md:py-8 lg:py-9',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2',
                     )}
+                    onPointerEnter={() => {
+                      setActive(index)
+                      setHovering(true)
+                    }}
+                    onFocus={() => {
+                      setActive(index)
+                      setHovering(true)
+                    }}
+                    onClick={() => {
+                      setActive(index)
+                      setHovering(true)
+                    }}
                   >
-                    {stage.number}
-                  </p>
-                  <h3
-                    className={cn(
-                      'mt-4 text-[clamp(1.5rem,1.2rem+0.8vw,2rem)] leading-none font-semibold tracking-[-0.03em]',
-                      on ? 'text-text' : 'text-text-muted',
-                    )}
-                  >
-                    {stage.title}
-                  </h3>
-                  {on ? (
                     <span
-                      aria-hidden="true"
-                      className="mt-6 block h-1 w-14 rounded-full bg-brand"
-                    />
-                  ) : null}
-                </article>
+                      className={cn(
+                        'text-[clamp(1.85rem,1.35rem+1.8vw,3.35rem)] leading-none font-semibold tracking-tighter transition-colors duration-300',
+                        dimmed ? 'text-text/22' : 'text-text',
+                        !hovering && index !== 0 && 'text-text/28',
+                        isActive && 'text-text',
+                      )}
+                    >
+                      {stage.title}
+                    </span>
+
+                    <span
+                      className={cn(
+                        'grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-4 transition-colors duration-300',
+                        dimmed ? 'text-text/20' : 'text-text-secondary',
+                        !hovering && index !== 0 && 'text-text/25',
+                        isActive && 'text-text-secondary',
+                      )}
+                    >
+                      {stage.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[0.68rem] font-semibold tracking-[0.14em] uppercase md:text-[0.72rem]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </span>
+                  </button>
+
+                  {/* Mobile / reduced: inline image under active row */}
+                  <div
+                    className={cn(
+                      'overflow-hidden transition-[max-height,opacity] duration-400 md:hidden',
+                      index === active ? 'max-h-56 opacity-100 pb-6' : 'max-h-0 opacity-0',
+                    )}
+                  >
+                    <div className="aspect-16/10 max-w-sm overflow-hidden rounded-2xl">
+                      <StageImage stage={stage} visible={index === active} />
+                    </div>
+                    <p className="mt-3 max-w-md text-body-small text-text-secondary">{stage.body}</p>
+                  </div>
+                </li>
               )
             })}
-          </m.div>
+          </ul>
         </div>
-      </div>
+      </Container>
     </section>
   )
 }

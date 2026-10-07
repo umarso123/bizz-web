@@ -27,15 +27,15 @@ export function BackgroundAtmosphere({
       >
         <defs>
           <linearGradient id="lz-orange-line" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#F66C2A" stopOpacity="0" />
-            <stop offset="30%" stopColor="#F66C2A" stopOpacity="0.55" />
-            <stop offset="70%" stopColor="#F66C2A" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#F66C2A" stopOpacity="0" />
+            <stop offset="0%" stopColor="#f5c84c" stopOpacity="0" />
+            <stop offset="30%" stopColor="#f5c84c" stopOpacity="0.55" />
+            <stop offset="70%" stopColor="#f5c84c" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#f5c84c" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="lz-blue-line" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#0A8FD8" stopOpacity="0" />
-            <stop offset="45%" stopColor="#0A8FD8" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#0A8FD8" stopOpacity="0" />
+            <stop offset="0%" stopColor="#2f5bea" stopOpacity="0" />
+            <stop offset="45%" stopColor="#2f5bea" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#2f5bea" stopOpacity="0" />
           </linearGradient>
         </defs>
         <m.path
@@ -67,7 +67,7 @@ export function BackgroundAtmosphere({
             cx={cx}
             cy={cy}
             r={2.5}
-            fill={i % 2 === 0 ? '#F66C2A' : '#0A8FD8'}
+            fill={i % 2 === 0 ? '#f5c84c' : '#2f5bea'}
             animate={reduced ? undefined : { opacity: [0.35, 0.9, 0.35] }}
             transition={
               reduced ? undefined : { duration: 3 + i * 0.3, repeat: Infinity, ease: 'easeInOut' }

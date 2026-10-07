@@ -131,9 +131,7 @@ export function ServicesPage() {
                 </m.div>
               </div>
               <Reveal delay={0.1}>
-                <p className="text-eyebrow text-text-muted uppercase tracking-[0.12em]">
-                  From idea to reality
-                </p>
+                <Eyebrow>From idea to reality</Eyebrow>
                 <p className="mt-4 text-title text-text">{servicesPage.intro.title}</p>
                 <p className="mt-4 text-body text-text-secondary">{servicesPage.intro.body}</p>
               </Reveal>

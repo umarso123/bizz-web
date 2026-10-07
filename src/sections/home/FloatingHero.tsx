@@ -9,17 +9,16 @@ import { homeContent } from '@/content/home.ts'
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 /** The zoomed sticker opens into this color, and the following hero uses it as its background. */
-export const floatingPortalColor = '#E8F5FC'
+export const floatingPortalColor = '#e8eefc'
 
-const line = '#F66C2A'
-const ink = '#17212b'
-const type = '#E8F5FC'
-const brand = '#0A8FD8'
-const brandDeep = '#087BB9'
+const line = '#f5c84c'
+const ink = '#0d121f'
+const type = '#eef2fc'
+const brand = '#2f5bea'
+const brandDeep = '#2549c9'
 
-const titleWords = homeContent.hero.title.split(' ')
-const lineOne = titleWords.slice(0, 2).join(' ')
-const lineTwo = titleWords.slice(2).join(' ')
+const lineOne = `${homeContent.hero.titleLead} ${homeContent.hero.titleMid}`
+const lineTwo = `${homeContent.hero.titleEnd} ${homeContent.hero.titleAccent}`
 
 export function FloatingHero() {
   const rootRef = useRef<HTMLElement>(null)
@@ -124,7 +123,7 @@ export function FloatingHero() {
     <>
     <section
       ref={rootRef}
-      className={`relative -mt-(--header-clearance) bg-[#17212B] ${reduced ? 'min-h-svh' : 'h-[380vh]'}`}
+      className={`relative -mt-(--header-clearance) bg-page-dark ${reduced ? 'min-h-svh' : 'h-[380vh]'}`}
     >
       <div ref={stageRef} className="sticky top-0 h-svh overflow-hidden">
         <div
@@ -133,7 +132,7 @@ export function FloatingHero() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at 50% 46%, rgb(10 143 216 / 0.38), transparent 58%)',
+              'radial-gradient(ellipse at 50% 46%, rgb(47 91 234 / 0.38), transparent 58%)',
           }}
         />
 
@@ -171,7 +170,7 @@ export function FloatingHero() {
             className="grid size-[6.6rem] place-items-center px-3 text-center shadow-lg max-sm:size-[5.4rem]"
             style={{
               background: line,
-              color: '#ffffff',
+              color: ink,
               borderRadius: '58% 42% 60% 40% / 40% 58% 42% 60%',
             }}
           >
@@ -230,7 +229,7 @@ export function FloatingHero() {
             data-zoom-label
             className="absolute inset-0 grid place-items-center rounded-full px-3 text-center shadow-lg ring-2 ring-[#ffffff]/70"
           >
-            <span className="text-[1.02rem] leading-tight font-bold text-[#17212b] max-sm:text-[0.85rem]">
+            <span className="text-[1.02rem] leading-tight font-bold text-text max-sm:text-[0.85rem]">
               Healthcare
             </span>
           </div>
@@ -246,14 +245,14 @@ export function FloatingHero() {
           </span>
           <Link
             to={bookCall.to}
-            className="rounded-full px-4 py-2 text-[0.8125rem] font-semibold whitespace-nowrap no-underline shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-[#F66C2A] sm:text-[0.875rem]"
+            className="rounded-full px-4 py-2 text-[0.8125rem] font-semibold whitespace-nowrap no-underline shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-[0.875rem]"
             style={{ backgroundColor: line, color: ink, textDecoration: 'none' }}
           >
             {homeContent.hero.primaryCta}
           </Link>
           <Link
-            to="/work"
-            className="rounded-full px-3 py-2 text-[0.8125rem] font-medium whitespace-nowrap no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#F66C2A] sm:text-[0.875rem]"
+            to="/#featured-projects"
+            className="rounded-full px-3 py-2 text-[0.8125rem] font-medium whitespace-nowrap no-underline outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-[0.875rem]"
             style={{ color: '#ffffff', textDecoration: 'none' }}
           >
             {homeContent.hero.secondaryCta}
@@ -304,12 +303,12 @@ function HealthcareFocus({ visible = false }: { visible?: boolean }) {
       style={visible ? undefined : { backgroundColor: floatingPortalColor, clipPath: 'circle(0px at 30% 80%)' }}
     >
       <div>
-        <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#17212b]/10 bg-[#ffffff]/70 px-3 py-1 text-[0.75rem] font-semibold tracking-[0.14em] text-[#17212b] uppercase">
+        <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-text/10 bg-[#ffffff]/70 px-3 py-1 text-[0.75rem] font-semibold tracking-[0.14em] text-text uppercase">
           <span className="size-1.5 rounded-full" style={{ background: line }} />
           Healthcare
         </p>
         <h2
-          className="max-w-[12ch] leading-[0.96] font-semibold tracking-[-0.045em] text-[#17212b]"
+          className="max-w-[12ch] leading-[0.96] font-semibold tracking-[-0.045em] text-text"
           style={{ fontSize: 'clamp(2.35rem, 4.2vw, 4.4rem)' }}
         >
           We specialize
@@ -322,7 +321,7 @@ function HealthcareFocus({ visible = false }: { visible?: boolean }) {
           <p
             key={item.label}
             data-float
-            className={`absolute max-w-[14rem] text-[clamp(0.88rem,1.15vw,1.2rem)] leading-tight font-semibold tracking-[-0.03em] text-[#17212b] max-sm:max-w-[11rem] ${item.className}`}
+            className={`absolute max-w-[14rem] text-[clamp(0.88rem,1.15vw,1.2rem)] leading-tight font-semibold tracking-[-0.03em] text-text max-sm:max-w-[11rem] ${item.className}`}
             style={{ opacity: item.opacity }}
           >
             <span

@@ -26,7 +26,7 @@ export function WhyBizaffixIntro() {
         aria-hidden="true"
       />
       <Container variant="page" className="relative w-full">
-        <Eyebrow tone="brand" className="uppercase tracking-[0.14em]">
+        <Eyebrow>
           {careersCopy.why.eyebrow}
         </Eyebrow>
 

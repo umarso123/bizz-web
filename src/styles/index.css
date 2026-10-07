@@ -1,16 +1,15 @@
-@import '@fontsource-variable/geist/wght.css';
+@import '@fontsource-variable/plus-jakarta-sans/wght.css';
 @import 'lenis/dist/lenis.css';
 @import 'tailwindcss' source('..');
 @import './theme.css';
 @import './base.css';
 
-/* Ink tank reads these as hex. Accent is the brand blue, used only where the pointer stirs. */
 :root {
-  --background: #ffffff;
-  --foreground: #17212b;
-  --border: #e4e9ed;
-  --ns-muted: #4d4d4d;
-  --ns-accent: #0a8fd8;
+  --background: #fbf7f2;
+  --foreground: #0d121f;
+  --border: #e4ddd4;
+  --ns-muted: #5a6472;
+  --ns-accent: #2f5bea;
 }
 
 @theme inline {
