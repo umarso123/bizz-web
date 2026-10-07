@@ -71,15 +71,28 @@ function placeCards(cards: HTMLElement[], focus: number) {
   })
 }
 
-function CardFace({ card }: { card: FactCard }) {
+function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
   const dark = card.tone === 'dark'
+  const hasVideo = typeof card.media === 'string' && card.media.length > 0
   const lead = card.title ?? card.eyebrow
-  const ink = dark ? 'text-white' : 'text-[#171717]'
-  const mute = dark ? 'text-white/70' : 'text-[#171717]/60'
+  const ink = hasVideo || dark ? 'text-white' : 'text-[#171717]'
+  const mute = hasVideo || dark ? 'text-white/70' : 'text-[#171717]/60'
 
   return (
     <>
       <div className={cn('absolute inset-0', scenes[card.id] ?? scenes.focus)} aria-hidden="true" />
+      {hasVideo ? (
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          src={card.media}
+          autoPlay={!reduced}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
+      ) : null}
       {card.id === 'focus' ? (
         <div
           aria-hidden="true"
@@ -98,6 +111,12 @@ function CardFace({ card }: { card: FactCard }) {
             background:
               'radial-gradient(ellipse at 30% 20%, rgb(10 143 216 / 0.22), transparent 48%)',
           }}
+        />
+      ) : null}
+      {hasVideo ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(23_33_43/0.15)_0%,rgb(23_33_43/0.45)_55%,rgb(23_33_43/0.78)_100%)]"
         />
       ) : null}
 
@@ -126,7 +145,7 @@ function CardFace({ card }: { card: FactCard }) {
       <div
         className={cn(
           'pointer-events-none absolute inset-x-0 bottom-0 h-28',
-          dark
+          hasVideo || dark
             ? 'bg-gradient-to-t from-[#0A121A] via-[#0A121A]/70 to-transparent'
             : 'bg-gradient-to-t from-[#F7F6F4] via-[#F7F6F4]/80 to-transparent',
         )}
@@ -135,11 +154,14 @@ function CardFace({ card }: { card: FactCard }) {
       <p
         className={cn(
           'absolute inset-x-0 bottom-0 z-10 flex items-start gap-2.5 px-5 pb-5 md:px-6 md:pb-6',
-          dark ? 'text-white' : 'text-[#171717]',
+          hasVideo || dark ? 'text-white' : 'text-[#171717]',
         )}
       >
         <span
-          className={cn('mt-[0.45em] size-1.5 shrink-0 rounded-full', dark ? 'bg-[#F66C2A]' : 'bg-[#0A8FD8]')}
+          className={cn(
+            'mt-[0.45em] size-1.5 shrink-0 rounded-full',
+            hasVideo || dark ? 'bg-[#F66C2A]' : 'bg-[#0A8FD8]',
+          )}
           aria-hidden="true"
         />
         <span className="line-clamp-2 text-[0.92rem] leading-snug font-medium tracking-tight">
@@ -249,7 +271,7 @@ export function FactsSnapshot() {
                 transform: `translate(-50%, -50%) scale(${index === 0 ? 1 : 0.88})`,
               }}
             >
-              <CardFace card={card} />
+              <CardFace card={card} reduced={reduced} />
             </article>
           ))}
         </div>

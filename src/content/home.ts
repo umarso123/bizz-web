@@ -167,7 +167,7 @@ export const homeContent = {
         title: null,
         caption: 'Stated rating on the previous Bizaffix site.',
         value: '5/5',
-        media: null,
+        media: '/videos/facts/Lion_explaining_with_hand_gestures_20261005173923.mp4',
       },
       {
         id: 'services',
