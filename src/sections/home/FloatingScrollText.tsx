@@ -115,7 +115,7 @@ export function FloatingScrollText() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 50% 45% at 15% 50%, rgb(201 215 248 / 0.45), transparent 55%), radial-gradient(ellipse 40% 40% at 85% 50%, rgb(254 246 216 / 0.4), transparent 50%)',
+              'radial-gradient(ellipse 50% 45% at 15% 50%, rgb(186 206 255 / 0.45), transparent 55%), radial-gradient(ellipse 40% 40% at 85% 50%, rgb(196 186 255 / 0.28), transparent 50%)',
           }}
         />
 

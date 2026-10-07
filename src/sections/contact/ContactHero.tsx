@@ -4,7 +4,7 @@ import { StaticMeridian } from '@/sections/contact/ContactVisual.tsx'
 
 export function ContactHero() {
   return (
-    <section data-scene="hero" className="relative -mt-(--header-clearance) min-h-svh overflow-hidden bg-page-white">
+    <section data-scene="hero" className="atmosphere-hero relative -mt-(--header-clearance) min-h-svh overflow-hidden">
 
       <div className="relative z-20 flex min-h-svh flex-col justify-end pt-(--header-clearance) pb-[30vh]">
         <div className={contactFrame}>
@@ -16,7 +16,7 @@ export function ContactHero() {
             >
               {contactIntro.titleLead}
               <br />
-              {contactIntro.titleRest}
+              <span className="text-brand">{contactIntro.titleRest}</span>
             </h1>
             <div className="motion-safe:hidden">
               <StaticMeridian />

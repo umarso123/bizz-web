@@ -1,5 +1,4 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
-import { Approach } from '@/sections/home/Approach.tsx'
 import { CaseHighlight } from '@/sections/home/CaseHighlight.tsx'
 import { FactsSnapshot } from '@/sections/home/FactsSnapshot.tsx'
 import { FeaturedProjects } from '@/sections/home/FeaturedProjects.tsx'
@@ -15,7 +14,6 @@ export function HomePage() {
       <main className="bg-page-white">
         <PremiumHero />
         <WhatWeDo />
-        <Approach />
         <HowWeWork />
         <FloatingScrollText />
         <CaseHighlight />

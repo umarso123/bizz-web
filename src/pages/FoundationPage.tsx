@@ -195,11 +195,11 @@ export function FoundationPage() {
               <Swatch name="Subtle" value="#F8FAFC" className="bg-bg-subtle" />
               <Swatch name="Muted surface" value="#F4F7F9" className="bg-bg-muted" />
               <Swatch name="Warm" value="#FAF8F4" className="bg-surface-warm" />
-              <Swatch name="Brand" value="#0A8FD8" className="bg-brand" />
-              <Swatch name="Brand hover" value="#087BB9" className="bg-brand-hover" />
-              <Swatch name="Brand active" value="#06699E" className="bg-brand-active" />
-              <Swatch name="Brand soft" value="#EAF6FC" className="bg-brand-soft" />
-              <Swatch name="Brand subtle" value="#F3F9FC" className="bg-brand-subtle" />
+              <Swatch name="Brand" value="#2F5BEA" className="bg-brand" />
+              <Swatch name="Brand hover" value="#2549C9" className="bg-brand-hover" />
+              <Swatch name="Brand active" value="#1E3DB0" className="bg-brand-active" />
+              <Swatch name="Brand soft" value="#E8EEFC" className="bg-brand-soft" />
+              <Swatch name="Brand subtle" value="#D9E3FB" className="bg-brand-subtle" />
               <Swatch name="Success soft" value="#EDF8F2" className="bg-success-soft" />
               <Swatch name="Warning soft" value="#FFF6E8" className="bg-warning-soft" />
               <Swatch name="Error soft" value="#FFF0F1" className="bg-error-soft" />

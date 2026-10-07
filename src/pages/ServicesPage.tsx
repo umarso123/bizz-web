@@ -49,7 +49,7 @@ function ServiceRow({
           className="pointer-events-none absolute inset-x-[-1rem] inset-y-2 -z-10 rounded-xl md:inset-x-[-1.5rem]"
           animate={{
             opacity: isHovered && !reduced ? 1 : 0,
-            backgroundColor: isHovered ? 'rgb(234 246 252 / 0.85)' : 'transparent',
+            backgroundColor: isHovered ? 'rgb(232 238 252 / 0.9)' : 'transparent',
           }}
           transition={{ duration: 0.25 }}
         />
@@ -61,8 +61,8 @@ function ServiceRow({
             opacity: isHovered ? 1 : 0,
             backgroundColor: isHovered
               ? index % 2 === 0
-                ? '#0A8FD8'
-                : '#F66C2A'
+                ? '#2f5bea'
+                : '#f5c84c'
               : 'transparent',
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 24 }}
@@ -92,7 +92,7 @@ export function ServicesPage() {
   return (
     <LazyMotion features={domAnimation}>
       <main>
-        <section className="bg-page-brand pt-10 pb-20 md:pt-14 md:pb-28">
+        <section className="atmosphere-hero -mt-(--header-clearance) pt-[calc(var(--header-clearance)+2.5rem)] pb-20 md:pt-[calc(var(--header-clearance)+3.5rem)] md:pb-28">
           <Container variant="page" className="relative w-full">
             <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:items-end lg:gap-20">
               <div>
@@ -109,7 +109,10 @@ export function ServicesPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.08, ease }}
                 >
-                  {servicesPage.hero.title}
+                  {servicesPage.hero.title.slice(0, servicesPage.hero.title.lastIndexOf(' '))}{' '}
+                  <span className="text-brand">
+                    {servicesPage.hero.title.slice(servicesPage.hero.title.lastIndexOf(' ') + 1)}
+                  </span>
                 </m.h1>
                 <m.p
                   className="mt-6 max-w-[38rem] text-body-large text-text-secondary"
@@ -125,7 +128,7 @@ export function ServicesPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.24, ease }}
                 >
-                  <Button to={bookCall.to} size="lg">
+                  <Button to={bookCall.to} size="lg" variant="brand">
                     {bookCall.label}
                   </Button>
                 </m.div>
@@ -258,7 +261,7 @@ export function ServicesPage() {
                 {servicesPage.cta.body}
               </p>
               <div className="mt-8">
-                <Button to={bookCall.to} size="lg">
+                <Button to={bookCall.to} size="lg" variant="brand">
                   {bookCall.label}
                 </Button>
               </div>

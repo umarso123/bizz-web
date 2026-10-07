@@ -1,61 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router'
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, type Variants } from 'framer-motion'
+import { Link, useLocation } from 'react-router'
 import { bookCall, primaryNavigation } from '@/app/navigation.ts'
 import { BrandLogo } from '@/components/brand/BrandLogo.tsx'
 import { cn } from '@/lib/cn.ts'
 
-const desktopNavQuery = '(min-width: 960px)'
 const menuId = 'site-menu'
-const expandScrollThreshold = 80
+const desktopNavQuery = '(min-width: 960px)'
 
-const containerVariants: Variants = {
-  expanded: {
-    y: 0,
-    opacity: 1,
-    width: 'auto',
-    transition: {
-      y: { type: 'spring', damping: 18, stiffness: 250 },
-      opacity: { duration: 0.3 },
-      width: { type: 'spring', damping: 22, stiffness: 260 },
-      staggerChildren: 0.05,
-      delayChildren: 0.08,
-    },
-  },
-  collapsed: {
-    y: 0,
-    opacity: 1,
-    width: '3.25rem',
-    transition: {
-      type: 'spring',
-      damping: 22,
-      stiffness: 280,
-      when: 'afterChildren',
-      staggerChildren: 0.04,
-      staggerDirection: -1,
-    },
-  },
-}
-
-const itemVariants: Variants = {
-  expanded: { opacity: 1, x: 0, scale: 1, transition: { type: 'spring', damping: 16, stiffness: 260 } },
-  collapsed: { opacity: 0, x: -16, scale: 0.96, transition: { duration: 0.18 } },
-}
-
-const collapsedIconVariants: Variants = {
-  expanded: { opacity: 0, scale: 0.8, transition: { duration: 0.16 } },
-  collapsed: {
-    opacity: 1,
-    scale: 1,
-    transition: { type: 'spring', damping: 16, stiffness: 300, delay: 0.12 },
-  },
-}
-
-const sideEntrance = {
-  initial: { y: -24, opacity: 0 },
-  animate: { y: 0, opacity: 1 },
-  transition: { type: 'spring' as const, damping: 18, stiffness: 260 },
-}
+const bar =
+  'border border-white/80 bg-white/80 shadow-[0_10px_40px_rgb(13_18_31/0.08)] backdrop-blur-xl'
 
 function MenuIcon() {
   return (
@@ -73,91 +26,32 @@ function CloseIcon() {
   )
 }
 
-const glassPill =
-  'border border-white/35 bg-transparent shadow-[0_8px_32px_rgb(13_18_31/0.05)] backdrop-blur-2xl backdrop-saturate-150'
-
-const darkPill =
-  'border border-text-inverse/15 bg-page-dark/90 text-text-inverse shadow-[0_12px_40px_rgb(13_18_31/0.35)] backdrop-blur-2xl'
-
-function Logo({ onDark = false }: { onDark?: boolean }) {
-  return (
-    <div
-      className={cn(
-        'rounded-full px-3.5 py-1.5',
-        onDark ? 'border border-surface bg-surface shadow-[0_8px_28px_rgb(13_18_31/0.22)]' : glassPill,
-      )}
-    >
-      <BrandLogo imgClassName="h-7 w-auto" />
-    </div>
-  )
-}
-
-function CallLink({ onClick, onDark = false }: { onClick?: () => void; onDark?: boolean }) {
-  return (
-    <Link
-      to={bookCall.to}
-      onClick={onClick}
-      className={cn(
-        'inline-flex h-11 shrink-0 items-center rounded-button px-5 text-[0.9375rem] font-semibold tracking-[-0.01em] whitespace-nowrap no-underline shadow-md transition-colors duration-(--duration-standard) ease-standard',
-        onDark
-          ? 'bg-brand text-text-inverse hover:bg-brand-hover'
-          : 'bg-button-primary text-text-inverse hover:bg-button-primary-hover',
-      )}
-    >
-      {bookCall.label}
-    </Link>
-  )
-}
-
-function linkClass(layout: string, active: boolean, onDark = false) {
+function navClass(active: boolean, layout: string) {
   return cn(
-    'group relative items-center font-medium whitespace-nowrap no-underline transition-colors duration-(--duration-standard) ease-standard',
-    onDark
-      ? active
-        ? 'text-text-inverse hover:text-text-inverse'
-        : 'text-mist hover:text-text-inverse'
-      : active
-        ? 'text-text hover:text-text'
-        : 'text-text-secondary hover:text-text',
+    'font-medium tracking-[-0.01em] no-underline transition-colors duration-(--duration-standard) ease-standard',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
+    active ? 'text-text' : 'text-text-secondary hover:text-text',
     layout,
   )
 }
 
+function linkIsActive(to: string, pathname: string, hash: string) {
+  const hashIndex = to.indexOf('#')
+  if (hashIndex === -1) return pathname === to
+  const path = to.slice(0, hashIndex) || '/'
+  return pathname === path && hash === to.slice(hashIndex)
+}
+
 export function Header() {
-  const reduced = useReducedMotion() === true
-  const { scrollY } = useScroll()
-  const { pathname } = useLocation()
-  const onDark = false
-  const [isExpanded, setExpanded] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.scrollY <= 150,
-  )
+  const { pathname, hash } = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuPath, setMenuPath] = useState(pathname)
-  const lastScrollY = useRef(window.scrollY)
-  const scrollPositionOnCollapse = useRef(window.scrollY)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   if (menuPath !== pathname) {
     setMenuPath(pathname)
     setMenuOpen(false)
   }
-
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    const previous = lastScrollY.current
-    lastScrollY.current = latest
-    if (reduced) return
-
-    if (isExpanded && latest > previous && latest > 150) {
-      setExpanded(false)
-      setMenuOpen(false)
-      scrollPositionOnCollapse.current = latest
-      return
-    }
-
-    if (!isExpanded && latest < previous && scrollPositionOnCollapse.current - latest > expandScrollThreshold) {
-      setExpanded(true)
-    }
-  })
 
   useEffect(() => {
     const media = window.matchMedia(desktopNavQuery)
@@ -182,156 +76,90 @@ export function Header() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [menuOpen])
 
-  function closeMenu() {
-    setMenuOpen(false)
-  }
-
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="relative mx-auto flex h-[3.25rem] w-full max-w-(--container-page) items-center justify-between ps-(--page-gutter) pe-[max(var(--page-gutter),2.75rem)] pt-5">
-        <motion.div {...(reduced ? {} : sideEntrance)} className="pointer-events-auto">
-          <Logo onDark={onDark} />
-        </motion.div>
-        <motion.div {...(reduced ? {} : sideEntrance)} className="pointer-events-auto">
-          <CallLink onClick={closeMenu} onDark={onDark} />
-        </motion.div>
-      </div>
-
-      <nav aria-label="Primary" className="pointer-events-auto absolute top-5 left-1/2 -translate-x-1/2">
-        <motion.div
-          initial={reduced ? false : { y: -80, opacity: 0 }}
-          animate={reduced ? undefined : isExpanded ? 'expanded' : 'collapsed'}
-          variants={reduced ? undefined : containerVariants}
-          whileHover={!reduced && !isExpanded ? { scale: 1.06 } : undefined}
-          whileTap={!reduced && !isExpanded ? { scale: 0.96 } : undefined}
+      <div className="px-2.5 pt-3 sm:px-3 md:px-5 md:pt-4">
+        <div
           className={cn(
-            'relative hidden h-[3.25rem] items-center overflow-hidden rounded-full min-[960px]:flex',
-            onDark ? darkPill : glassPill,
-            isExpanded ? (onDark ? '' : 'border-white/50') : 'cursor-pointer',
-            !onDark && !isExpanded && 'border-brand/25',
+            'pointer-events-auto relative mx-auto flex h-14 max-w-[90rem] items-center justify-between gap-2 rounded-full ps-3 pe-1.5 sm:gap-3 sm:ps-4 sm:pe-2 md:h-[4.25rem] md:ps-5 md:pe-2.5',
+            bar,
           )}
         >
-          <button
-            type="button"
-            className={cn(
-              'absolute inset-0 z-10 flex items-center justify-center rounded-full',
-              onDark ? 'text-text-inverse' : 'text-text',
-              isExpanded && 'pointer-events-none',
-            )}
-            aria-label="Open navigation"
-            aria-expanded={isExpanded}
-            aria-hidden={isExpanded || undefined}
-            tabIndex={isExpanded ? -1 : 0}
-            onClick={() => setExpanded(true)}
-          >
-            <motion.span
-              aria-hidden="true"
-              variants={collapsedIconVariants}
-              animate={reduced ? undefined : isExpanded ? 'expanded' : 'collapsed'}
-              className="flex items-center justify-center"
+          <BrandLogo imgClassName="h-5 w-auto max-w-[6.5rem] sm:h-6 sm:max-w-none md:h-7" />
+
+          <nav aria-label="Primary" className="absolute left-1/2 hidden -translate-x-1/2 min-[960px]:block">
+            <ul className="flex items-center">
+              {primaryNavigation.map((item) => (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    aria-current={linkIsActive(item.to, pathname, hash) ? 'page' : undefined}
+                    className={navClass(
+                      linkIsActive(item.to, pathname, hash),
+                      'inline-flex px-3 py-2 text-[0.9375rem]',
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex items-center gap-1">
+            <Link
+              to={bookCall.to}
+              className="inline-flex h-9 items-center rounded-full bg-button-primary px-3 text-[0.8125rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-text-inverse no-underline transition-colors duration-(--duration-standard) ease-standard hover:bg-button-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-10 sm:px-4 sm:text-[0.875rem] md:h-11 md:px-5 md:text-[0.9375rem]"
             >
-              <MenuIcon />
-            </motion.span>
-          </button>
-
-          <div
-            inert={!isExpanded ? true : undefined}
-            className={cn('flex w-max items-center px-3', !isExpanded && 'pointer-events-none')}
-          >
-            <motion.div variants={reduced ? undefined : itemVariants}>
-              <ul className="flex items-center">
-                {primaryNavigation.map((item) => (
-                  <li key={item.to}>
-                    <NavLink
-                      to={item.to}
-                      end
-                      onClick={closeMenu}
-                      className={({ isActive }) =>
-                        linkClass(
-                          'inline-flex px-2.5 py-1 text-[0.875rem] tracking-[-0.01em]',
-                          isActive,
-                          onDark,
-                        )
-                      }
-                    >
-                      {({ isActive }) => (
-                        <>
-                          {item.label}
-                          <span
-                            aria-hidden="true"
-                            className={cn(
-                              'absolute -bottom-0.5 left-2.5 h-px w-[calc(100%-1.25rem)] origin-left bg-brand motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-standard',
-                              isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100 group-focus-visible:scale-x-100',
-                            )}
-                          />
-                        </>
-                      )}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+              {bookCall.label}
+            </Link>
+            <button
+              ref={menuButtonRef}
+              type="button"
+              className="inline-flex size-10 items-center justify-center rounded-full text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand min-[960px]:hidden"
+              aria-expanded={menuOpen}
+              aria-controls={menuId}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {menuOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
           </div>
-        </motion.div>
-
-        <button
-          ref={menuButtonRef}
-          type="button"
-          className={cn(
-            'inline-flex size-[3.25rem] items-center justify-center rounded-full min-[960px]:hidden',
-            onDark ? cn(darkPill, 'text-text-inverse') : cn(glassPill, 'text-text'),
-            !onDark && menuOpen ? 'border-brand/35' : '',
-          )}
-          aria-expanded={menuOpen}
-          aria-controls={menuId}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <CloseIcon /> : <MenuIcon />}
-        </button>
+        </div>
 
         <div
           id={menuId}
           hidden={!menuOpen}
-          inert={!menuOpen ? true : undefined}
           className={cn(
-            'absolute top-[calc(100%+0.5rem)] left-1/2 w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl p-2 min-[960px]:hidden',
-            onDark ? darkPill : glassPill,
+            'pointer-events-auto mx-auto mt-2 w-full max-w-[90rem] rounded-[1.5rem] p-2 min-[960px]:hidden',
+            bar,
           )}
         >
           <ul className="flex flex-col">
-            {primaryNavigation.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    linkClass(
-                      'flex min-h-12 w-full rounded-lg px-3 text-[1.0625rem] tracking-[-0.02em]',
-                      isActive,
-                      onDark,
-                    )
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          'mr-3 h-5 w-px origin-center bg-brand motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-standard',
-                          isActive ? 'scale-y-100' : 'scale-y-0 group-hover:scale-y-100',
-                        )}
-                      />
-                      {item.label}
-                    </>
-                  )}
-                </NavLink>
-              </li>
-            ))}
+            {primaryNavigation.map((item) => {
+              const active = linkIsActive(item.to, pathname, hash)
+              return (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={active ? 'page' : undefined}
+                    className={navClass(
+                      active,
+                      cn(
+                        'flex min-h-12 items-center rounded-2xl px-4 text-[1.0625rem]',
+                        active ? 'bg-brand-soft' : 'hover:bg-bg-subtle',
+                      ),
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </div>
-      </nav>
+      </div>
     </header>
   )
 }

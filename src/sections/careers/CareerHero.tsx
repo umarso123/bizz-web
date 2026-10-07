@@ -50,7 +50,7 @@ function MagneticCta({
 }: {
   children: ReactNode
   to: string
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'brand' | 'secondary'
 }) {
   const reduced = useReducedMotion() === true
   const magnetic = useMagnetic({ strength: 0.22, disabled: reduced })
@@ -107,8 +107,8 @@ function FloatingFragment({
         'pointer-events-none absolute hidden select-none rounded-md border font-semibold uppercase md:block',
         sizeClass,
         fragment.accent
-          ? 'border-[rgb(246_108_42_/0.35)] bg-[rgb(246_108_42_/0.08)] text-[#F66C2A]'
-          : 'border-[rgb(10_143_216_/0.28)] bg-[rgb(10_143_216_/0.07)] text-brand-hover',
+          ? 'border-accent/50 bg-accent-soft text-text'
+          : 'border-brand/25 bg-brand-soft text-brand',
       )}
       style={{
         left: fragment.left,
@@ -162,7 +162,7 @@ function FloatingOrb({
       aria-hidden="true"
       className={cn(
         'pointer-events-none absolute hidden rounded-full md:block',
-        orb.accent ? 'bg-[#F66C2A]/70' : 'bg-brand/55',
+        orb.accent ? 'bg-accent/80' : 'bg-brand/55',
       )}
       style={{
         left: orb.left,
@@ -200,21 +200,21 @@ function ConnectionLines({ progress, reduced }: { progress: MotionValue<number>;
       <m.path
         d="M18 22 C 34 18, 42 36, 52 30 S 70 18, 82 24"
         fill="none"
-        stroke="rgb(10 143 216 / 0.35)"
+        stroke="rgb(47 91 234 / 0.35)"
         strokeWidth="0.2"
         style={{ pathLength: reduced ? 1 : pathLength }}
       />
       <m.path
         d="M22 68 C 38 54, 48 62, 58 52 S 74 48, 84 42"
         fill="none"
-        stroke="rgb(246 108 42 / 0.3)"
+        stroke="rgb(245 200 76 / 0.55)"
         strokeWidth="0.18"
         style={{ pathLength: reduced ? 1 : pathLength }}
       />
       <m.path
         d="M40 30 C 48 48, 36 58, 44 74"
         fill="none"
-        stroke="rgb(10 143 216 / 0.22)"
+        stroke="rgb(47 91 234 / 0.22)"
         strokeWidth="0.16"
         style={{ pathLength: reduced ? 1 : pathLength }}
       />
@@ -235,7 +235,7 @@ export function CareerHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative -mt-24 h-[180vh] bg-page-brand md:h-[220vh]"
+      className="atmosphere-hero relative -mt-(--header-clearance) h-[180vh] md:h-[220vh]"
       aria-labelledby="careers-hero-title"
     >
       <div className="sticky top-0 flex min-h-svh items-center overflow-hidden">
@@ -286,7 +286,10 @@ export function CareerHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0 : 0.65, delay: reduced ? 0 : 0.2, ease }}
             >
-              {careersCopy.hero.headline}
+              {careersCopy.hero.headline.slice(0, careersCopy.hero.headline.lastIndexOf(' '))}{' '}
+              <span className="text-brand">
+                {careersCopy.hero.headline.slice(careersCopy.hero.headline.lastIndexOf(' ') + 1)}
+              </span>
             </m.h1>
             <m.p
               className="mt-6 max-w-[36rem] text-body-large text-text-secondary"
@@ -302,7 +305,9 @@ export function CareerHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.44, ease }}
             >
-              <MagneticCta to="/careers#open-positions">{careersCopy.hero.primaryCta}</MagneticCta>
+              <MagneticCta to="/careers#open-positions" variant="brand">
+                {careersCopy.hero.primaryCta}
+              </MagneticCta>
               <MagneticCta to="/careers#life-at-bizaffix" variant="secondary">
                 {careersCopy.hero.secondaryCta}
               </MagneticCta>

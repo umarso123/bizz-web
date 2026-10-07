@@ -16,29 +16,13 @@ export function PremiumHero() {
       className="atmosphere-hero relative min-h-svh overflow-x-clip -mt-(--header-clearance) pt-(--header-clearance) pb-12 md:pb-16 lg:pb-20"
       aria-labelledby="premium-hero-title"
     >
-      {/* Full-bleed atmosphere — extends under the glass navbar */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 70% 65% at 88% 18%, rgb(254 246 216 / 0.7), transparent 58%),
-            radial-gradient(ellipse 55% 50% at 72% 42%, rgb(255 249 242 / 0.85), transparent 62%),
-            radial-gradient(ellipse 45% 40% at 8% 78%, rgb(254 246 216 / 0.4), transparent 55%)
-          `,
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-[-20%] right-[-18%] h-[min(95vh,52rem)] w-[min(90vw,54rem)] rounded-full blur-3xl"
+        className="pointer-events-none absolute top-[-22%] right-[-16%] h-[min(96vh,54rem)] w-[min(92vw,56rem)] rounded-full blur-3xl"
         style={{
           background:
-            'radial-gradient(circle at 38% 40%, rgb(254 246 216 / 0.85), rgb(255 249 242 / 0.4) 48%, transparent 72%)',
+            'radial-gradient(circle at 42% 40%, rgb(168 196 255 / 0.9), rgb(196 186 255 / 0.38) 46%, transparent 72%)',
         }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-[-5%] left-[-10%] h-80 w-80 rounded-full bg-accent/30 blur-3xl"
       />
 
       <Container variant="wide" className="relative z-10 w-full">
@@ -51,17 +35,17 @@ export function PremiumHero() {
           <span className="inline-flex items-center rounded-pill bg-accent px-3.5 py-1.5 text-[0.78rem] font-semibold tracking-tight text-text shadow-sm">
             {copy.badge}
           </span>
-          <span className="text-body-small text-text-secondary">{copy.badgeNote}</span>
+          <span className="w-full text-body-small text-pretty text-text-secondary sm:w-auto">{copy.badgeNote}</span>
         </m.div>
 
         <m.h1
           id="premium-hero-title"
-          className="mt-8 max-w-[14ch] text-display text-text md:mt-10"
+          className="mt-8 max-w-full text-display text-wrap text-text md:mt-10 md:max-w-[14ch]"
           initial={reduced ? false : { opacity: 0, y: 24 }}
           animate={reduced ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.05, ease }}
         >
-          {copy.titleLead} {copy.titleAccent}
+          {copy.titleLead} <span className="text-brand">{copy.titleAccent}</span>
         </m.h1>
 
         <div className="mt-8 grid gap-8 md:mt-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end lg:gap-16">
@@ -83,9 +67,10 @@ export function PremiumHero() {
             <Link
               to={copy.primaryTo}
               className={cn(
-                'inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill bg-button-primary px-7 text-body-small font-semibold text-text-inverse no-underline',
-                'shadow-card transition-[transform,background-color] duration-(--duration-standard)',
-                'hover:-translate-y-0.5 hover:bg-button-primary-hover',
+                'inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill bg-button-brand px-7 text-body-small font-semibold text-text-inverse no-underline',
+                'shadow-[0_12px_28px_rgb(47_91_234/0.28)] transition-[transform,background-color] duration-(--duration-standard)',
+                'hover:-translate-y-0.5 hover:bg-button-brand-hover',
+                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
               )}
             >
               {copy.primaryCta}
@@ -95,7 +80,7 @@ export function PremiumHero() {
             </Link>
             <Link
               to={copy.secondaryTo}
-              className="inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill border border-border bg-surface/80 px-6 text-body-small font-semibold text-text no-underline backdrop-blur-sm transition-colors hover:border-border-strong hover:bg-surface"
+              className="inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill border border-border bg-surface/90 px-6 text-body-small font-semibold text-text no-underline shadow-card backdrop-blur-sm transition-colors hover:border-border-strong hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             >
               {copy.secondaryCta}
             </Link>
@@ -107,23 +92,22 @@ export function PremiumHero() {
             <m.li
               key={card.id}
               className={cn(
-                'group flex min-h-[9.75rem] flex-col justify-between rounded-[1.85rem] p-6 transition-transform duration-500 md:min-h-[11.5rem] md:rounded-[2.15rem] md:p-7',
-                'bg-surface/85 text-text shadow-card ring-1 ring-border-subtle backdrop-blur-sm',
+                'flex min-h-[9.75rem] flex-col justify-between rounded-[1.85rem] p-6 md:min-h-[11.5rem] md:rounded-[2.15rem] md:p-7',
+                card.tone === 'brand'
+                  ? 'bg-brand text-text-inverse shadow-[0_18px_40px_rgb(47_91_234/0.28)]'
+                  : 'bg-surface/90 text-text shadow-card ring-1 ring-white backdrop-blur-sm',
               )}
               initial={reduced ? false : { opacity: 0, y: 20 }}
               animate={reduced ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.22 + index * 0.07, ease }}
             >
-              <p
-                className={cn(
-                  'text-[clamp(1.7rem,1.15rem+1.7vw,2.75rem)] leading-none font-bold tracking-tighter text-text',
-                )}
-              >
+              <p className="text-[clamp(1.7rem,1.15rem+1.7vw,2.75rem)] leading-none font-bold tracking-tighter">
                 {card.value}
               </p>
               <p
                 className={cn(
-                  'mt-4 max-w-[16rem] text-body-small leading-snug text-text-secondary',
+                  'mt-4 max-w-[16rem] text-body-small leading-snug',
+                  card.tone === 'brand' ? 'text-text-inverse/80' : 'text-text-secondary',
                 )}
               >
                 {card.label}

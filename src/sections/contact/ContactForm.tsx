@@ -207,7 +207,7 @@ export function ContactForm({
   }
 
   return (
-    <section data-scene="form" className="bg-page-white pb-[clamp(5rem,14vh,9rem)]">
+    <section data-scene="form" className="bg-page-brand pb-[clamp(5rem,14vh,9rem)]">
       <div className={contactFrame}>
         <div className={contactInset}>
           <div id="project-note" data-filament="form" className="scroll-mt-28 max-w-[40rem]">

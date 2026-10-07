@@ -82,7 +82,7 @@ function ProjectImage({ project }: { project: FeaturedProject }) {
         style={{
           background: `
             radial-gradient(ellipse at 28% 22%, rgb(255 255 255 / 0.7), transparent 52%),
-            radial-gradient(ellipse at 78% 78%, rgb(254 246 216 / 0.8), transparent 48%),
+            radial-gradient(ellipse at 78% 78%, rgb(186 206 255 / 0.55), transparent 48%),
             linear-gradient(145deg, #fff9f2 0%, #fbf7f2 48%, #efe8df 100%)
           `,
         }}

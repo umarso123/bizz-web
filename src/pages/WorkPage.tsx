@@ -48,17 +48,7 @@ export function WorkPage() {
   return (
     <LazyMotion features={domAnimation}>
       <main className="relative -mt-(--header-clearance) bg-page-white text-text">
-        <section className="relative overflow-hidden pt-(--header-clearance)" aria-labelledby="work-title">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundImage:
-                'linear-gradient(to right, rgb(13 18 31 / 0.06) 1px, transparent 1px), linear-gradient(to bottom, rgb(13 18 31 / 0.06) 1px, transparent 1px)',
-              backgroundSize: '72px 72px',
-              maskImage: 'radial-gradient(ellipse 80% 70% at 50% 30%, black 40%, transparent 100%)',
-            }}
-          />
+        <section className="atmosphere-hero relative overflow-hidden pt-(--header-clearance)" aria-labelledby="work-title">
 
           <div className="relative z-10 mx-auto w-full max-w-[90rem] px-[clamp(1.5rem,4vw,4.5rem)] pt-14 pb-16 md:pt-20 md:pb-20">
             <m.div
@@ -71,7 +61,8 @@ export function WorkPage() {
                 id="work-title"
                 className="text-[clamp(3.25rem,1.6rem+6vw,6.25rem)] leading-[0.95] font-semibold tracking-[-0.045em]"
               >
-                {copy.title}
+                {copy.title.slice(0, copy.title.lastIndexOf(' '))}{' '}
+                <span className="text-brand">{copy.title.slice(copy.title.lastIndexOf(' ') + 1)}</span>
               </h1>
               <p className="mx-auto mt-5 max-w-[34rem] text-[1.125rem] leading-relaxed text-text-secondary">
                 {copy.intro}
@@ -95,8 +86,8 @@ export function WorkPage() {
                       'inline-flex h-10 items-center rounded-full px-4 text-[0.9375rem] font-medium transition-colors',
                       'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text',
                       selected
-                        ? 'bg-button-primary text-text-inverse'
-                        : 'border border-border bg-surface text-text-secondary hover:bg-bg-muted',
+                        ? 'bg-brand text-text-inverse'
+                        : 'border border-border bg-surface/80 text-text-secondary hover:bg-surface',
                     )}
                   >
                     {item}
@@ -116,20 +107,20 @@ export function WorkPage() {
                   <li key={study.slug}>
                     <Link
                       to={`/work/${study.slug}`}
-                      className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-surface text-text no-underline outline-none hover:text-text focus-visible:ring-2 focus-visible:ring-text focus-visible:ring-offset-2 focus-visible:ring-offset-page-white"
+                      className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-border-subtle bg-surface text-text no-underline shadow-card outline-none hover:text-text focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-page-white"
                     >
                       <div className="relative aspect-16/10">
                         <WorkStill slug={study.slug} />
                         <StudyPhoto src={study.image} alt="" />
                         <span className="absolute bottom-4 left-4 inline-flex max-w-[calc(100%-5.5rem)] items-center gap-2 rounded-full bg-surface/90 px-3 py-1.5 text-[0.8125rem] font-medium text-text backdrop-blur-md">
-                          <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-text" />
+                          <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
                           <span className="truncate">{study.category}</span>
                         </span>
                         <span
                           aria-hidden="true"
                           className={cn(
                             'absolute right-4 bottom-4 grid size-11 place-items-center rounded-full shadow-[0_8px_20px_rgb(13_18_31/0.28)] transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none',
-                            'bg-button-primary text-text-inverse',
+                            'bg-brand text-text-inverse',
                           )}
                         >
                           <ArrowMark />
@@ -165,22 +156,24 @@ export function WorkPage() {
 
             <ul className="mt-10 grid gap-4 md:mt-12 md:grid-cols-[1.15fr_0.85fr] md:gap-5">
               {workBuiltContent.stories.map((story) => {
-                const paper = story.tone === 'blue'
+                const brand = story.tone === 'blue'
                 return (
                   <li key={story.slug}>
                     <Link
                       to={`/work/${story.slug}`}
                       className={cn(
                         'group flex h-full min-h-[28rem] flex-col justify-between rounded-[1.75rem] p-7 no-underline outline-none md:min-h-[32rem] md:p-9',
-                        'text-text hover:text-text focus-visible:ring-2 focus-visible:ring-text focus-visible:ring-offset-2',
-                        paper ? 'border border-border bg-surface' : 'bg-bg-muted',
+                        'focus-visible:ring-2 focus-visible:ring-offset-2',
+                        brand
+                          ? 'bg-[linear-gradient(165deg,#3d6bf0_0%,#2f5bea_48%,#2549c9_100%)] text-text-inverse hover:text-text-inverse focus-visible:ring-text-inverse'
+                          : 'bg-accent text-text hover:text-text focus-visible:ring-brand',
                       )}
                     >
                       <div className="flex justify-end">
                         <span
                           className={cn(
-                            'rounded-full px-3 py-1 text-[0.8125rem] font-medium text-text-secondary',
-                            paper ? 'bg-bg-muted' : 'bg-surface',
+                            'rounded-full px-3 py-1 text-[0.8125rem] font-medium',
+                            brand ? 'bg-text-inverse/16 text-text-inverse' : 'bg-text/10 text-text',
                           )}
                         >
                           {story.industry}
@@ -190,12 +183,20 @@ export function WorkPage() {
                         {story.title}
                       </p>
                       <div className="flex items-end justify-between gap-6">
-                        <p className="min-w-0 flex-1 text-[1.02rem] leading-relaxed text-text-secondary">
+                        <p
+                          className={cn(
+                            'min-w-0 flex-1 text-[1.02rem] leading-relaxed',
+                            brand ? 'text-text-inverse/85' : 'text-text/75',
+                          )}
+                        >
                           {story.body}
                         </p>
                         <span
                           aria-hidden="true"
-                          className="grid size-11 shrink-0 place-items-center rounded-full bg-button-primary text-text-inverse transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
+                          className={cn(
+                            'grid size-11 shrink-0 place-items-center rounded-full transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none',
+                            brand ? 'bg-accent text-text' : 'bg-brand text-text-inverse',
+                          )}
                         >
                           <ArrowMark />
                         </span>

@@ -21,8 +21,8 @@ export function ContactClosing({ onIntent }: { onIntent: (intent: ContactIntent)
   const [reduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
 
   return (
-    <section className="bg-page-white">
-      <div id="contact-close" data-scene="close" className="scroll-mt-28 bg-page-white text-text">
+    <section className="bg-page-brand">
+      <div id="contact-close" data-scene="close" className="scroll-mt-28 bg-page-brand text-text">
         <div className={cn(contactFrame, 'py-[clamp(4.5rem,12vh,8rem)]')}>
           <div className={contactInset}>
             <h2

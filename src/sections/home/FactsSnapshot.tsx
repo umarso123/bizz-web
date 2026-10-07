@@ -75,8 +75,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
   const dark = card.tone === 'dark'
   const hasVideo = typeof card.media === 'string' && card.media.length > 0
   const lead = card.title ?? card.eyebrow
-  const ink = hasVideo || dark ? 'text-white' : 'text-[#171717]'
-  const mute = hasVideo || dark ? 'text-white/70' : 'text-[#171717]/60'
+  const ink = hasVideo || dark ? 'text-text-inverse' : 'text-[#171717]'
 
   return (
     <>
@@ -116,20 +115,20 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
       {hasVideo ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(23_33_43/0.15)_0%,rgb(23_33_43/0.45)_55%,rgb(23_33_43/0.78)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(7_11_18/0.28)_0%,rgb(7_11_18/0.45)_42%,rgb(7_11_18/0.88)_100%)]"
         />
       ) : null}
 
       {card.kind === 'circle' ? (
-        <div className="absolute inset-0 flex items-center justify-center pb-10">
-          <div className="grid aspect-square w-[42%] min-w-28 place-items-center rounded-full bg-white shadow-[0_18px_50px_rgb(23_33_43/0.12)] ring-1 ring-[#171717]/6">
+        <div className="absolute inset-0 flex items-center justify-center pb-16">
+          <div className="grid aspect-square w-[42%] min-w-28 place-items-center rounded-full bg-surface shadow-[0_18px_50px_rgb(23_33_43/0.28)] ring-1 ring-[#171717]/10">
             <p className="text-[clamp(2.2rem,3.4vw,3.75rem)] leading-none font-semibold tracking-tighter text-[#171717]">
               {card.value}
             </p>
           </div>
         </div>
       ) : (
-        <div className="absolute inset-0 flex flex-col justify-end px-5 pb-20 md:px-7 md:pb-24">
+        <div className="absolute inset-0 flex flex-col justify-end px-5 pb-28 md:px-7 md:pb-32">
           <p className={cn('text-[clamp(3.25rem,4.5vw,5.5rem)] leading-none font-semibold tracking-tighter', ink)}>
             {card.value}
           </p>
@@ -138,23 +137,15 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
               {card.title}
             </p>
           ) : null}
-          <p className={cn('mt-2 max-w-[18rem] text-[0.92rem] leading-snug', mute)}>{card.caption}</p>
         </div>
       )}
 
-      <div
-        className={cn(
-          'pointer-events-none absolute inset-x-0 bottom-0 h-28',
-          hasVideo || dark
-            ? 'bg-gradient-to-t from-[#0A121A] via-[#0A121A]/70 to-transparent'
-            : 'bg-gradient-to-t from-[#F7F6F4] via-[#F7F6F4]/80 to-transparent',
-        )}
-      />
-
       <p
         className={cn(
-          'absolute inset-x-0 bottom-0 z-10 flex items-start gap-2.5 px-5 pb-5 md:px-6 md:pb-6',
-          hasVideo || dark ? 'text-white' : 'text-[#171717]',
+          'absolute inset-x-0 bottom-0 z-10 flex items-start gap-2.5 px-5 pt-16 pb-5 md:px-6 md:pb-6',
+          hasVideo || dark
+            ? 'bg-gradient-to-t from-[#070b12] from-35% via-[#070b12]/92 to-transparent text-text-inverse'
+            : 'bg-gradient-to-t from-[#F7F6F4] from-40% via-[#F7F6F4]/95 to-transparent text-[#171717]',
         )}
       >
         <span
@@ -164,7 +155,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           )}
           aria-hidden="true"
         />
-        <span className="line-clamp-2 text-[0.92rem] leading-snug font-medium tracking-tight">
+        <span className="text-[1rem] leading-snug font-semibold tracking-tight">
           {lead}: {card.caption}
         </span>
       </p>
@@ -246,22 +237,22 @@ export function FactsSnapshot() {
       )}
       aria-labelledby="facts-title"
     >
-      <div
-        className={cn(
-          'flex flex-col justify-center overflow-x-clip bg-page-white sticky-section',
-          reduced ? 'min-h-svh py-16' : 'sticky top-0 h-svh',
-        )}
-      >
-        <Container variant="wide" className="relative w-full">
-          <div className="mx-auto max-w-160 text-center">
-            <h2 id="facts-title" className="text-section-title text-text">
-              {copy.title}
-            </h2>
-            <p className="mt-3 text-body text-text-secondary md:mt-4">{copy.subtitle}</p>
-          </div>
-        </Container>
+        <div
+          className={cn(
+            'flex flex-col overflow-hidden bg-page-white pt-(--header-clearance)',
+            reduced ? 'min-h-dvh pb-16' : 'sticky top-0 h-dvh pb-8',
+          )}
+        >
+          <Container variant="wide" className="relative w-full shrink-0 pt-4">
+            <div className="mx-auto max-w-160 text-center">
+              <h2 id="facts-title" className="text-section-title text-text">
+                {copy.title}
+              </h2>
+              <p className="mt-3 text-body text-text-secondary md:mt-4">{copy.subtitle}</p>
+            </div>
+          </Container>
 
-        <div className="fact-stage relative mt-8 h-[min(38vh,270px)] w-full sm:mt-10 sm:h-[min(46vh,390px)] lg:h-[min(54vh,480px)]">
+          <div className="fact-stage relative mt-6 min-h-64 w-full flex-1 sm:mt-8">
           {copy.cards.map((card, index) => (
             <article
               key={card.id}

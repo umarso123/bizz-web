@@ -6,7 +6,7 @@ const explore = [
     { label: 'Home', to: '/' },
     { label: 'Services', to: '/#services' },
     { label: 'Work', to: '/work' },
-    { label: 'Approach', to: '/#approach' },
+    { label: 'Approach', to: '/#how-we-work' },
 ];
 const company = [
     { label: 'Digital Health', to: '/#digital-health' },

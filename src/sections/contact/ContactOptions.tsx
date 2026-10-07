@@ -37,7 +37,7 @@ export function ContactOptions({
   }
 
   return (
-    <section data-scene="options" className="bg-page-white pt-[clamp(1.5rem,5vh,3.5rem)] pb-[clamp(4.5rem,12vh,8rem)]">
+    <section data-scene="options" className="bg-page-brand pt-[clamp(1.5rem,5vh,3.5rem)] pb-[clamp(4.5rem,12vh,8rem)]">
       <div className={contactFrame}>
         <div className={contactInset}>
           <h2 className="max-w-[14ch] text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em]">
