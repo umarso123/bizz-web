@@ -3,6 +3,8 @@
  * Grounded in content/legacy-site.md for process, case study, articles, and healthcare facts.
  */
 
+import { mockups } from '@/content/mockups.ts'
+
 export const homeContent = {
   hero: {
     badge: 'HealthTech studio',
@@ -189,40 +191,40 @@ export const homeContent = {
         title: 'Understand',
         body: 'Understand the problem, users, business, and context.',
         tags: ['Problem', 'Users', 'Business'] as const,
-        image: '/images/process/understand.webp',
-        alt: 'Understanding the problem and context',
+        image: mockups.familyTreeLaptop,
+        alt: 'Family tree product on a laptop and tablet',
       },
       {
         number: '02',
         title: 'Research',
         body: 'Explore the users, workflows, constraints, and opportunities.',
         tags: ['Workflows', 'Constraints', 'Opportunity'] as const,
-        image: '/images/process/research.webp',
-        alt: 'Researching users and opportunities',
+        image: mockups.familyTree,
+        alt: 'Family tree product across several tablets',
       },
       {
         number: '03',
         title: 'Analyze',
         body: 'Turn findings into clear product direction and priorities.',
         tags: ['Direction', 'Priorities', 'Clarity'] as const,
-        image: '/images/process/analyze.webp',
-        alt: 'Analyzing findings into product direction',
+        image: mockups.foodPhones,
+        alt: 'Food ordering app on phones',
       },
       {
         number: '04',
         title: 'Design',
         body: 'Shape the experience, interaction, and product system.',
         tags: ['Experience', 'Interaction', 'System'] as const,
-        image: '/images/process/design.webp',
-        alt: 'Designing the product experience',
+        image: mockups.foodPresentation,
+        alt: 'Food ordering app presentation',
       },
       {
         number: '05',
         title: 'Testing',
         body: 'Validate that the product works as intended before it meets the world.',
         tags: ['Validate', 'Quality', 'Launch-ready'] as const,
-        image: '/images/process/testing.webp',
-        alt: 'Testing before launch',
+        image: mockups.fitnessBoards,
+        alt: 'Fitness tracking app across several phones',
       },
     ],
   },
@@ -232,15 +234,11 @@ export const homeContent = {
     /** Short accent chip labels — keep minimal */
     chips: ['Healthcare', 'Mobile', 'Web'] as const,
     cardTitle: 'Optimized Strength',
-    /**
-     * Drop real screenshots here later.
-     * Suggested paths: /images/projects/desktop.webp, phone-left.webp, phone-right.webp, card.webp
-     */
     shots: {
-      desktop: { src: null as string | null, alt: 'Desktop product screenshot' },
-      phoneLeft: { src: null as string | null, alt: 'Mobile product screenshot' },
-      phoneRight: { src: null as string | null, alt: 'Mobile product screenshot' },
-      card: { src: null as string | null, alt: 'Project highlight image' },
+      desktop: { src: mockups.familyTreeLaptop, alt: 'Family tree product on a laptop and tablet' },
+      phoneLeft: { src: mockups.stepup, alt: 'Learning app on a phone' },
+      phoneRight: { src: mockups.foodPresentation, alt: 'Food ordering app on phones' },
+      card: { src: mockups.optimizedStrength, alt: 'Optimized Strength app on phones' },
     },
   },
   why: {
@@ -287,7 +285,7 @@ export const homeContent = {
         title: 'What we build',
         caption: 'Product, mobile, web, and cloud. One team.',
         value: '07',
-        media: null,
+        media: '/videos/facts/Lion_explaining_with_hand_gestures_20261005173923.mp4',
       },
     ],
   },

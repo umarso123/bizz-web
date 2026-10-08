@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import { bookCall } from '@/app/navigation.ts'
 import { Container } from '@/components/layout/Container.tsx'
+import { studioAddress, studioEmail, studioPhone, studioSocial } from '@/content/contact.ts'
 
 const explore = [
   { label: 'Home', to: '/' },
@@ -13,12 +14,6 @@ const company = [
   { label: 'Digital Health', to: '/#digital-health' },
   { label: 'Careers', to: '/careers' },
   { label: 'Contact', to: '/contact' },
-] as const
-
-const social = [
-  { label: 'Facebook', href: 'https://facebook.com' },
-  { label: 'Twitter', href: 'https://twitter.com' },
-  { label: 'LinkedIn', href: 'https://linkedin.com' },
 ] as const
 
 const linkClass =
@@ -79,7 +74,18 @@ export function Footer() {
             </ul>
           </div>
           <ul className="grid gap-3">
-            {social.map((item) => (
+            <li className="text-body-small text-text">{studioAddress}</li>
+            <li>
+              <a href={`mailto:${studioEmail}`} className={linkClass}>
+                {studioEmail}
+              </a>
+            </li>
+            <li>
+              <a href={studioPhone.href} className={linkClass}>
+                {studioPhone.label}
+              </a>
+            </li>
+            {studioSocial.map((item) => (
               <li key={item.label}>
                 <a
                   href={item.href}

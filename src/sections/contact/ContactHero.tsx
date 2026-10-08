@@ -1,4 +1,4 @@
-import { contactIntro } from '@/content/contact.ts'
+import { contactIntro, studioAddress, studioEmail, studioPhone, studioSocial } from '@/content/contact.ts'
 import { contactFrame } from '@/sections/contact/contactLayout.ts'
 
 export function ContactHero() {
@@ -17,6 +17,32 @@ export function ContactHero() {
           <p className="mt-8 max-w-[34rem] text-[1.125rem] leading-[1.6] text-text-secondary">
             {contactIntro.dek}
           </p>
+          <ul className="mt-10 grid gap-3 text-body text-text">
+            <li>{studioAddress}</li>
+            <li>
+              <a href={`mailto:${studioEmail}`} className="text-text no-underline hover:text-brand">
+                {studioEmail}
+              </a>
+            </li>
+            <li>
+              <a href={studioPhone.href} className="text-text no-underline hover:text-brand">
+                {studioPhone.label}
+              </a>
+            </li>
+            <li className="flex flex-wrap gap-x-6 gap-y-2">
+              {studioSocial.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="text-text no-underline hover:text-brand"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </li>
+          </ul>
         </div>
       </div>
     </section>

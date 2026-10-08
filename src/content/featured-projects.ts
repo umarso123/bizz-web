@@ -1,12 +1,9 @@
 /**
  * Featured Projects, single source for the immersive portfolio stage.
- *
- * Drop images into `public/images/projects/` using the filenames below,
- * then update name / category / description / href as real case studies land.
- *
- * Expected files (in order):
- *   project-01.webp … project-06.webp
+ * Images are the presentation boards in src/assets.
  */
+
+import { mockups } from '@/content/mockups.ts'
 
 export type FeaturedProject = {
   id: string
@@ -32,8 +29,8 @@ export const featuredProjectsContent = {
       category: 'Fitness',
       description:
         'A consolidated, intuitive fitness product designed for lasting adherence and progress.',
-      image: '/images/projects/project-01.webp',
-      alt: 'Optimized Strength, featured project visual',
+      image: mockups.optimizedStrengthIcon,
+      alt: 'Optimized Strength app on a phone',
       href: '/work/optimized-strength',
     },
     {
@@ -43,8 +40,8 @@ export const featuredProjectsContent = {
       category: 'Digital Health',
       description:
         'Custom healthcare experiences spanning clinical workflows, care access, and connected data.',
-      image: '/images/projects/project-02.webp',
-      alt: 'Healthcare, featured project visual',
+      image: mockups.healthcare,
+      alt: 'Healthcare website shown on tablets',
       href: '/work/clinical-decision-support',
     },
     {
@@ -53,19 +50,19 @@ export const featuredProjectsContent = {
       name: 'Educational',
       category: 'Education',
       description: 'Digital learning products shaped for clarity, engagement, and real outcomes.',
-      image: '/images/projects/project-03.webp',
-      alt: 'Educational, featured project visual',
+      image: mockups.stepup,
+      alt: 'Learning app on a phone',
       href: '/work/educational',
     },
     {
       id: 'project-04',
       number: '04',
-      name: 'Fintech',
+      name: 'Bank Alfalah',
       category: 'Finance',
-      description: 'Product experiences that make complex financial systems feel approachable.',
-      image: '/images/projects/project-04.webp',
-      alt: 'Fintech, featured project visual',
-      href: '/work/fintech',
+      description: 'Bank Alfalah product screens across web and tablet.',
+      image: mockups.bankAlfalah,
+      alt: 'Bank Alfalah product on a presentation board',
+      href: '/work/bank-alfalah',
     },
     {
       id: 'project-05',
@@ -73,9 +70,9 @@ export const featuredProjectsContent = {
       name: 'Fitness',
       category: 'Wellness',
       description: 'Mobile and web experiences built around motivation, progress, and daily use.',
-      image: '/images/projects/project-05.webp',
-      alt: 'Fitness, featured project visual',
-      href: '/work/optimized-strength',
+      image: mockups.fitnessBoards,
+      alt: 'Fitness tracking app across several phones',
+      href: '/work/fitness',
     },
     {
       id: 'project-06',
@@ -83,9 +80,29 @@ export const featuredProjectsContent = {
       name: 'eCommerce',
       category: 'Commerce',
       description: 'Storefront and product journeys designed to convert without friction.',
-      image: '/images/projects/project-06.webp',
-      alt: 'eCommerce, featured project visual',
+      image: mockups.foodScreens,
+      alt: 'Food ordering app across several phones',
       href: '/work/ecommerce',
+    },
+    {
+      id: 'project-07',
+      number: '07',
+      name: 'Family Tree',
+      category: 'Product',
+      description: 'Family Tree product screens for the web experience.',
+      image: mockups.familyTreeScreens,
+      alt: 'Family Tree product board',
+      href: '/work/family-tree',
+    },
+    {
+      id: 'project-08',
+      number: '08',
+      name: 'Drug Testing',
+      category: 'Healthcare',
+      description: 'Drug testing app screens for the mobile experience.',
+      image: mockups.drugTestingBoard,
+      alt: 'Drug testing app screens',
+      href: '/work/drug-testing',
     },
   ] satisfies FeaturedProject[],
 } as const

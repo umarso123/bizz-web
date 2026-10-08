@@ -24,7 +24,7 @@ function ScreenFill({
       <img
         src={shot.src}
         alt={shot.alt}
-        className={cn('h-full w-full object-cover object-top', className)}
+        className={cn('h-full w-full object-contain object-center', className)}
         loading="lazy"
         decoding="async"
       />

@@ -1,11 +1,24 @@
 /**
  * Contact page content.
- * Studio email is intentionally unset: the legacy site does not publish a public address.
- * Set `studioEmail` when that address is confirmed. Do not guess one.
+ * Studio reach details confirmed for the public site.
  */
 
-/** Replace with the confirmed public studio address. Null means the page will not invent one. */
-export const studioEmail: string | null = null
+export const studioEmail = 'info@bizaffix.com'
+
+export const studioPhone = {
+  label: '+1 832-529-1569',
+  href: 'tel:+18325291569',
+} as const
+
+export const studioAddress = 'Austin, Texas'
+
+export const studioSocial = [
+  { label: 'Facebook', href: 'https://www.facebook.com/bizaffix' },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/bizaffix/posts/?feedView=all',
+  },
+] as const
 
 export const contactIntro = {
   titleLead: "Let's build",

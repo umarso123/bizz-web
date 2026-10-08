@@ -3,6 +3,8 @@
  * Grounded in content/legacy-site.md. No invented clients or metrics.
  */
 
+import { mockups } from '@/content/mockups.ts'
+
 export const workIndustries = ['Healthcare', 'Educational', 'Fintech', 'Fitness', 'eCommerce'] as const
 
 export type WorkIndustry = (typeof workIndustries)[number]
@@ -13,7 +15,7 @@ export type WorkMedia = 'ink' | 'day'
 export type CaseStudy = {
   slug: string
   title: string
-  industry: WorkIndustry
+  industry: WorkIndustry | 'Family Tree'
   category: string
   /** One-line blurb on the index list */
   summary: string
@@ -23,6 +25,8 @@ export type CaseStudy = {
   solution?: string
   services: string[]
   image: string | null
+  /** Extra boards already in the project. Omit rather than invent. */
+  gallery?: readonly { src: string; alt: string }[]
   media: WorkMedia
 }
 
@@ -32,7 +36,7 @@ export const workPageContent = {
   intro: 'Explored our projects yet? Have a look.',
   filtersLabel: 'Filter by industry',
   emptyLabel: 'No case studies in this industry.',
-  backLabel: 'All case studies',
+  backLabel: 'Back to work',
   ctaLabel: 'Book a call',
   ctaTo: '/contact',
   studies: [
@@ -51,7 +55,7 @@ export const workPageContent = {
       solution:
         'We design CDS experiences that integrate into clinical flow, improving efficiency so professionals can focus on exceptional care.',
       services: ['Product Design', 'Frontend & Backend Development', 'Cloud Development'],
-      image: '/images/projects/project-02.webp',
+      image: mockups.healthcare,
     },
     {
       slug: 'telemedicine',
@@ -132,7 +136,13 @@ export const workPageContent = {
       solution:
         'We shaped a product experience that consolidates the journey: clear, intuitive, and personalized enough to support real adherence.',
       services: ['Product Design', 'UI/UX', 'Mobile', 'Web Development'],
-      image: '/images/projects/project-01.webp',
+      image: mockups.optimizedStrengthIcon,
+      gallery: [
+        { src: mockups.optimizedStrengthScreens, alt: 'Optimized Strength app screens' },
+        { src: mockups.optimizedStrengthTall, alt: 'Optimized Strength phone screens' },
+        { src: mockups.optimizedStrengthDetail, alt: 'Optimized Strength app detail' },
+        { src: mockups.optimizedStrength, alt: 'Optimized Strength phones' },
+      ],
     },
     {
       slug: 'educational',
@@ -144,19 +154,50 @@ export const workPageContent = {
       description:
         'Educational industry work across mobile apps, websites, and product experiences, built to make complex learning feel approachable.',
       services: ['Product Design', 'Web Development', 'Mobile'],
-      image: '/images/projects/project-03.webp',
+      image: mockups.stepup,
     },
     {
-      slug: 'fintech',
-      title: 'Fintech',
+      slug: 'bank-alfalah',
+      title: 'Bank Alfalah',
       industry: 'Fintech',
-      category: 'Fintech',
+      category: 'Fintech · Bank Alfalah',
       media: 'ink',
-      summary: 'Product experiences that make complex financial systems feel approachable.',
-      description:
-        'Fintech product and web experiences, combining clear design with solid engineering for ambitious financial products.',
-      services: ['Product Design', 'Web Development', 'Frontend & Backend Development'],
-      image: '/images/projects/project-04.webp',
+      summary: 'Bank Alfalah product screens across web and tablet.',
+      description: 'Product visuals for Bank Alfalah, covering the web experience and tablet screens.',
+      services: ['Product Design', 'Web Development'],
+      image: mockups.bankAlfalah,
+      gallery: [
+        { src: mockups.bankAlfalahTablet, alt: 'Bank Alfalah on a tablet' },
+        { src: mockups.bankAlfalahMark, alt: 'Bank Alfalah mark' },
+      ],
+    },
+    {
+      slug: 'drug-testing',
+      title: 'Drug Testing',
+      industry: 'Healthcare',
+      category: 'Healthcare · Drug Testing',
+      media: 'ink',
+      summary: 'Drug testing app screens for the mobile experience.',
+      description: 'Product visuals for the drug testing app.',
+      services: ['Product Design'],
+      image: mockups.drugTestingBoard,
+      gallery: [{ src: mockups.drugTestingApp, alt: 'Drug testing app screens' }],
+    },
+    {
+      slug: 'family-tree',
+      title: 'Family Tree',
+      industry: 'Family Tree',
+      category: 'Family Tree',
+      media: 'day',
+      summary: 'Family Tree product screens for the web experience.',
+      description: 'Product visuals for Family Tree.',
+      services: ['Product Design', 'Web Development'],
+      image: mockups.familyTreeScreens,
+      gallery: [
+        { src: mockups.familyTreePage, alt: 'Family Tree page' },
+        { src: mockups.familyTree, alt: 'Family Tree across tablets' },
+        { src: mockups.familyTreeLaptop, alt: 'Family Tree on a laptop' },
+      ],
     },
     {
       slug: 'ecommerce',
@@ -168,7 +209,23 @@ export const workPageContent = {
       description:
         'eCommerce websites and product experiences crafted to captivate audiences and strengthen digital presence.',
       services: ['Web Development', 'UI/UX', 'Product Design'],
-      image: '/images/projects/project-06.webp',
+      image: mockups.foodPhones,
+      gallery: [
+        { src: mockups.foodScreens, alt: 'Food ordering screens' },
+        { src: mockups.foodPresentation, alt: 'Food ordering app presentation' },
+      ],
+    },
+    {
+      slug: 'fitness',
+      title: 'Fitness',
+      industry: 'Fitness',
+      category: 'Fitness',
+      media: 'ink',
+      summary: 'Mobile and web experiences built around motivation, progress, and daily use.',
+      description:
+        'Mobile and web experiences built around motivation, progress, and daily use.',
+      services: ['Product Design', 'Web Development'],
+      image: mockups.fitnessBoards,
     },
   ] satisfies CaseStudy[],
 } as const
@@ -176,6 +233,24 @@ export const workPageContent = {
 export function getCaseStudy(slug: string): CaseStudy | undefined {
   return workPageContent.studies.find((study) => study.slug === slug)
 }
+
+/** Questions grounded in the published process. No timelines or commercial terms are invented. */
+export const caseStudyFaqs = [
+  {
+    question: 'How does a project begin?',
+    answer:
+      'Book a call. We start by understanding the problem, the people, and the opportunity, then turn that understanding into a product people can use.',
+  },
+  {
+    question: 'What does the work include?',
+    answer:
+      'The services named on the study. Strategy, design, and engineering stay in the same conversation so the product stays coherent.',
+  },
+  {
+    question: 'What happens before launch?',
+    answer: 'We test that the product works as intended before it meets the world.',
+  },
+] as const
 
 /** Light band under the gallery. Copy is taken from the legacy site. No client names or metrics. */
 export const workBuiltContent = {

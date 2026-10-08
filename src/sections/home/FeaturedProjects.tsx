@@ -53,7 +53,7 @@ function poseForDelta(delta: number, index: number, depthSoft: boolean): LayerPo
       scale: 1 - enter * 0.07 * deep,
       rotate: enter * 2.4 * deep,
       opacity: 1 - enter * 0.18,
-      blur: enter * (depthSoft ? 3 : 5.5),
+      blur: 0,
       z: 40 + index,
     }
   }
@@ -65,7 +65,7 @@ function poseForDelta(delta: number, index: number, depthSoft: boolean): LayerPo
     scale: 1 - exit * 0.09 * deep,
     rotate: -exit * 1.15 * deep,
     opacity: 1 - exit * 0.42,
-    blur: exit * (depthSoft ? 1.5 : 2.8),
+    blur: 0,
     z: 20 + index,
   }
 }
@@ -75,24 +75,13 @@ function ProjectImage({ project }: { project: FeaturedProject }) {
   const [loaded, setLoaded] = useState(false)
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-bg-muted">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 28% 22%, rgb(255 255 255 / 0.7), transparent 52%),
-            radial-gradient(ellipse at 78% 78%, rgb(186 206 255 / 0.55), transparent 48%),
-            linear-gradient(145deg, #fff9f2 0%, #fbf7f2 48%, #efe8df 100%)
-          `,
-        }}
-      />
+    <div className="absolute inset-0 overflow-hidden bg-[#f4f0e8]">
       {!failed ? (
         <img
           src={project.image}
           alt={project.alt}
           className={cn(
-            'absolute inset-0 h-full w-full object-cover transition-opacity duration-700',
+            'absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700',
             loaded ? 'opacity-100' : 'opacity-0',
           )}
           loading="lazy"
@@ -131,10 +120,10 @@ function SectionChrome({
   headerRef?: RefObject<HTMLDivElement | null>
 }) {
   return (
-    <div ref={headerRef} className="flex items-end justify-between gap-6">
+    <div ref={headerRef} className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
       <h2
         id="featured-projects-title"
-        className="text-[clamp(1.85rem,1.15rem+2.2vw,3.15rem)] leading-none font-medium tracking-tighter text-text"
+        className="min-w-0 text-[clamp(1.85rem,1.15rem+2.2vw,3.15rem)] leading-none font-medium tracking-tighter text-text"
       >
         {title}
       </h2>
@@ -205,27 +194,27 @@ function MobileFeatured({
         <ul className="mt-8 space-y-10">
           {projects.map((project) => (
             <li key={project.id} className="relative">
-              <div className="overflow-hidden rounded-[1.75rem] shadow-[0_28px_70px_rgb(6_50_90/0.32)] ring-1 ring-white/15">
-                <div className="relative aspect-16/10 w-full">
-                  <ProjectImage project={project} />
-                </div>
-              </div>
-              <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-text">
-                <span className="text-eyebrow text-brand">
-                  {project.number}
-                </span>
-                <h3 className="text-[1.2rem] font-semibold tracking-tight">{project.name}</h3>
-                <span className="text-[0.78rem] text-text-secondary">{project.category}</span>
-              </div>
-              <p className="mt-2 max-w-xl text-[0.95rem] leading-snug text-text-secondary">
-                {project.description}
-              </p>
               <Link
                 to={project.href}
-                className="mt-3 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-text no-underline"
+                className="group block text-text no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand"
               >
-                {copy.caseStudyLabel}
-                <span aria-hidden="true">→</span>
+                <div className="overflow-hidden rounded-[1.75rem]">
+                  <div className="relative aspect-4/5 w-full">
+                    <ProjectImage project={project} />
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="text-eyebrow text-brand">{project.number}</span>
+                  <h3 className="text-[1.2rem] font-semibold tracking-tight">{project.name}</h3>
+                  <span className="text-[0.78rem] text-text-secondary">{project.category}</span>
+                </div>
+                <p className="mt-2 max-w-xl text-[0.95rem] leading-snug text-text-secondary">
+                  {project.description}
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1.5 text-[0.88rem] font-semibold text-text">
+                  {copy.caseStudyLabel}
+                  <span aria-hidden="true">→</span>
+                </span>
               </Link>
             </li>
           ))}
@@ -258,26 +247,27 @@ function ReducedFeatured({
         />
         <div className="mt-10 grid gap-8 lg:grid-cols-2">
           {projects.map((project) => (
-            <article key={project.id}>
-              <div className="overflow-hidden rounded-[1.75rem] shadow-[0_24px_60px_rgb(6_50_90/0.28)] ring-1 ring-white/15">
-                <div className="relative aspect-16/10">
+            <Link
+              key={project.id}
+              to={project.href}
+              className="group block text-text no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            >
+              <div className="overflow-hidden rounded-[1.75rem]">
+                <div className="relative aspect-4/5">
                   <ProjectImage project={project} />
                 </div>
               </div>
-              <div className="mt-4 text-text">
+              <div className="mt-4">
                 <p className="text-eyebrow text-brand">
                   {project.number} · {project.category}
                 </p>
                 <h3 className="mt-1 text-title">{project.name}</h3>
                 <p className="mt-2 text-body-small text-text-secondary">{project.description}</p>
-                <Link
-                  to={project.href}
-                  className="mt-3 inline-flex text-body-small font-semibold text-text no-underline"
-                >
+                <span className="mt-3 inline-flex text-body-small font-semibold text-text">
                   {copy.caseStudyLabel} →
-                </Link>
+                </span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </Container>
@@ -521,7 +511,7 @@ export function FeaturedProjects() {
           <circle cx="138" cy="42" r="2.4" fill={ORANGE} />
         </svg>
 
-        <Container variant="wide" className="relative z-20 w-full pt-7 md:pt-9 lg:pt-11">
+        <Container variant="wide" className="relative z-30 w-full shrink-0 pt-6 pb-2 md:pt-8 md:pb-3">
           <SectionChrome
             headerRef={headerRef}
             title={copy.title}
@@ -529,15 +519,15 @@ export function FeaturedProjects() {
             viewAllTo={copy.viewAllTo}
           />
 
-          <div className="mt-4 flex items-center gap-4 md:mt-5">
+          <div className="mt-5 flex items-center gap-4 md:mt-6">
             <p className="text-eyebrow text-brand tabular-nums">
               <span ref={counterRef}>{activeProject?.number ?? '01'}</span>
               <span className="text-text-muted"> / 0{count}</span>
             </p>
-            <div className="h-px max-w-40 flex-1 overflow-hidden bg-white/20">
+            <div className="h-px max-w-40 flex-1 overflow-hidden bg-text/15">
               <div
                 ref={progressRef}
-                className="h-full origin-left bg-white"
+                className="h-full origin-left bg-text/70"
                 style={{
                   transform: 'scaleX(0)',
                   boxShadow: `0 0 0 0.5px ${ORANGE}`,
@@ -552,29 +542,30 @@ export function FeaturedProjects() {
           </div>
         </Container>
 
-        <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-center px-4 pb-5 sm:px-6 md:pb-7 lg:px-8">
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden px-[clamp(0.75rem,2vw,1.75rem)] pt-3 pb-3 md:pt-4 md:pb-4">
           <div
-            className="mx-auto w-full max-w-[min(92vw,78rem)]"
+            className="mx-auto h-full min-h-0 w-full max-w-[78rem]"
             style={{ perspective: '1400px' }}
           >
             <div
               ref={frameRef}
-              className="relative mx-auto w-full will-change-transform"
+              className="relative h-full w-full will-change-transform"
               style={{
-                height: 'min(68vh, 640px)',
-                maxWidth: '1280px',
                 transformStyle: 'preserve-3d',
               }}
               onPointerMove={onPointerMove}
               onPointerLeave={onPointerLeave}
             >
               {projects.map((project, index) => (
-                <article
+                <Link
                   key={project.id}
+                  to={project.href}
+                  aria-label={`${project.name}. ${copy.caseStudyLabel}`}
+                  tabIndex={index === active ? 0 : -1}
                   ref={(node) => {
                     layersRef.current[index] = node
                   }}
-                  className="absolute inset-0 overflow-hidden rounded-[1.85rem] shadow-[0_32px_80px_rgb(6_40_80/0.38)] ring-1 ring-white/18 md:rounded-[2.15rem]"
+                  className="absolute inset-0 overflow-hidden rounded-[1.85rem] outline-none focus-visible:ring-2 focus-visible:ring-brand md:rounded-[2.15rem]"
                   style={{
                     zIndex: index + 1,
                     transformOrigin: '50% 50%',
@@ -586,11 +577,11 @@ export function FeaturedProjects() {
                     ref={(node) => {
                       mediaRefs.current[index] = node
                     }}
-                    className="absolute inset-[-4%] will-change-transform"
+                    className="absolute inset-0 will-change-transform"
                   >
                     <ProjectImage project={project} />
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
           </div>
