@@ -1,15 +1,13 @@
-import { LazyMotion, domAnimation } from 'framer-motion'
 import { useEffect } from 'react'
-import { CareerCultureCta, CareerFinalCta } from '@/sections/careers/CareerCTA.tsx'
-import { CareerHero } from '@/sections/careers/CareerHero.tsx'
-import { CultureStory } from '@/sections/careers/CultureStory.tsx'
-import { JobList } from '@/sections/careers/JobList.tsx'
-import { LifeAtBizaffix } from '@/sections/careers/LifeAtBizaffix.tsx'
-import { TeamStrip } from '@/sections/careers/TeamStrip.tsx'
-import { WhyBizaffixIntro } from '@/sections/careers/WhyBizaffixIntro.tsx'
-import { WorkProcess } from '@/sections/careers/WorkProcess.tsx'
+import { useParams } from 'react-router'
+import { Container } from '@/components/layout/Container.tsx'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
+import { careersCopy, jobPostings } from '@/content/careers.ts'
+import { CareerBoard } from '@/sections/careers/CareerBoard.tsx'
 
 export function CareersPage() {
+  const { slug } = useParams()
+
   useEffect(() => {
     const previousTitle = document.title
     document.title = 'Careers · Bizaffix'
@@ -19,18 +17,18 @@ export function CareersPage() {
   }, [])
 
   return (
-    <LazyMotion features={domAnimation}>
-      <main>
-        <CareerHero />
-        <WhyBizaffixIntro />
-        <CultureStory />
-        <WorkProcess />
-        <JobList />
-        <LifeAtBizaffix />
-        <TeamStrip />
-        <CareerCultureCta />
-        <CareerFinalCta />
-      </main>
-    </LazyMotion>
+    <main className="bg-page-white">
+      <section className="atmosphere-hero -mt-(--header-clearance) pt-[calc(var(--header-clearance)+2.5rem)] pb-10 md:pb-14">
+        <Container variant="wide" className="w-full">
+          <Eyebrow>{careersCopy.hero.eyebrow}</Eyebrow>
+          <h1 className="mt-4 max-w-[12ch] text-display text-text">{careersCopy.hero.headline}</h1>
+          <p className="mt-5 max-w-[34rem] text-body-large text-text-secondary">{careersCopy.hero.body}</p>
+          <p className="mt-8 text-body text-text-secondary">
+            {jobPostings.length} openings. Choose a role and drop a CV. It goes straight to the hiring desk.
+          </p>
+        </Container>
+      </section>
+      <CareerBoard activeSlug={slug} />
+    </main>
   )
 }

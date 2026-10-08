@@ -59,7 +59,7 @@ export function WorkPage() {
             >
               <h1
                 id="work-title"
-                className="text-[clamp(3.25rem,1.6rem+6vw,6.25rem)] leading-[0.95] font-semibold tracking-[-0.045em]"
+                className="text-[clamp(3.25rem,1.6rem+6vw,6.25rem)] leading-[0.95] font-normal tracking-[-0.03em]"
               >
                 {copy.title.slice(0, copy.title.lastIndexOf(' '))}{' '}
                 <span className="text-brand">{copy.title.slice(copy.title.lastIndexOf(' ') + 1)}</span>

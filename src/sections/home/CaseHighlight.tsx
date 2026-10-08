@@ -43,7 +43,7 @@ export function CaseHighlight() {
             </span>
             <p
               id="case-highlight-title"
-              className="max-w-160 text-[clamp(1.4rem,1.05rem+1.3vw,2.25rem)] leading-tight font-bold tracking-tight text-text"
+              className="max-w-160 text-[clamp(1.4rem,1.05rem+1.3vw,2.25rem)] leading-tight font-medium tracking-tight text-text"
             >
               {copy.quote}
             </p>

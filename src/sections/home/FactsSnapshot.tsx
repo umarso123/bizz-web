@@ -115,30 +115,25 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
       {hasVideo ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(7_11_18/0.28)_0%,rgb(7_11_18/0.45)_42%,rgb(7_11_18/0.88)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_46%,rgb(7_11_18/0.42)_70%,rgb(7_11_18/0.92)_100%)]"
         />
       ) : null}
 
-      {card.kind === 'circle' ? (
-        <div className="absolute inset-0 flex items-center justify-center pb-16">
-          <div className="grid aspect-square w-[42%] min-w-28 place-items-center rounded-full bg-surface shadow-[0_18px_50px_rgb(23_33_43/0.28)] ring-1 ring-[#171717]/10">
-            <p className="text-[clamp(2.2rem,3.4vw,3.75rem)] leading-none font-semibold tracking-tighter text-[#171717]">
-              {card.value}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="absolute inset-0 flex flex-col justify-end px-5 pb-28 md:px-7 md:pb-32">
-          <p className={cn('text-[clamp(3.25rem,4.5vw,5.5rem)] leading-none font-semibold tracking-tighter', ink)}>
-            {card.value}
+      <div className="absolute inset-0 flex flex-col justify-end px-5 pb-28 md:px-7 md:pb-32">
+        <p
+          className={cn(
+            'text-[clamp(3.25rem,4.5vw,5.5rem)] leading-none font-medium tracking-tighter',
+            hasVideo ? 'text-accent' : ink,
+          )}
+        >
+          {card.value}
+        </p>
+        {card.title ? (
+          <p className={cn('mt-2 text-[clamp(1.15rem,1.4vw,1.5rem)] font-medium tracking-tighter', ink)}>
+            {card.title}
           </p>
-          {card.title ? (
-            <p className={cn('mt-2 text-[clamp(1.15rem,1.4vw,1.5rem)] font-semibold tracking-tighter', ink)}>
-              {card.title}
-            </p>
-          ) : null}
-        </div>
-      )}
+        ) : null}
+      </div>
 
       <p
         className={cn(
@@ -155,7 +150,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           )}
           aria-hidden="true"
         />
-        <span className="text-[1rem] leading-snug font-semibold tracking-tight">
+        <span className="text-[1rem] leading-snug font-medium tracking-tight">
           {lead}: {card.caption}
         </span>
       </p>
@@ -239,7 +234,7 @@ export function FactsSnapshot() {
     >
         <div
           className={cn(
-            'flex flex-col overflow-hidden bg-page-white pt-(--header-clearance)',
+            'flex flex-col overflow-hidden bg-page-white pt-(--header-clearance) [background-image:radial-gradient(ellipse_48%_36%_at_88%_18%,rgb(126_170_255/0.28),transparent_62%),radial-gradient(ellipse_32%_28%_at_8%_92%,rgb(245_200_76/0.22),transparent_58%)]',
             reduced ? 'min-h-dvh pb-16' : 'sticky top-0 h-dvh pb-8',
           )}
         >
@@ -256,7 +251,7 @@ export function FactsSnapshot() {
           {copy.cards.map((card, index) => (
             <article
               key={card.id}
-              className="fact-card absolute top-1/2 left-1/2 h-full w-[min(74vw,300px)] overflow-hidden rounded-[1.7rem] border border-[#171717]/8 shadow-[0_24px_60px_rgb(40_32_24/0.14)] sm:w-[min(58vw,460px)] lg:w-[min(44vw,600px)]"
+              className="fact-card absolute top-1/2 left-1/2 h-full w-[min(74vw,300px)] overflow-hidden rounded-[1.7rem] border border-white/70 shadow-[0_24px_60px_rgb(47_91_234/0.14)] sm:w-[min(58vw,460px)] lg:w-[min(44vw,600px)]"
               style={{
                 zIndex: index === 0 ? 30 : 12,
                 transform: `translate(-50%, -50%) scale(${index === 0 ? 1 : 0.88})`,

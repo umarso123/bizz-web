@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+data/hr-inbox
 *.local
 .env
 .env.*

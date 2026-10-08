@@ -41,7 +41,7 @@ function StageImage({ stage, visible }: { stage: Stage; visible: boolean }) {
           <p className="text-eyebrow text-brand">
             {stage.number}
           </p>
-          <p className="text-[1.15rem] font-bold tracking-tight text-text">{stage.title}</p>
+          <p className="text-[1.15rem] font-medium tracking-tight text-text">{stage.title}</p>
         </div>
       )}
     </div>
@@ -145,7 +145,7 @@ export function HowWeWork() {
                   >
                     <span
                       className={cn(
-                        'text-[clamp(1.85rem,1.35rem+1.8vw,3.35rem)] leading-none font-semibold tracking-tighter transition-colors duration-300',
+                        'text-[clamp(1.85rem,1.35rem+1.8vw,3.35rem)] leading-none font-medium tracking-tighter transition-colors duration-300',
                         dimmed ? 'text-text/22' : 'text-text',
                         !hovering && index !== 0 && 'text-text/28',
                         isActive && 'text-text',

@@ -5,7 +5,6 @@ import { CaseStudyPage } from '@/pages/CaseStudyPage.tsx'
 import { FoundationPage } from '@/pages/FoundationPage.tsx'
 import { ContactPage } from '@/pages/ContactPage.tsx'
 import { HomePage } from '@/pages/HomePage.tsx'
-import { JobDetailPage } from '@/pages/JobDetailPage.tsx'
 import { PlaceholderPage } from '@/pages/PlaceholderPage.tsx'
 import { ServicesPage } from '@/pages/ServicesPage.tsx'
 import { WorkPage } from '@/pages/WorkPage.tsx'
@@ -27,7 +26,7 @@ export function AppRouter() {
         <Route path="/insights" element={<PlaceholderPage title="Insights" />} />
         <Route path="/about" element={<PlaceholderPage title="About" />} />
         <Route path="/careers" element={<CareersPage />} />
-        <Route path="/careers/:slug" element={<JobDetailPage />} />
+        <Route path="/careers/:slug" element={<CareersPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/__design-system" element={<FoundationPage />} />
       </Route>

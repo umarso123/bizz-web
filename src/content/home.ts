@@ -272,12 +272,12 @@ export const homeContent = {
       {
         id: 'rating',
         tone: 'light' as const,
-        kind: 'circle' as const,
+        kind: 'stat' as const,
         eyebrow: 'Overall platforms',
         title: null,
         caption: 'Stated rating on the previous Bizaffix site.',
         value: '5/5',
-        media: '/videos/facts/Lion_explaining_with_hand_gestures_20261005173923.mp4',
+        media: '/videos/facts/colleagues-presenting-healthcare.mp4',
       },
       {
         id: 'services',

@@ -134,7 +134,7 @@ function SectionChrome({
     <div ref={headerRef} className="flex items-end justify-between gap-6">
       <h2
         id="featured-projects-title"
-        className="text-[clamp(1.85rem,1.15rem+2.2vw,3.15rem)] leading-none font-semibold tracking-tighter text-text"
+        className="text-[clamp(1.85rem,1.15rem+2.2vw,3.15rem)] leading-none font-medium tracking-tighter text-text"
       >
         {title}
       </h2>

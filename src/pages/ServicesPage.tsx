@@ -94,7 +94,7 @@ export function ServicesPage() {
       <main>
         <section className="atmosphere-hero -mt-(--header-clearance) pt-[calc(var(--header-clearance)+2.5rem)] pb-20 md:pt-[calc(var(--header-clearance)+3.5rem)] md:pb-28">
           <Container variant="page" className="relative w-full">
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:items-end lg:gap-20">
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16">
               <div>
                 <m.div
                   initial={reduced ? false : { opacity: 0, y: 12 }}
@@ -134,7 +134,20 @@ export function ServicesPage() {
                 </m.div>
               </div>
               <Reveal delay={0.1}>
-                <Eyebrow>From idea to reality</Eyebrow>
+                <div className="overflow-hidden rounded-[1.75rem] bg-page-dark shadow-[0_24px_60px_rgb(47_91_234/0.16)] ring-1 ring-brand/15">
+                  <video
+                    className="aspect-video w-full object-cover"
+                    src={'/videos/Colleagues_presenting_healthcare\u2026_1080p_20261008150328.mp4'}
+                    autoPlay={!reduced}
+                    muted
+                    loop
+                    playsInline
+                    controls={reduced}
+                    preload="metadata"
+                    aria-label="Colleagues presenting a healthcare product on a laptop"
+                  />
+                </div>
+                <Eyebrow className="mt-8">From idea to reality</Eyebrow>
                 <p className="mt-4 text-title text-text">{servicesPage.intro.title}</p>
                 <p className="mt-4 text-body text-text-secondary">{servicesPage.intro.body}</p>
               </Reveal>

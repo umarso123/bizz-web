@@ -1,6 +1,7 @@
 import { m, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router'
 import { Container } from '@/components/layout/Container.tsx'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { premiumHome } from '@/content/premium-home.ts'
 import { cn } from '@/lib/cn.ts'
 
@@ -32,15 +33,13 @@ export function PremiumHero() {
           animate={reduced ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease }}
         >
-          <span className="inline-flex items-center rounded-pill bg-accent px-3.5 py-1.5 text-[0.78rem] font-semibold tracking-tight text-text shadow-sm">
-            {copy.badge}
-          </span>
+          <Eyebrow as="span">{copy.badge}</Eyebrow>
           <span className="w-full text-body-small text-pretty text-text-secondary sm:w-auto">{copy.badgeNote}</span>
         </m.div>
 
         <m.h1
           id="premium-hero-title"
-          className="mt-8 max-w-full text-display text-wrap text-text md:mt-10 md:max-w-[14ch]"
+          className="mt-4 max-w-full text-display text-wrap text-text md:max-w-[14ch]"
           initial={reduced ? false : { opacity: 0, y: 24 }}
           animate={reduced ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.05, ease }}
@@ -48,7 +47,7 @@ export function PremiumHero() {
           {copy.titleLead} <span className="text-brand">{copy.titleAccent}</span>
         </m.h1>
 
-        <div className="mt-8 grid gap-8 md:mt-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end lg:gap-16">
+        <div className="mt-4 grid gap-6 md:mt-5 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end lg:gap-16">
           <m.p
             className="max-w-[34rem] text-body-large text-text-secondary"
             initial={reduced ? false : { opacity: 0, y: 16 }}
@@ -101,7 +100,7 @@ export function PremiumHero() {
               animate={reduced ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.22 + index * 0.07, ease }}
             >
-              <p className="text-[clamp(1.7rem,1.15rem+1.7vw,2.75rem)] leading-none font-bold tracking-tighter">
+              <p className="text-[clamp(1.7rem,1.15rem+1.7vw,2.75rem)] leading-none font-medium tracking-tighter">
                 {card.value}
               </p>
               <p

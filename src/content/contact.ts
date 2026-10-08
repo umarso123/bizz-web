@@ -4,8 +4,6 @@
  * Set `studioEmail` when that address is confirmed. Do not guess one.
  */
 
-export const signalColor = '#F66C2A'
-
 /** Replace with the confirmed public studio address. Null means the page will not invent one. */
 export const studioEmail: string | null = null
 

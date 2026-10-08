@@ -11,7 +11,7 @@ export function WhatWeDo() {
 
   return (
     <section
-      id="services"
+      id="what-we-do"
       className="atmosphere-soft relative overflow-hidden section-y"
       aria-labelledby="what-we-do-title"
     >
@@ -56,7 +56,7 @@ export function WhatWeDo() {
                 </span>
                 <span className="text-[0.8rem] font-medium text-text/35">{d.index}</span>
               </div>
-              <h3 className="mt-6 text-[clamp(1.5rem,1.1rem+1.4vw,2.35rem)] leading-[1.12] font-bold tracking-tight text-text">
+              <h3 className="mt-6 text-[clamp(1.5rem,1.1rem+1.4vw,2.35rem)] leading-[1.12] font-medium tracking-tight text-text">
                 {d.title}
               </h3>
               <p className="mt-3 max-w-[36rem] text-body text-text-secondary">{d.body}</p>
@@ -133,7 +133,7 @@ function ServiceCard({
       </div>
 
       <div>
-        <h3 className={cn('text-[clamp(1.35rem,1.05rem+0.9vw,1.85rem)] leading-[1.15] font-bold tracking-tight', ink)}>
+        <h3 className={cn('text-[clamp(1.35rem,1.05rem+0.9vw,1.85rem)] leading-[1.15] font-medium tracking-tight', ink)}>
           {card.title}
         </h3>
         <p className={cn('mt-3 text-body-small', mute)}>{card.body}</p>

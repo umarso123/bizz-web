@@ -13,8 +13,7 @@ import {
   type ContactIntent,
   type TimingId,
 } from '@/content/contact.ts'
-import { contactLive } from '@/sections/contact/contactLive.ts'
-import { contactFrame, contactInset } from '@/sections/contact/contactLayout.ts'
+import { contactFrame } from '@/sections/contact/contactLayout.ts'
 import { useContactScroll } from '@/sections/contact/useContactScroll.ts'
 import { useMagnetic } from '@/sections/contact/useMagnetic.ts'
 import { cn } from '@/lib/cn.ts'
@@ -70,7 +69,7 @@ function Choices<T extends string>({
 
   return (
     <div role="radiogroup" aria-label={label} aria-invalid={invalid || undefined} aria-describedby={describedBy}>
-      <div className="flex flex-wrap gap-x-6 gap-y-1">
+      <div className="flex flex-wrap gap-2">
         {options.map((option, index) => {
           const selected = value === option.id
           const tab = selected || (value === null && index === 0) ? 0 : -1
@@ -85,8 +84,10 @@ function Choices<T extends string>({
               aria-checked={selected}
               tabIndex={tab}
               className={cn(
-                'min-h-11 cursor-pointer border-b bg-transparent px-0 text-left text-[1.05rem] transition-colors',
-                selected ? 'border-(--signal) text-text' : 'border-transparent text-text-secondary hover:text-text',
+                'min-h-11 cursor-pointer rounded-full border px-4 text-left text-[0.98rem] transition-colors',
+                selected
+                  ? 'border-text bg-text text-text-inverse'
+                  : 'border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text',
               )}
               onClick={() => onChange(option.id)}
               onKeyDown={(event) => onKeyDown(event, index)}
@@ -130,16 +131,6 @@ export function ContactForm({
   const note = composeNote({ intent, name, email, organization, build, message, timing, when })
 
   useEffect(() => {
-    contactLive.emailReady = emailPattern.test(email.trim())
-    contactLive.messageRatio = Math.min(1, message.trim().length / 280)
-    contactLive.build = build
-    contactLive.arrived = active === 'timing' || timing !== null
-    contactLive.awake = active === 'name' || name.trim().length > 0
-    contactLive.complete = ready
-    if (ready) contactLive.activeField = null
-  }, [email, message, build, active, timing, name, ready])
-
-  useEffect(() => {
     scrollToNote.current = scroll
   }, [scroll])
 
@@ -154,16 +145,10 @@ export function ContactForm({
 
   function focusField(id: string) {
     setActive(id)
-    contactLive.activeField = id
-    if (id === 'timing') contactLive.arrived = true
   }
 
   function blurField(id: string) {
-    setActive((current) => {
-      if (current !== id) return current
-      if (contactLive.activeField === id) contactLive.activeField = null
-      return null
-    })
+    setActive((current) => (current === id ? null : current))
   }
 
   function growMessage(node: HTMLTextAreaElement) {
@@ -200,236 +185,235 @@ export function ContactForm({
 
   function writeAnother() {
     setReady(false)
-    contactLive.complete = false
     window.setTimeout(() => {
       document.getElementById('contact-name')?.focus()
     }, 40)
   }
 
   return (
-    <section data-scene="form" className="bg-page-brand pb-[clamp(5rem,14vh,9rem)]">
+    <section data-scene="form" className="bg-page-brand pb-[clamp(4rem,10vh,7rem)]">
       <div className={contactFrame}>
-        <div className={contactInset}>
-          <div id="project-note" data-filament="form" className="scroll-mt-28 max-w-[40rem]">
-            {ready ? (
-              <div>
-                <h2 id="contact-note-ready" tabIndex={-1} className="text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em] outline-none">
-                  Your note is ready.
-                </h2>
-                <p className="mt-6 max-w-[36rem] text-body-large text-text-secondary">
-                  {studioEmail
-                    ? 'Open it in your mail app, or copy it.'
-                    : 'This site does not list a public studio address. Copy the note and send it to the address you already have.'}
-                </p>
-                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-                  {studioEmail ? (
-                    <a
-                      href={mailHref(studioEmail, note)}
-                      className="inline-flex min-h-(--button-height-desktop) items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse no-underline hover:bg-button-primary-hover"
-                    >
-                      Open in your mail
-                    </a>
-                  ) : null}
-                  <button
-                    type="button"
-                    className="inline-flex min-h-(--button-height-desktop) cursor-pointer items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse hover:bg-button-primary-hover"
-                    onClick={() => void copyNote()}
+        <div id="project-note" className="scroll-mt-28 max-w-[52rem] rounded-[1.75rem] bg-surface px-6 py-8 shadow-card sm:px-10 sm:py-12">
+          {ready ? (
+            <div>
+              <h2 id="contact-note-ready" tabIndex={-1} className="text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-text outline-none">
+                Your note is ready.
+              </h2>
+              <p className="mt-5 max-w-[36rem] text-body-large text-text-secondary">
+                {studioEmail
+                  ? 'Open it in your mail app, or copy it.'
+                  : 'This site does not list a public studio address. Copy the note and send it to the address you already have.'}
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+                {studioEmail ? (
+                  <a
+                    href={mailHref(studioEmail, note)}
+                    className="inline-flex min-h-(--button-height-desktop) items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse no-underline hover:bg-button-primary-hover"
                   >
-                    {copied ? 'Copied' : 'Copy the note'}
-                  </button>
-                  <button type="button" className="cursor-pointer bg-transparent text-body text-text-secondary underline decoration-border underline-offset-4 hover:text-text" onClick={writeAnother}>
-                    Write another note
-                  </button>
-                </div>
-                {copyFailed ? (
-                  <textarea readOnly value={note} className="mt-8 w-full resize-none border border-border bg-transparent p-4 text-body-small text-text" rows={8} aria-label="Your note" />
+                    Open in your mail
+                  </a>
                 ) : null}
+                <button
+                  type="button"
+                  className="inline-flex min-h-(--button-height-desktop) cursor-pointer items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse hover:bg-button-primary-hover"
+                  onClick={() => void copyNote()}
+                >
+                  {copied ? 'Copied' : 'Copy the note'}
+                </button>
+                <button type="button" className="cursor-pointer bg-transparent text-body text-text-secondary underline decoration-border underline-offset-4 hover:text-text" onClick={writeAnother}>
+                  Write another note
+                </button>
               </div>
-            ) : (
-              <form noValidate aria-labelledby="project-note-title" onSubmit={onSubmit}>
-                <h2 id="project-note-title" className="text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em]">
-                  {intentMeta?.formTitle ?? defaultFormTitle}
-                </h2>
-                <p className="mt-5 max-w-[34rem] text-body text-text-secondary">
-                  Name, email, the kind of work, and a short description are required.
-                </p>
+              {copyFailed ? (
+                <textarea readOnly value={note} className="mt-8 w-full resize-none rounded-2xl border border-border bg-bg p-4 text-body-small text-text" rows={8} aria-label="Your note" />
+              ) : null}
+            </div>
+          ) : (
+            <form noValidate aria-labelledby="project-note-title" onSubmit={onSubmit}>
+              <h2 id="project-note-title" className="text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-text">
+                {intentMeta?.formTitle ?? defaultFormTitle}
+              </h2>
+              <p className="mt-4 max-w-[34rem] text-body text-text-secondary">
+                Name, email, the kind of work, and a short description are required.
+              </p>
 
-                <div className="mt-10">
-                  <p id={errorTitleId} className="text-body-small text-text-secondary">
-                    This note is about
-                  </p>
-                  <div className="mt-3">
-                    <Choices
-                      label="This note is about"
-                      value={intent}
-                      options={contactIntents}
-                      onChange={onIntent}
-                    />
+              <div className="mt-10">
+                <p id={errorTitleId} className="text-body-small text-text-secondary">
+                  This note is about
+                </p>
+                <div className="mt-3">
+                  <Choices
+                    label="This note is about"
+                    value={intent}
+                    options={contactIntents}
+                    onChange={onIntent}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-12 grid gap-10">
+                <Field
+                  index="01"
+                  id="contact-name"
+                  label="Your name"
+                  autoComplete="name"
+                  value={name}
+                  active={active === 'name'}
+                  error={errors.name}
+                  onFocus={() => focusField('name')}
+                  onBlur={() => blurField('name')}
+                  onChange={setName}
+                />
+                <Field
+                  index="02"
+                  id="contact-email"
+                  label="Email"
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  value={email}
+                  active={active === 'email'}
+                  error={errors.email}
+                  onFocus={() => focusField('email')}
+                  onBlur={() => blurField('email')}
+                  onChange={setEmail}
+                />
+                <Field
+                  index="03"
+                  id="contact-organization"
+                  label="Organization"
+                  hint="Optional"
+                  autoComplete="organization"
+                  value={organization}
+                  active={active === 'organization'}
+                  onFocus={() => focusField('organization')}
+                  onBlur={() => blurField('organization')}
+                  onChange={setOrganization}
+                />
+
+                <div
+                  className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3"
+                  onFocus={() => focusField('build')}
+                  onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) blurField('build')
+                  }}
+                >
+                  <span className={cn('pt-1 text-body-small tabular-nums', active === 'build' ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
+                    04
+                  </span>
+                  <div>
+                    <p id="contact-build" className={cn('text-body', active === 'build' ? 'text-text' : 'text-text-secondary')}>
+                      What are you looking to build?
+                    </p>
+                    <div id="contact-build-choices" className="mt-4">
+                      <Choices
+                        label="What are you looking to build?"
+                        value={build}
+                        options={buildOptions}
+                        onChange={setBuild}
+                        invalid={Boolean(errors.build)}
+                        describedBy={errors.build ? 'contact-build-error' : undefined}
+                      />
+                    </div>
+                    {errors.build ? (
+                      <p id="contact-build-error" className="mt-2 text-body-small text-error">
+                        {errors.build}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
 
-                <div className="mt-14 grid gap-11">
-                  <Field
-                    index="01"
-                    id="contact-name"
-                    filament="name"
-                    label="Your name"
-                    autoComplete="name"
-                    value={name}
-                    active={active === 'name'}
-                    error={errors.name}
-                    onFocus={() => focusField('name')}
-                    onBlur={() => blurField('name')}
-                    onChange={setName}
-                  />
-                  <Field
-                    index="02"
-                    id="contact-email"
-                    filament="email"
-                    label="Email"
-                    type="email"
-                    autoComplete="email"
-                    inputMode="email"
-                    value={email}
-                    active={active === 'email'}
-                    error={errors.email}
-                    onFocus={() => focusField('email')}
-                    onBlur={() => blurField('email')}
-                    onChange={setEmail}
-                  />
-                  <Field
-                    index="03"
-                    id="contact-organization"
-                    filament="organization"
-                    label="Organization"
-                    hint="Optional"
-                    autoComplete="organization"
-                    value={organization}
-                    active={active === 'organization'}
-                    onFocus={() => focusField('organization')}
-                    onBlur={() => blurField('organization')}
-                    onChange={setOrganization}
-                  />
-
-                  <div
-                    className="grid grid-cols-[2.4rem_minmax(0,1fr)] gap-x-3"
-                    onFocus={() => focusField('build')}
-                    onBlur={(event) => {
-                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) blurField('build')
-                    }}
-                  >
-                    <span className={cn('pt-1 text-body-small tabular-nums', active === 'build' ? 'text-(--signal)' : 'text-text-muted')}>04</span>
-                    <div>
-                      <p id="contact-build" className={cn('text-body-small', active === 'build' ? 'text-text' : 'text-text-secondary')}>
-                        What are you looking to build?
-                      </p>
-                      <div id="contact-build-choices" className="mt-3" data-filament-field="build">
-                        <Choices
-                          label="What are you looking to build?"
-                          value={build}
-                          options={buildOptions}
-                          onChange={setBuild}
-                          invalid={Boolean(errors.build)}
-                          describedBy={errors.build ? 'contact-build-error' : undefined}
-                        />
-                      </div>
-                      {errors.build ? (
-                        <p id="contact-build-error" className="mt-2 text-body-small text-error">
-                          {errors.build}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-[2.4rem_minmax(0,1fr)] gap-x-3">
-                    <label htmlFor="contact-message" className={cn('pt-1 text-body-small tabular-nums', active === 'message' ? 'text-(--signal)' : 'text-text-muted')}>
-                      05
+                <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3">
+                  <span className={cn('pt-1 text-body-small tabular-nums', active === 'message' ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
+                    05
+                  </span>
+                  <div>
+                    <label htmlFor="contact-message" className={cn('block text-body', active === 'message' ? 'text-text' : 'text-text-secondary')}>
+                      Tell us about the project
                     </label>
-                    <div>
-                      <label htmlFor="contact-message" className={cn('block text-body-small', active === 'message' ? 'text-text' : 'text-text-secondary')}>
-                        Tell us about the project
-                      </label>
-                      <div className="relative" data-filament-field="message">
-                        <textarea
-                          ref={messageRef}
-                          id="contact-message"
-                          rows={3}
-                          value={message}
-                          aria-invalid={errors.message ? true : undefined}
-                          aria-describedby={errors.message ? 'contact-message-error' : undefined}
-                          className="min-h-28 w-full resize-none overflow-hidden bg-transparent py-3 text-[1.0625rem] leading-[1.55] text-text caret-(--signal) outline-none"
-                          onFocus={() => focusField('message')}
-                          onBlur={() => blurField('message')}
-                          onChange={(event) => {
-                            setMessage(event.target.value)
-                            growMessage(event.target)
-                          }}
-                        />
-                        <Line active={active === 'message'} invalid={Boolean(errors.message)} />
-                      </div>
-                      {errors.message ? (
-                        <p id="contact-message-error" className="mt-2 text-body-small text-error">
-                          {errors.message}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div
-                    className="grid grid-cols-[2.4rem_minmax(0,1fr)] gap-x-3"
-                    onFocus={() => focusField('timing')}
-                    onBlur={(event) => {
-                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) blurField('timing')
-                    }}
-                  >
-                    <span className={cn('pt-1 text-body-small tabular-nums', active === 'timing' ? 'text-(--signal)' : 'text-text-muted')}>06</span>
-                    <div>
-                      <p className={cn('text-body-small', active === 'timing' ? 'text-text' : 'text-text-secondary')}>
-                        When should it begin? <span className="text-text-muted">Optional</span>
+                    <textarea
+                      ref={messageRef}
+                      id="contact-message"
+                      rows={4}
+                      value={message}
+                      aria-invalid={errors.message ? true : undefined}
+                      aria-describedby={errors.message ? 'contact-message-error' : undefined}
+                      className={cn(
+                        'mt-4 min-h-36 w-full resize-none overflow-hidden rounded-2xl border bg-bg px-4 py-3 text-[1.0625rem] leading-[1.55] text-text caret-brand outline-none',
+                        errors.message ? 'border-error' : 'border-border focus-visible:border-brand',
+                      )}
+                      onFocus={() => focusField('message')}
+                      onBlur={() => blurField('message')}
+                      onChange={(event) => {
+                        setMessage(event.target.value)
+                        growMessage(event.target)
+                      }}
+                    />
+                    {errors.message ? (
+                      <p id="contact-message-error" className="mt-2 text-body-small text-error">
+                        {errors.message}
                       </p>
-                      <div className="mt-3" data-filament-field="timing">
-                        <Choices
-                          label="When should it begin?"
-                          value={timing}
-                          options={timingOptions}
-                          onChange={setTiming}
-                        />
-                      </div>
-                      <div className={cn('grid transition-[grid-template-rows] duration-300', timing === 'dated' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}>
-                        <div className="overflow-hidden" inert={timing === 'dated' ? undefined : true}>
-                          <div className="relative pt-4">
-                            <label htmlFor="contact-when" className="sr-only">
-                              Roughly when
-                            </label>
-                            <input
-                              id="contact-when"
-                              value={when}
-                              autoComplete="off"
-                              className="w-full bg-transparent py-3 text-[1.0625rem] text-text caret-(--signal) outline-none"
-                              onFocus={() => focusField('timing')}
-                              onChange={(event) => setWhen(event.target.value)}
-                            />
-                            <Line active={active === 'timing' && timing === 'dated'} />
-                          </div>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div
+                  className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3"
+                  onFocus={() => focusField('timing')}
+                  onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) blurField('timing')
+                  }}
+                >
+                  <span className={cn('pt-1 text-body-small tabular-nums', active === 'timing' ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
+                    06
+                  </span>
+                  <div>
+                    <p className={cn('text-body', active === 'timing' ? 'text-text' : 'text-text-secondary')}>
+                      When should it begin? <span className="text-text-muted">Optional</span>
+                    </p>
+                    <div className="mt-4">
+                      <Choices
+                        label="When should it begin?"
+                        value={timing}
+                        options={timingOptions}
+                        onChange={setTiming}
+                      />
+                    </div>
+                    <div className={cn('grid transition-[grid-template-rows] duration-300', timing === 'dated' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}>
+                      <div className="overflow-hidden" inert={timing === 'dated' ? undefined : true}>
+                        <div className="relative pt-4">
+                          <label htmlFor="contact-when" className="sr-only">
+                            Roughly when
+                          </label>
+                          <input
+                            id="contact-when"
+                            value={when}
+                            autoComplete="off"
+                            placeholder="Roughly when"
+                            className="w-full bg-transparent py-3 text-[1.0625rem] text-text caret-brand outline-none placeholder:text-text-muted"
+                            onFocus={() => focusField('timing')}
+                            onChange={(event) => setWhen(event.target.value)}
+                          />
+                          <Line active={active === 'timing' && timing === 'dated'} />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="mt-14">
-                  <button
-                    ref={magnetic}
-                    type="submit"
-                    className="group inline-flex min-h-(--button-height-desktop) cursor-pointer items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse transition-[background-color,transform] duration-200 hover:bg-button-primary-hover"
-                  >
-                    {intentMeta?.submit ?? defaultSubmit}
-                    <Arrow />
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
+              <div className="mt-12">
+                <button
+                  ref={magnetic}
+                  type="submit"
+                  className="group inline-flex min-h-(--button-height-desktop) cursor-pointer items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse transition-[background-color,transform] duration-200 hover:bg-button-primary-hover"
+                >
+                  {intentMeta?.submit ?? defaultSubmit}
+                  <Arrow />
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </section>
@@ -443,7 +427,8 @@ function Line({ active, invalid = false }: { active: boolean; invalid?: boolean 
       <span
         aria-hidden="true"
         className={cn(
-          'absolute right-0 bottom-0 left-0 h-0.5 origin-left bg-(--signal) motion-safe:transition-transform motion-safe:duration-300',
+          'absolute right-0 bottom-0 left-0 h-0.5 origin-left motion-safe:transition-transform motion-safe:duration-300',
+          invalid ? 'bg-error' : 'bg-brand',
           active ? 'scale-x-100' : 'scale-x-0',
         )}
       />
@@ -454,7 +439,6 @@ function Line({ active, invalid = false }: { active: boolean; invalid?: boolean 
 function Field({
   index,
   id,
-  filament,
   label,
   hint,
   type = 'text',
@@ -469,7 +453,6 @@ function Field({
 }: {
   index: string
   id: string
-  filament: string
   label: string
   hint?: string
   type?: string
@@ -484,16 +467,16 @@ function Field({
 }) {
   const errorId = `${id}-error`
   return (
-    <div className="grid grid-cols-[2.4rem_minmax(0,1fr)] gap-x-3">
-      <label htmlFor={id} className={cn('pt-1 text-body-small tabular-nums', active ? 'text-(--signal)' : 'text-text-muted')}>
+    <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3">
+      <span className={cn('pt-1 text-body-small tabular-nums', active ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
         {index}
-      </label>
+      </span>
       <div>
-        <label htmlFor={id} className={cn('block text-body-small', active ? 'text-text' : 'text-text-secondary')}>
+        <label htmlFor={id} className={cn('block text-body', active ? 'text-text' : 'text-text-secondary')}>
           {label}
           {hint ? <span className="ms-2 text-text-muted">{hint}</span> : null}
         </label>
-        <div className="relative" data-filament-field={filament}>
+        <div className="relative">
           <input
             id={id}
             type={type}
@@ -502,7 +485,7 @@ function Field({
             inputMode={inputMode}
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? errorId : undefined}
-            className="w-full bg-transparent py-3 text-[1.0625rem] text-text caret-(--signal) outline-none"
+            className="w-full bg-transparent py-3 text-[1.0625rem] text-text caret-brand outline-none"
             onFocus={onFocus}
             onBlur={onBlur}
             onChange={(event) => onChange(event.target.value)}

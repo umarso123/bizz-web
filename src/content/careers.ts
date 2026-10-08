@@ -13,8 +13,8 @@ import type {
 export const careersCopy = {
   hero: {
     eyebrow: 'Careers at Bizaffix',
-    headline: 'Build what matters.',
-    body: 'Join a team designing and engineering digital products that make complex healthcare experiences simpler, smarter, and more human.',
+    headline: 'A good place to work.',
+    body: 'We focus on remote opportunity and flexible timing. That is what sets us apart.',
     primaryCta: 'View open positions',
     secondaryCta: 'Life at Bizaffix',
   },
@@ -163,7 +163,7 @@ export const jobPostings: JobPosting[] = [
       'Familiarity with design systems at scale',
     ],
     applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Product%20Designer',
-    status: 'placeholder',
+    status: 'open',
   },
   {
     id: 'job-frontend-engineer',
@@ -193,7 +193,7 @@ export const jobPostings: JobPosting[] = [
       'Healthcare or complex domain product experience',
     ],
     applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Frontend%20Engineer',
-    status: 'placeholder',
+    status: 'open',
   },
   {
     id: 'job-backend-engineer',
@@ -223,7 +223,7 @@ export const jobPostings: JobPosting[] = [
       'Event-driven or distributed systems experience',
     ],
     applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Backend%20Engineer',
-    status: 'placeholder',
+    status: 'open',
   },
   {
     id: 'job-mobile-developer',
@@ -253,7 +253,7 @@ export const jobPostings: JobPosting[] = [
       'CI/CD for mobile releases',
     ],
     applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Mobile%20App%20Developer',
-    status: 'placeholder',
+    status: 'open',
   },
   {
     id: 'job-ai-ml-engineer',
@@ -283,7 +283,7 @@ export const jobPostings: JobPosting[] = [
       'MLOps and monitoring practice',
     ],
     applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20AI%20%2F%20ML%20Engineer',
-    status: 'placeholder',
+    status: 'open',
   },
   {
     id: 'job-product-manager',
@@ -313,7 +313,7 @@ export const jobPostings: JobPosting[] = [
       'Technical background that aids collaboration with engineering',
     ],
     applyUrl: 'mailto:careers@bizaffix.com?subject=Application%20%3A%20Product%20Manager',
-    status: 'placeholder',
+    status: 'open',
   },
 ]
 
