@@ -147,7 +147,7 @@ export function WorkPage() {
             <div>
               <h2
                 id="built-title"
-                className="max-w-[9em] font-[Iowan_Old_Style,Palatino_Linotype,Palatino,Georgia,serif] text-[clamp(2.8rem,1.4rem+4vw,5rem)] leading-[0.98] font-medium tracking-[-0.03em] wrap-normal"
+                className="max-w-[9em] text-[clamp(2.8rem,1.4rem+4vw,5rem)] leading-[0.98] font-medium tracking-[-0.03em] wrap-normal"
               >
                 {workBuiltContent.title}
               </h2>

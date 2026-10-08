@@ -24,7 +24,7 @@ export function Eyebrow({
   void _tone
   const Tag = as
   return (
-    <Tag className={cn('text-eyebrow', inverse ? 'text-white' : 'text-brand', className)} {...props}>
+    <Tag className={cn('text-eyebrow', inverse ? 'text-text-inverse' : 'text-brand', className)} {...props}>
       {children}
     </Tag>
   )

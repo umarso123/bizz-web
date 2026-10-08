@@ -173,7 +173,7 @@ function ArcNumber({
         />
         <m.span
           style={{ color }}
-          className="block text-[1.85rem] leading-none font-medium tracking-[-0.04em] font-[Georgia,Palatino,serif]"
+          className="block text-[1.85rem] leading-none font-medium tracking-[-0.04em]"
         >
           {String(index + 1).padStart(2, '0')}
         </m.span>
@@ -191,7 +191,7 @@ function ServiceCopy({
 }) {
   return (
     <div>
-      <h2 className="max-w-[14ch] text-[clamp(3.1rem,4.7vw,5.35rem)] leading-[0.94] font-medium tracking-[-0.035em] text-[#171717] font-[Georgia,Palatino,serif]">
+      <h2 className="max-w-[14ch] text-[clamp(3.1rem,4.7vw,5.35rem)] leading-[0.94] font-medium tracking-[-0.035em] text-[#171717]">
         <Link to={`/services#${service.slug}`} className="text-[#171717] no-underline hover:text-[#171717]">
           {service.title}
         </Link>
@@ -278,7 +278,7 @@ function ServiceStack() {
               className="grid items-center gap-8 border-t border-[#171717]/8 pt-10 md:grid-cols-[minmax(0,1fr)_16rem] md:gap-12"
             >
               <div>
-                <p className="text-[1.35rem] text-[#171717] font-[Georgia,Palatino,serif]">
+                <p className="text-[1.35rem] text-[#171717]">
                   {String(index + 1).padStart(2, '0')}
                 </p>
                 <div className="mt-4">
@@ -326,7 +326,7 @@ export function ServiceOrbit() {
           aria-hidden="true"
           className="absolute top-[34%] left-0 z-20 flex h-48 w-12 -translate-y-1/2 flex-col items-center bg-page-dark pt-3.5 text-[#fff]"
         >
-          <span className="text-[1.15rem] leading-none font-medium font-[Georgia,Palatino,serif]">S.</span>
+          <span className="text-[1.15rem] leading-none font-medium">S.</span>
           <Eyebrow as="span" inverse className="mt-4 [writing-mode:vertical-rl] rotate-180">
             Services
           </Eyebrow>

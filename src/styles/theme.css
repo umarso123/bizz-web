@@ -1,7 +1,7 @@
 /*
  * Bizaffix design system — premium HealthTech studio.
  * Palette and radii from the provided design-system reference.
- * (Dazzed is commercial; Plus Jakarta Sans is the licensed stand-in.)
+ * One serif across the site: Georgia, the face used for service titles.
  */
 @theme static {
   --color-*: initial;
@@ -11,9 +11,8 @@
   --tracking-tighter: -0.04em;
   --tracking-tight: -0.02em;
 
-  --font-sans:
-    'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', sans-serif;
+  --font-sans: Georgia, 'Palatino Linotype', Palatino, 'Iowan Old Style', serif;
+  --color-white: #ffffff;
 
   /* Surfaces */
   --color-bg: #fbf7f2;

@@ -1,22 +1,19 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
-import { ReactLenis, type LenisRef } from 'lenis/react'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { ReactLenis, useLenis } from 'lenis/react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const [reduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-  const lenisRef = useRef<LenisRef>(null)
+  const lenis = useLenis()
   const { pathname } = useLocation()
 
   useEffect(() => {
-    if (reduced) return
-
-    const lenis = lenisRef.current?.lenis
-    if (!lenis) return
+    if (reduced || !lenis) return
 
     const onScroll = () => {
       ScrollTrigger.update()
@@ -35,7 +32,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       lenis.off('scroll', onScroll)
       gsap.ticker.remove(tick)
     }
-  }, [reduced])
+  }, [reduced, lenis])
 
   useEffect(() => {
     if (reduced) {
@@ -43,14 +40,13 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       return
     }
 
-    lenisRef.current?.lenis?.scrollTo(0, { immediate: true })
-  }, [pathname, reduced])
+    lenis?.scrollTo(0, { immediate: true })
+  }, [pathname, reduced, lenis])
 
   if (reduced) return children
 
   return (
     <ReactLenis
-      ref={lenisRef}
       root
       options={{
         autoRaf: false,

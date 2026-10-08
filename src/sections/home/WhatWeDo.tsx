@@ -51,7 +51,7 @@ export function WhatWeDo() {
           >
             <div className="max-w-[40rem]">
               <div className="flex items-start justify-between gap-4">
-                <span className="inline-flex rounded-pill border border-text/15 bg-surface/50 px-3 py-1 text-[0.72rem] font-semibold text-text">
+                <span className="text-eyebrow inline-flex rounded-pill border border-text/15 bg-surface/50 px-3 py-1 text-text">
                   {d.badge}
                 </span>
                 <span className="text-[0.8rem] font-medium text-text/35">{d.index}</span>
@@ -119,7 +119,7 @@ function ServiceCard({
       <div className="flex items-start justify-between gap-3">
         <span
           className={cn(
-            'inline-flex rounded-pill border px-3 py-1 text-[0.72rem] font-semibold',
+            'text-eyebrow inline-flex rounded-pill border px-3 py-1',
             brand && 'border-white/25 bg-white/10 text-white',
             accent && 'border-text/15 bg-surface/40 text-text',
             card.tone === 'light' && 'border-border bg-bg-subtle text-text',

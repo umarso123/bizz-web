@@ -38,7 +38,7 @@ function StageImage({ stage, visible }: { stage: Stage; visible: boolean }) {
         />
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
-          <p className="text-[0.7rem] font-semibold tracking-[0.16em] text-brand uppercase">
+          <p className="text-eyebrow text-brand">
             {stage.number}
           </p>
           <p className="text-[1.15rem] font-bold tracking-tight text-text">{stage.title}</p>
@@ -165,7 +165,7 @@ export function HowWeWork() {
                       {stage.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-[0.68rem] font-semibold tracking-[0.14em] uppercase md:text-[0.72rem]"
+                          className="text-eyebrow text-brand"
                         >
                           {tag}
                         </span>

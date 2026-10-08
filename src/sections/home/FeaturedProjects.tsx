@@ -110,7 +110,7 @@ function ProjectImage({ project }: { project: FeaturedProject }) {
           <p className="text-[clamp(1.25rem,2.4vw,2rem)] leading-none font-semibold tracking-tight text-text">
             {project.name}
           </p>
-          <p className="text-[0.72rem] font-medium tracking-[0.18em] text-text-muted uppercase">
+          <p className="text-eyebrow text-brand">
             {project.category}
           </p>
         </div>
@@ -211,7 +211,7 @@ function MobileFeatured({
                 </div>
               </div>
               <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-text">
-                <span className="text-[0.78rem] font-semibold tracking-[0.14em] text-text-muted">
+                <span className="text-eyebrow text-brand">
                   {project.number}
                 </span>
                 <h3 className="text-[1.2rem] font-semibold tracking-tight">{project.name}</h3>
@@ -265,7 +265,7 @@ function ReducedFeatured({
                 </div>
               </div>
               <div className="mt-4 text-text">
-                <p className="text-[0.75rem] font-semibold tracking-[0.14em] text-text-muted">
+                <p className="text-eyebrow text-brand">
                   {project.number} · {project.category}
                 </p>
                 <h3 className="mt-1 text-title">{project.name}</h3>
@@ -530,7 +530,7 @@ export function FeaturedProjects() {
           />
 
           <div className="mt-4 flex items-center gap-4 md:mt-5">
-            <p className="font-mono text-[0.78rem] tracking-[0.08em] text-text/80 tabular-nums">
+            <p className="text-eyebrow text-brand tabular-nums">
               <span ref={counterRef}>{activeProject?.number ?? '01'}</span>
               <span className="text-text-muted"> / 0{count}</span>
             </p>
