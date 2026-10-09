@@ -4,6 +4,7 @@ import { FactsSnapshot } from '@/sections/home/FactsSnapshot.tsx'
 import { FeaturedProjects } from '@/sections/home/FeaturedProjects.tsx'
 import { HowWeWork } from '@/sections/home/HowWeWork.tsx'
 import { PremiumHero } from '@/sections/home/PremiumHero.tsx'
+import { ServiceArc } from '@/sections/home/ServiceArc.tsx'
 import { ServiceOrbit } from '@/sections/home/ServiceOrbit.tsx'
 import { WhatWeDo } from '@/sections/home/WhatWeDo.tsx'
 
@@ -16,6 +17,7 @@ export function HomePage() {
         <HowWeWork />
         <CaseHighlight />
         <FeaturedProjects />
+        <ServiceArc />
         <ServiceOrbit />
         <FactsSnapshot />
       </main>
