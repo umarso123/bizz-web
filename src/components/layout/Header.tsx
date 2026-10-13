@@ -8,7 +8,7 @@ const menuId = 'site-menu'
 const desktopNavQuery = '(min-width: 960px)'
 
 const bar =
-  'border border-white/80 bg-white/80 shadow-[0_10px_40px_rgb(13_18_31/0.08)] backdrop-blur-xl'
+  'border border-white/80 bg-white/70 shadow-[0_1px_0_rgb(255_255_255/0.9)_inset,0_12px_40px_rgb(13_18_31/0.08)] backdrop-blur-2xl backdrop-saturate-150'
 
 function MenuIcon() {
   return (
@@ -78,10 +78,10 @@ export function Header() {
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="px-2.5 pt-3 sm:px-3 md:px-5 md:pt-4">
+      <div className="flex flex-col items-center px-3 pt-3 sm:px-4 md:px-5 md:pt-3.5">
         <div
           className={cn(
-            'pointer-events-auto relative mx-auto flex h-14 max-w-[90rem] items-center justify-between gap-2 rounded-full ps-3 pe-1.5 sm:gap-3 sm:ps-4 sm:pe-2 md:h-[4.25rem] md:ps-5 md:pe-2.5',
+            'pointer-events-auto relative flex h-12 w-full max-w-[72rem] items-center justify-between gap-2 rounded-full ps-3 pe-1.5 sm:gap-3 sm:ps-4 sm:pe-2 md:h-14 md:ps-5 md:pe-2',
             bar,
           )}
         >
@@ -131,7 +131,7 @@ export function Header() {
           id={menuId}
           hidden={!menuOpen}
           className={cn(
-            'pointer-events-auto mx-auto mt-2 w-full max-w-[90rem] rounded-[1.5rem] p-2 min-[960px]:hidden',
+            'pointer-events-auto mx-auto mt-2 w-full max-w-[72rem] rounded-[1.5rem] p-2 min-[960px]:hidden',
             bar,
           )}
         >

@@ -39,7 +39,7 @@ function TalkUnit({ clone = false }: { clone?: boolean }) {
       data-clone={clone ? '' : undefined}
       aria-hidden="true"
     >
-      <span className="inline-flex items-center gap-[0.32em] text-[clamp(3.25rem,12vw,12.5rem)] leading-none font-semibold tracking-[-0.045em] whitespace-nowrap">
+      <span className="inline-flex items-center gap-[0.32em] text-[clamp(2.15rem,5.5vw,4.75rem)] leading-none font-semibold tracking-[-0.045em] whitespace-nowrap">
         <TalkArrow />
         Let’s Talk
         <TalkArrow />

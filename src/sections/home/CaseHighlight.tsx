@@ -16,9 +16,10 @@ export function CaseHighlight() {
     >
       <Container variant="wide" className="relative w-full">
         <m.figure
-          className="relative overflow-hidden rounded-[2.15rem] px-7 py-11 shadow-card md:rounded-[2.75rem] md:px-14 md:py-16"
+          className="relative overflow-hidden rounded-2xl px-6 py-10 shadow-card md:px-12 md:py-14"
           style={{
-            background: 'linear-gradient(110deg, #fef6d8 0%, #fbf7f2 46%, #fff9f2 100%)',
+            background:
+              'linear-gradient(110deg, var(--color-accent-soft) 0%, var(--color-bg) 46%, var(--color-surface-warm) 100%)',
           }}
           initial={reduced ? false : { opacity: 0, y: 22, scale: 0.985 }}
           whileInView={reduced ? undefined : { opacity: 1, y: 0, scale: 1 }}
@@ -37,13 +38,13 @@ export function CaseHighlight() {
           <blockquote className="relative">
             <span
               aria-hidden="true"
-              className="mb-6 block text-[3.5rem] leading-none font-bold text-text/15 md:text-[4.5rem]"
+              className="mb-4 block text-section-title text-brand"
             >
               “
             </span>
             <p
               id="case-highlight-title"
-              className="max-w-160 text-[clamp(1.4rem,1.05rem+1.3vw,2.25rem)] leading-tight font-medium tracking-tight text-text"
+              className="max-w-160 text-title text-text"
             >
               {copy.quote}
             </p>
@@ -52,11 +53,11 @@ export function CaseHighlight() {
           <figcaption className="relative mt-12 flex items-center gap-4">
             <span
               aria-hidden="true"
-              className="size-12 shrink-0 rounded-full bg-accent ring-4 ring-white/80"
+              className="size-12 shrink-0 rounded-full bg-accent ring-4 ring-surface"
             />
             <div>
               <p className="text-body-small font-semibold text-text">{copy.role}</p>
-              <p className="text-caption text-text-muted">{copy.meta}</p>
+              <p className="text-caption text-text-secondary">{copy.meta}</p>
             </div>
           </figcaption>
         </m.figure>

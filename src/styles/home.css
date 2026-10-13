@@ -1,0 +1,315 @@
+/*
+ * Homepage type scale.
+ * Georgia is a system face, so it is configured here rather than downloaded.
+ * Sizes stay inside the professional range and scale down on small screens.
+ * H1 44–56px, H2 32–40px, H3 22–28px, body 16–18px at 1.6, captions 13–14px.
+ */
+.homepage {
+  font-family: Georgia, 'Palatino Linotype', Palatino, serif;
+  --text-display: clamp(2.75rem, 2.2rem + 1.5vw, 3.5rem);
+  --text-display--line-height: 1.12;
+  --text-display--font-weight: 500;
+  --text-display--letter-spacing: -0.02em;
+  --text-page-title: clamp(2.75rem, 2.2rem + 1.5vw, 3.5rem);
+  --text-page-title--line-height: 1.12;
+  --text-page-title--font-weight: 500;
+  --text-page-title--letter-spacing: -0.02em;
+  --text-section-title: clamp(2rem, 1.65rem + 1vw, 2.5rem);
+  --text-section-title--line-height: 1.2;
+  --text-section-title--font-weight: 500;
+  --text-section-title--letter-spacing: -0.015em;
+  --text-title: clamp(1.375rem, 1.25rem + 0.4vw, 1.75rem);
+  --text-title--line-height: 1.3;
+  --text-title--font-weight: 500;
+  --text-title--letter-spacing: -0.01em;
+  --text-card-title: clamp(1.375rem, 1.25rem + 0.4vw, 1.75rem);
+  --text-card-title--line-height: 1.3;
+  --text-card-title--font-weight: 500;
+  --text-card-title--letter-spacing: -0.01em;
+  --text-body-large: clamp(1.0625rem, 1.02rem + 0.15vw, 1.125rem);
+  --text-body-large--line-height: 1.6;
+  --text-body-large--font-weight: 400;
+  --text-body-large--letter-spacing: 0em;
+  --text-body: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
+  --text-body--line-height: 1.6;
+  --text-body--font-weight: 400;
+  --text-body--letter-spacing: 0em;
+  --text-body-small: 0.875rem;
+  --text-body-small--line-height: 1.55;
+  --text-body-small--font-weight: 400;
+  --text-body-small--letter-spacing: 0em;
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1.45;
+  --text-eyebrow--font-weight: 500;
+  --text-eyebrow--letter-spacing: 0.04em;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-caption--font-weight: 400;
+  --text-caption--letter-spacing: 0em;
+}
+
+.homepage p {
+  font-size: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.homepage h1,
+.homepage .text-display,
+.homepage .text-page-title {
+  font-size: clamp(2.75rem, 2.2rem + 1.5vw, 3.5rem);
+  line-height: 1.12;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.homepage h2,
+.homepage .text-section-title {
+  font-size: clamp(2rem, 1.65rem + 1vw, 2.5rem);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.homepage h3,
+.homepage .text-title,
+.homepage .text-card-title {
+  font-size: clamp(1.375rem, 1.25rem + 0.4vw, 1.75rem);
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.homepage .text-body-large {
+  font-size: clamp(1.0625rem, 1.02rem + 0.15vw, 1.125rem);
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.homepage .text-body-small {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+.homepage .text-caption {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.homepage .text-eyebrow {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* Hero fold — one viewport on large screens, Georgia display over the body face. */
+.homepage .hero-fold h1 {
+  font-family: Georgia, 'Palatino Linotype', Palatino, serif;
+  font-size: clamp(1.7rem, 0.85rem + 1.55vw, 2.55rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.homepage .hero-fold h1 em {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.homepage .hero-fold .hero-milestone h2 {
+  font-family: Georgia, 'Palatino Linotype', Palatino, serif;
+  font-size: clamp(1.2rem, 0.9rem + 0.55vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.homepage .project-showcase h2 {
+  font-family: Georgia, 'Palatino Linotype', Palatino, serif;
+  font-size: clamp(2.15rem, 1.2rem + 2.1vw, 3.35rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.homepage .project-showcase-title {
+  font-family: Georgia, 'Palatino Linotype', Palatino, serif;
+  font-size: clamp(1.15rem, 1.05rem + 0.35vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* Team cards: the written page turns up and the portrait underneath appears. */
+.members-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 2.75rem;
+  padding-top: 2.5rem;
+}
+
+.members-card {
+  width: min(100%, 18.75rem);
+}
+
+.members-hit {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 1.5rem;
+}
+
+.members-hit:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+.members-stage {
+  position: relative;
+  height: 25.5rem;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+.members-identity,
+.members-sheet {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+}
+
+.members-identity {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-surface-brand-deep);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(14px) scale(0.97);
+  transform-origin: center center;
+  transition:
+    transform 0.55s var(--ease-standard),
+    opacity 0.22s linear;
+}
+
+.members-card[data-open='true'] .members-identity {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotateX(7deg);
+  transition:
+    transform 0.7s var(--ease-standard),
+    opacity 0.4s linear 0.12s;
+}
+
+.members-photo {
+  height: 13.25rem;
+  width: calc(100% - 1.5rem);
+  margin: 0.75rem 0.75rem 0;
+  border-radius: 1.05rem;
+  object-fit: cover;
+  object-position: center 16%;
+}
+
+.members-identity-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  padding: 1rem 1.2rem 1.3rem;
+}
+
+.members-identity-name {
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.members-identity-detail {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-text-inverse-muted);
+}
+
+.members-sheet {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 1.35rem 1.3rem 1.45rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+  transform-origin: center top;
+  backface-visibility: hidden;
+  transition:
+    transform 0.7s var(--ease-standard),
+    opacity 0.2s linear;
+}
+
+.members-card[data-open='true'] .members-sheet {
+  transform: rotateX(-112deg);
+  opacity: 0;
+  transition:
+    transform 0.75s var(--ease-standard),
+    opacity 0.18s linear 0.48s;
+}
+
+.members-name {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.members-role {
+  margin-top: 0.3rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+.members-page {
+  margin-top: auto;
+  max-width: 28ch;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .members-row {
+    padding-top: 0;
+  }
+
+  .members-identity,
+  .members-sheet {
+    transition: opacity 0.2s linear;
+    transform: none;
+  }
+
+  .members-card[data-open='true'] .members-identity {
+    opacity: 1;
+    transform: none;
+  }
+
+  .members-card[data-open='true'] .members-sheet {
+    opacity: 0;
+    transform: none;
+    pointer-events: none;
+  }
+}
+

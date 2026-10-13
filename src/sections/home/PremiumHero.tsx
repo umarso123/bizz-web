@@ -1,120 +1,146 @@
 import { m, useReducedMotion } from 'framer-motion'
-import { Link } from 'react-router'
-import { Container } from '@/components/layout/Container.tsx'
-import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { Button } from '@/components/ui/Button.tsx'
 import { premiumHome } from '@/content/premium-home.ts'
-import { cn } from '@/lib/cn.ts'
+import { HelixStrand, type HelixPointer } from '@/sections/home/HelixStrand.tsx'
 
 const ease = [0.22, 1, 0.36, 1] as const
+
+function ScrollMark() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M7 2.5v9M7 11.5 3.5 8M7 11.5 10.5 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
 
 export function PremiumHero() {
   const reduced = useReducedMotion() === true
   const copy = premiumHome.hero
-  const facts = premiumHome.facts.cards
+  const sectionRef = useRef<HTMLElement>(null)
+  const pointer = useRef<HelixPointer>({ x: 0, y: 0 })
+  const scroll = useRef(0)
+  const [inView, setInView] = useState(true)
+
+  useEffect(() => {
+    const node = sectionRef.current
+    if (!node) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry?.isIntersecting ?? false),
+      { threshold: 0.08 },
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const node = sectionRef.current
+    if (!node) return
+    let frame = 0
+    const measure = () => {
+      frame = 0
+      const rect = node.getBoundingClientRect()
+      const next = -rect.top / Math.max(rect.height, 1)
+      scroll.current = Math.min(Math.max(next, 0), 1)
+    }
+    const onScroll = () => {
+      if (frame) return
+      frame = requestAnimationFrame(measure)
+    }
+    measure()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  const onPointerMove = (event: PointerEvent<HTMLElement>) => {
+    if (reduced) return
+    const rect = event.currentTarget.getBoundingClientRect()
+    pointer.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+    pointer.current.y = ((event.clientY - rect.top) / rect.height) * 2 - 1
+  }
 
   return (
     <section
-      className="atmosphere-hero relative min-h-svh overflow-x-clip -mt-(--header-clearance) pt-(--header-clearance) pb-12 md:pb-16 lg:pb-20"
+      ref={sectionRef}
+      className="hero-fold relative -mt-(--header-clearance) flex min-h-svh flex-col bg-page-white pt-(--header-clearance)"
       aria-labelledby="premium-hero-title"
+      onPointerMove={onPointerMove}
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-[-22%] right-[-16%] h-[min(96vh,54rem)] w-[min(92vw,56rem)] rounded-full blur-3xl"
-        style={{
-          background:
-            'radial-gradient(circle at 42% 40%, rgb(168 196 255 / 0.9), rgb(196 186 255 / 0.38) 46%, transparent 72%)',
-        }}
-      />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden h-full w-[52%] overflow-hidden md:block" aria-hidden="true">
+        <HelixStrand pointer={pointer} scroll={scroll} reduced={reduced} active={inView} />
+      </div>
 
-      <Container variant="wide" className="relative z-10 w-full">
-        <m.div
-          className="flex flex-wrap items-center gap-3"
-          initial={reduced ? false : { opacity: 0, y: 12 }}
-          animate={reduced ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease }}
-        >
-          <Eyebrow as="span">{copy.badge}</Eyebrow>
-          <span className="w-full text-body-small text-pretty text-text-secondary sm:w-auto">{copy.badgeNote}</span>
-        </m.div>
-
-        <m.h1
-          id="premium-hero-title"
-          className="mt-4 max-w-full text-display text-wrap text-text md:max-w-[14ch]"
-          initial={reduced ? false : { opacity: 0, y: 24 }}
-          animate={reduced ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.05, ease }}
-        >
-          {copy.titleLead} <span className="text-brand">{copy.titleAccent}</span>
-        </m.h1>
-
-        <div className="mt-4 grid gap-6 md:mt-5 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:items-end lg:gap-16">
-          <m.p
-            className="max-w-[34rem] text-body-large text-text-secondary"
-            initial={reduced ? false : { opacity: 0, y: 16 }}
-            animate={reduced ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.12, ease }}
-          >
-            {copy.body}
-          </m.p>
-
+      <div className="relative z-10 mx-auto flex w-full max-w-[90rem] flex-1 flex-col px-(--page-gutter) pb-3 md:pb-4">
+        <div className="flex flex-1 flex-col justify-center py-3 lg:py-2">
           <m.div
-            className="flex flex-wrap items-center gap-3 md:justify-end"
+            className="max-w-[38rem]"
             initial={reduced ? false : { opacity: 0, y: 16 }}
             animate={reduced ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.16, ease }}
+            transition={{ duration: 0.6, ease }}
           >
-            <Link
-              to={copy.primaryTo}
-              className={cn(
-                'inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill bg-button-brand px-7 text-body-small font-semibold text-text-inverse no-underline',
-                'shadow-[0_12px_28px_rgb(47_91_234/0.28)] transition-[transform,background-color] duration-(--duration-standard)',
-                'hover:-translate-y-0.5 hover:bg-button-brand-hover',
-                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
-              )}
-            >
-              {copy.primaryCta}
-              <span aria-hidden="true" className="ms-2">
-                →
+            <p className="text-[0.72rem] font-medium tracking-[0.16em] text-text-secondary uppercase">
+              {copy.badge}
+            </p>
+            <h1 id="premium-hero-title" className="mt-3 text-text">
+              {copy.titleLead}{' '}
+              <span className="lg:block">
+                {copy.titleMove} <em>{copy.titleItalic}</em>
+              </span>{' '}
+              <span className="lg:block">
+                {copy.titleBridge} <em className="text-brand">{copy.titleAccent}</em>
               </span>
-            </Link>
-            <Link
-              to={copy.secondaryTo}
-              className="inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-pill border border-border bg-surface/90 px-6 text-body-small font-semibold text-text no-underline shadow-card backdrop-blur-sm transition-colors hover:border-border-strong hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            >
-              {copy.secondaryCta}
-            </Link>
+            </h1>
+            <p className="mt-3 max-w-[30rem] text-body text-text-secondary">{copy.body}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <Button to={copy.primaryTo} variant="brand">
+                {copy.primaryCta}
+              </Button>
+              <Button to={copy.secondaryTo} variant="secondary">
+                {copy.secondaryCta}
+              </Button>
+              <a
+                href={copy.scrollTo}
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-button-primary px-4 text-body-small font-semibold text-text-inverse no-underline transition-colors duration-(--duration-standard) ease-standard hover:bg-button-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand lg:hidden"
+              >
+                <ScrollMark />
+                {copy.scrollCta}
+              </a>
+            </div>
           </m.div>
         </div>
 
-        <ul className="mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4 md:mt-16 md:gap-5" aria-label="Key facts">
-          {facts.map((card, index) => (
-            <m.li
-              key={card.id}
-              className={cn(
-                'flex min-h-[9.75rem] flex-col justify-between rounded-[1.85rem] p-6 md:min-h-[11.5rem] md:rounded-[2.15rem] md:p-7',
-                card.tone === 'brand'
-                  ? 'bg-brand text-text-inverse shadow-[0_18px_40px_rgb(47_91_234/0.28)]'
-                  : 'bg-surface/90 text-text shadow-card ring-1 ring-white backdrop-blur-sm',
-              )}
-              initial={reduced ? false : { opacity: 0, y: 20 }}
-              animate={reduced ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.22 + index * 0.07, ease }}
-            >
-              <p className="text-[clamp(1.7rem,1.15rem+1.7vw,2.75rem)] leading-none font-medium tracking-tighter">
-                {card.value}
+        <div className="relative">
+          <a
+            href={copy.scrollTo}
+            className="absolute right-0 -top-14 z-20 hidden h-11 items-center gap-2 rounded-full bg-button-primary px-4 text-body-small font-semibold text-text-inverse no-underline shadow-md transition-colors duration-(--duration-standard) ease-standard hover:bg-button-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand lg:inline-flex"
+          >
+            <ScrollMark />
+            {copy.scrollCta}
+          </a>
+          <article className="hero-milestone rounded-[1.75rem] border border-white/80 bg-white/62 px-5 py-4 shadow-[0_1px_0_rgb(255_255_255/0.85)_inset,0_18px_48px_rgb(13_18_31/0.08)] backdrop-blur-xl sm:px-7 sm:py-4 lg:px-9 lg:py-5">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+            <div>
+              <p className="inline-flex items-center rounded-full border border-border bg-white/80 px-3 py-1 text-[0.68rem] font-medium tracking-[0.08em] text-text-secondary">
+                {copy.milestone.label}
               </p>
-              <p
-                className={cn(
-                  'mt-4 max-w-[16rem] text-body-small leading-snug',
-                  card.tone === 'brand' ? 'text-text-inverse/80' : 'text-text-secondary',
-                )}
-              >
-                {card.label}
-              </p>
-            </m.li>
-          ))}
-        </ul>
-      </Container>
+              <h2 className="mt-3 text-text">
+                {copy.milestone.title[0]}
+                <br />
+                {copy.milestone.title[1]}
+              </h2>
+            </div>
+            <p className="max-w-[28rem] text-body-small text-pretty text-text-secondary lg:max-w-[22rem] lg:text-body">
+              {copy.milestone.body}
+            </p>
+          </div>
+        </article>
+        </div>
+      </div>
     </section>
   )
 }

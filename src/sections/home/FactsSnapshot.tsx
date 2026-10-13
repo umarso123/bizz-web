@@ -12,9 +12,9 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 type FactCard = (typeof homeContent.facts.cards)[number]
 
 const scenes: Record<string, string> = {
-  focus: 'bg-page-dark',
-  rating: 'bg-[#F7F6F4]',
-  services: 'bg-[#0E1A24]',
+  healthcare: 'bg-page-dark',
+  services: 'bg-surface-dark',
+  industries: 'bg-bg-subtle',
 }
 
 function signedDelta(index: number, focus: number, count: number) {
@@ -74,8 +74,7 @@ function placeCards(cards: HTMLElement[], focus: number) {
 function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
   const dark = card.tone === 'dark'
   const hasVideo = typeof card.media === 'string' && card.media.length > 0
-  const lead = card.title ?? card.eyebrow
-  const ink = hasVideo || dark ? 'text-text-inverse' : 'text-[#171717]'
+  const ink = hasVideo || dark ? 'text-text-inverse' : 'text-text'
 
   return (
     <>
@@ -92,7 +91,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           aria-hidden="true"
         />
       ) : null}
-      {card.id === 'focus' ? (
+      {card.id === 'healthcare' ? (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-70"
@@ -115,21 +114,21 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
       {hasVideo ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_46%,rgb(7_11_18/0.42)_70%,rgb(7_11_18/0.92)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_46%,rgb(13_18_31/0.5)_70%,rgb(13_18_31/0.94)_100%)]"
         />
       ) : null}
 
       <div className="absolute inset-0 flex flex-col justify-end px-5 pb-28 md:px-7 md:pb-32">
         <p
           className={cn(
-            'text-[clamp(3.25rem,4.5vw,5.5rem)] leading-none font-medium tracking-tighter',
-            hasVideo ? 'text-accent' : ink,
+            'text-display',
+            ink,
           )}
         >
           {card.value}
         </p>
         {card.title ? (
-          <p className={cn('mt-2 text-[clamp(1.15rem,1.4vw,1.5rem)] font-medium tracking-tighter', ink)}>
+          <p className={cn('mt-2 text-title', ink)}>
             {card.title}
           </p>
         ) : null}
@@ -139,8 +138,8 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
         className={cn(
           'absolute inset-x-0 bottom-0 z-10 flex items-start gap-2.5 px-5 pt-16 pb-5 md:px-6 md:pb-6',
           hasVideo || dark
-            ? 'bg-gradient-to-t from-[#070b12] from-35% via-[#070b12]/92 to-transparent text-text-inverse'
-            : 'bg-gradient-to-t from-[#F7F6F4] from-40% via-[#F7F6F4]/95 to-transparent text-[#171717]',
+            ? 'bg-gradient-to-t from-surface-dark from-35% via-surface-dark/92 to-transparent text-text-inverse'
+            : 'bg-gradient-to-t from-bg-subtle from-40% via-bg-subtle/95 to-transparent text-text',
         )}
       >
         <span
@@ -150,9 +149,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           )}
           aria-hidden="true"
         />
-        <span className="text-[1rem] leading-snug font-medium tracking-tight">
-          {lead}: {card.caption}
-        </span>
+        <span className="text-body-small font-medium">{card.caption}</span>
       </p>
     </>
   )
@@ -234,7 +231,7 @@ export function FactsSnapshot() {
     >
         <div
           className={cn(
-            'flex flex-col overflow-hidden bg-page-white pt-(--header-clearance) [background-image:radial-gradient(ellipse_48%_36%_at_88%_18%,rgb(126_170_255/0.28),transparent_62%),radial-gradient(ellipse_32%_28%_at_8%_92%,rgb(245_200_76/0.22),transparent_58%)]',
+            'flex flex-col overflow-hidden bg-page-white pt-(--header-clearance) [background-image:radial-gradient(ellipse_48%_36%_at_88%_18%,rgb(47_91_234/0.16),transparent_62%),radial-gradient(ellipse_32%_28%_at_8%_92%,rgb(245_200_76/0.22),transparent_58%)]',
             reduced ? 'min-h-dvh pb-16' : 'sticky top-0 h-dvh pb-8',
           )}
         >
@@ -251,7 +248,7 @@ export function FactsSnapshot() {
           {copy.cards.map((card, index) => (
             <article
               key={card.id}
-              className="fact-card absolute top-1/2 left-1/2 h-full w-[min(74vw,300px)] overflow-hidden rounded-[1.7rem] border border-white/70 shadow-[0_24px_60px_rgb(47_91_234/0.14)] sm:w-[min(58vw,460px)] lg:w-[min(44vw,600px)]"
+              className="fact-card absolute top-1/2 left-1/2 h-full w-[min(74vw,300px)] overflow-hidden rounded-2xl border border-border-subtle shadow-lg sm:w-[min(58vw,460px)] lg:w-[min(44vw,600px)]"
               style={{
                 zIndex: index === 0 ? 30 : 12,
                 transform: `translate(-50%, -50%) scale(${index === 0 ? 1 : 0.88})`,

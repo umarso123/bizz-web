@@ -43,7 +43,7 @@ function ServiceMark({ kind }: { kind: (typeof services)[number]['id'] }) {
           <feDropShadow dx="0" dy="22" stdDeviation="16" floodColor="#0d121f" floodOpacity="0.16" />
         </filter>
       </defs>
-      <g filter={`url(#${soft})`} fill="#E8E7E4" stroke="#C9C7C2" strokeWidth="2.5">
+      <g filter={`url(#${soft})`} fill="var(--color-brand-soft)" stroke="var(--color-mist)" strokeWidth="2.5">
         {kind === 'android' && <Bloom />}
         {kind === 'ios' && <Discs />}
         {kind === 'flutter' && <Burst />}
@@ -157,7 +157,7 @@ function ArcNumber({
     if (distance > 2.2) return 0
     return Math.max(0, 1 - distance * 0.38)
   })
-  const color = useTransform(focus, (value) => (Math.abs(index - value) < 0.45 ? '#171717' : '#C8C8C2'))
+  const color = useTransform(focus, (value) => (Math.abs(index - value) < 0.45 ? '#0d121f' : '#5a6472'))
   const dot = useTransform(focus, (value) => (Math.abs(index - value) < 0.45 ? 1 : 0))
 
   return (
@@ -173,7 +173,7 @@ function ArcNumber({
         />
         <m.span
           style={{ color }}
-          className="block text-[1.85rem] leading-none font-medium tracking-[-0.04em]"
+          className="text-title block"
         >
           {String(index + 1).padStart(2, '0')}
         </m.span>
@@ -191,17 +191,17 @@ function ServiceCopy({
 }) {
   return (
     <div>
-      <h2 className="max-w-[14ch] text-[clamp(3.1rem,4.7vw,5.35rem)] leading-[0.94] font-medium tracking-[-0.035em] text-[#171717]">
-        <Link to={`/services#${service.slug}`} className="text-[#171717] no-underline hover:text-[#171717]">
+      <h2 className="max-w-[16ch] text-section-title text-text">
+        <Link to={`/services#${service.slug}`} className="text-text no-underline hover:text-brand">
           {service.title}
         </Link>
       </h2>
-      <p className="mt-6 max-w-[28rem] text-[1.05rem] leading-relaxed text-[#6d6d68]">{service.body}</p>
-      <ul className="mt-8 flex flex-wrap gap-2.5">
+      <p className="mt-4 max-w-[32rem] text-body text-text-secondary">{service.body}</p>
+      <ul className="mt-6 flex flex-wrap gap-2">
         {chipsForService.map((chip) => (
           <li
             key={chip}
-            className="rounded-full border border-[#171717]/8 bg-[#fff] px-4 py-2 text-[0.92rem] text-[#2a2a28] shadow-[0_1px_1px_rgb(23_33_43/0.04)]"
+            className="rounded-pill border border-border bg-surface px-3 py-1.5 text-body-small text-text shadow-xs"
           >
             {chip}
           </li>
@@ -269,16 +269,16 @@ function FloatingMark({
 
 function ServiceStack() {
   return (
-    <section id="service-offerings" className="section-y bg-[#F7F6F4]" aria-label="Services">
-      <div className="mx-auto w-full max-w-[90rem] px-(--page-gutter)">
-        <ol className="space-y-20 md:space-y-28">
+    <section id="service-offerings" className="section-y bg-bg-subtle" aria-label="Services">
+      <div className="container-wide">
+        <ol className="space-y-16 md:space-y-20">
           {services.map((service, index) => (
             <li
               key={service.id}
-              className="grid items-center gap-8 border-t border-[#171717]/8 pt-10 md:grid-cols-[minmax(0,1fr)_16rem] md:gap-12"
+              className="grid items-center gap-8 border-t border-border pt-10 md:grid-cols-[minmax(0,1fr)_16rem] md:gap-12"
             >
               <div>
-                <p className="text-[1.35rem] text-[#171717]">
+                <p className="text-title text-text">
                   {String(index + 1).padStart(2, '0')}
                 </p>
                 <div className="mt-4">
@@ -316,17 +316,17 @@ export function ServiceArc() {
   const service = services[active]
 
   return (
-    <section ref={ref} id="service-offerings" className="relative h-[620vh] bg-[#F7F6F4]" aria-label="Services">
+    <section ref={ref} id="service-offerings" className="relative h-[620vh] bg-bg-subtle" aria-label="Services">
       <div className="sticky top-0 h-svh overflow-hidden">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-[34%] left-[18rem] size-[1120px] -translate-x-full -translate-y-1/2 rounded-full border border-[#E1E1DC]"
+          className="pointer-events-none absolute top-[34%] left-[18rem] size-[1120px] -translate-x-full -translate-y-1/2 rounded-full border border-border"
         />
         <div
           aria-hidden="true"
-          className="absolute top-[34%] left-0 z-20 flex h-48 w-12 -translate-y-1/2 flex-col items-center bg-page-dark pt-3.5 text-[#fff]"
+          className="absolute top-[34%] left-0 z-20 flex h-48 w-12 -translate-y-1/2 flex-col items-center bg-page-dark pt-3.5 text-text-inverse"
         >
-          <span className="text-[1.15rem] leading-none font-medium">S.</span>
+          <span className="text-body font-medium">S.</span>
           <Eyebrow as="span" inverse className="mt-4 [writing-mode:vertical-rl] rotate-180">
             Services
           </Eyebrow>

@@ -1,22 +1,24 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { CaseHighlight } from '@/sections/home/CaseHighlight.tsx'
 import { FactsSnapshot } from '@/sections/home/FactsSnapshot.tsx'
-import { FeaturedProjects } from '@/sections/home/FeaturedProjects.tsx'
+import { ProjectShowcase } from '@/sections/home/ProjectShowcase.tsx'
 import { HowWeWork } from '@/sections/home/HowWeWork.tsx'
+import { Members } from '@/sections/home/Members.tsx'
 import { PremiumHero } from '@/sections/home/PremiumHero.tsx'
 import { ServiceArc } from '@/sections/home/ServiceArc.tsx'
 import { ServiceOrbit } from '@/sections/home/ServiceOrbit.tsx'
-import { WhatWeDo } from '@/sections/home/WhatWeDo.tsx'
+import { WhoWeWorkWith } from '@/sections/home/WhoWeWorkWith.tsx'
 
 export function HomePage() {
   return (
     <LazyMotion features={domAnimation}>
-      <main className="bg-page-white">
+      <main className="homepage bg-page-white">
         <PremiumHero />
-        <WhatWeDo />
+        <WhoWeWorkWith />
         <HowWeWork />
+        <Members />
         <CaseHighlight />
-        <FeaturedProjects />
+        <ProjectShowcase />
         <ServiceArc />
         <ServiceOrbit />
         <FactsSnapshot />

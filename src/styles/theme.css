@@ -11,7 +11,7 @@
   --tracking-tighter: -0.04em;
   --tracking-tight: -0.02em;
 
-  --font-sans: Georgia, 'Palatino Linotype', Palatino, 'Iowan Old Style', serif;
+  --font-sans: Georgia, 'Palatino Linotype', Palatino, serif;
   --color-white: #ffffff;
 
   /* Surfaces */
@@ -27,6 +27,8 @@
   --color-text-muted: #7a8494;
   --color-text-subtle: #8b93a1;
   --color-text-inverse: #ffffff;
+  /* Body copy on navy. Passes WCAG AA on --color-surface-dark. */
+  --color-text-inverse-muted: #d7deea;
 
   /* Borders */
   --color-border-subtle: #efe8df;

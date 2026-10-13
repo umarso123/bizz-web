@@ -121,7 +121,7 @@ function Ring({ size, tilt = 0, gold = false }: { size: number; tilt?: number; g
         width: size,
         height: size,
         transform: `translate(-50%, -50%) rotateZ(${tilt}deg)`,
-        border: `3px solid ${gold ? '#f5c84c' : '#b9cbff'}`,
+        border: `3px solid ${gold ? '#f5c84c' : '#2f5bea'}`,
         boxShadow: gold
           ? '0 0 22px rgb(245 200 76 / 0.55), inset 0 0 14px rgb(245 200 76 / 0.35)'
           : '0 0 22px rgb(47 91 234 / 0.45), inset 0 0 18px rgb(47 91 234 / 0.28)',
@@ -141,9 +141,9 @@ function Sphere({ left, top, size, gold = false }: { left: string; top: string; 
         width: size,
         height: size,
         background: gold
-          ? 'radial-gradient(circle at 32% 30%, #fff8e4, #f5c84c 42%, #a37816 78%)'
-          : 'radial-gradient(circle at 32% 30%, #ffffff, #b9cbff 36%, #2f5bea 70%, #0d1733)',
-        boxShadow: '0 8px 16px rgb(0 0 0 / 0.35)',
+          ? 'radial-gradient(circle at 32% 30%, #fef6d8, #f5c84c 42%, #e0b030 78%)'
+          : 'radial-gradient(circle at 32% 30%, #ffffff, #c9d7f8 36%, #2f5bea 70%, #1a2f8a)',
+        boxShadow: '0 8px 16px rgb(26 47 138 / 0.18)',
       }}
     />
   )
@@ -156,7 +156,7 @@ function Node({ left, top, gold = false }: { left: string; top: string; gold?: b
 function Connector({ d, gold = false }: { d: string; gold?: boolean }) {
   return (
     <svg className="absolute inset-0 h-full w-full overflow-visible" viewBox="0 0 180 180" aria-hidden="true">
-      <path d={d} fill="none" stroke={gold ? '#f5c84c' : 'rgb(198 214 255 / 0.7)'} strokeWidth="1.4" />
+      <path d={d} fill="none" stroke={gold ? '#e0b030' : '#2f5bea'} strokeWidth="1.4" />
     </svg>
   )
 }
@@ -168,9 +168,9 @@ function Ribbon({ rotate, offset, gold = false }: { rotate: number; offset: numb
       style={{
         transform: `translate(-50%, -50%) translateY(${offset}px) rotate(${rotate}deg) rotateX(58deg)`,
         background: gold
-          ? 'linear-gradient(90deg, transparent, #fff4c8 18%, #f5c84c 50%, #8d6816 82%, transparent)'
-          : 'linear-gradient(90deg, transparent, #d5e1ff 16%, #2f5bea 52%, #10182f 84%, transparent)',
-        boxShadow: '0 10px 18px rgb(8 12 28 / 0.35)',
+          ? 'linear-gradient(90deg, transparent, #fef6d8 18%, #f5c84c 50%, #e0b030 82%, transparent)'
+          : 'linear-gradient(90deg, transparent, #d9e3fb 16%, #2f5bea 52%, #1a2f8a 84%, transparent)',
+        boxShadow: '0 10px 18px rgb(26 47 138 / 0.16)',
       }}
     />
   )
@@ -198,10 +198,10 @@ function Slab({
         width,
         height,
         background: gold
-          ? 'linear-gradient(145deg, #fff6d4, #f5c84c 42%, #8d6818)'
-          : 'linear-gradient(155deg, #f4f7ff, #9db4ff 38%, #244bc8 72%, #10182f)',
-        boxShadow: '0 14px 24px rgb(5 8 20 / 0.4)',
-        border: '1px solid rgb(255 255 255 / 0.28)',
+          ? 'linear-gradient(145deg, #fef6d8, #f5c84c 42%, #e0b030)'
+          : 'linear-gradient(155deg, #e8eefc, #c9d7f8 38%, #2f5bea 72%, #1a2f8a)',
+        boxShadow: '0 14px 24px rgb(26 47 138 / 0.16)',
+        border: '1px solid rgb(255 255 255 / 0.7)',
       }}
     />
   )
@@ -215,11 +215,13 @@ function Frame({ size, rotate, gold = false }: { size: number; rotate: number; g
         width: size,
         height: size,
         transform: `translate(-50%, -50%) rotate(${rotate}deg) rotateX(28deg)`,
-        border: gold ? '2px solid #f5c84c' : '2px solid rgb(198 214 255 / 0.85)',
+        border: gold ? '2px solid #e0b030' : '2px solid #2f5bea',
         boxShadow: gold
-          ? 'inset 0 0 18px rgb(245 200 76 / 0.35), 0 12px 20px rgb(0 0 0 / 0.28)'
-          : 'inset 0 0 16px rgb(47 91 234 / 0.35), 0 12px 20px rgb(0 0 0 / 0.28)',
-        background: 'linear-gradient(160deg, rgb(255 255 255 / 0.08), rgb(16 24 48 / 0.2))',
+          ? 'inset 0 0 18px rgb(245 200 76 / 0.35), 0 12px 20px rgb(26 47 138 / 0.12)'
+          : 'inset 0 0 16px rgb(47 91 234 / 0.2), 0 12px 20px rgb(26 47 138 / 0.12)',
+        background: gold
+          ? 'linear-gradient(160deg, rgb(254 246 216 / 0.85), rgb(245 200 76 / 0.35))'
+          : 'linear-gradient(160deg, rgb(255 255 255 / 0.92), rgb(201 215 248 / 0.72))',
       }}
     />
   )
@@ -240,17 +242,17 @@ function Pane({
 }) {
   return (
     <span
-      className="absolute rounded-[1.1rem]"
+      className="absolute rounded-lg"
       style={{
         width,
         height,
         top,
         left,
-        border: gold ? '2px solid #f5c84c' : '2px solid rgb(214 226 255 / 0.8)',
+        border: gold ? '2px solid #e0b030' : '2px solid #2f5bea',
         background: gold
-          ? 'linear-gradient(160deg, rgb(245 200 76 / 0.28), rgb(16 20 36 / 0.15))'
-          : 'linear-gradient(165deg, rgb(255 255 255 / 0.16), rgb(47 91 234 / 0.18) 55%, rgb(10 16 32 / 0.2))',
-        boxShadow: '0 16px 28px rgb(0 0 0 / 0.32)',
+          ? 'linear-gradient(160deg, rgb(254 246 216 / 0.95), rgb(245 200 76 / 0.45))'
+          : 'linear-gradient(165deg, #ffffff, rgb(201 215 248 / 0.8) 55%, rgb(47 91 234 / 0.22))',
+        boxShadow: '0 16px 28px rgb(26 47 138 / 0.14)',
       }}
     />
   )
@@ -258,18 +260,18 @@ function Pane({
 
 function ReducedServices() {
   return (
-    <section id="services" className="bg-[#070b14] py-24 text-[#f6f3ec] md:py-32" aria-label="Services">
-      <div className="mx-auto w-full max-w-[72rem] px-(--page-gutter)">
-        <p className="text-[0.78rem] tracking-[0.18em] text-[#f5c84c] uppercase">What we build</p>
-        <h2 className="mt-4 max-w-[12ch] text-[clamp(2.4rem,4vw,4.2rem)] leading-[1.05] font-normal tracking-[-0.03em] text-[#f7f4ee]">
+    <section id="services" className="section-y bg-page-white text-text" aria-label="Services">
+      <div className="container-page">
+        <p className="text-eyebrow text-brand">What we build</p>
+        <h2 className="mt-4 max-w-[18ch] text-section-title text-text">
           Healthcare technology, built around care.
         </h2>
-        <ol className="mt-16 max-w-[40rem] space-y-10">
+        <ol className="mt-12 max-w-[40rem] space-y-8">
           {services.map((service, index) => (
-            <li key={service.title} className="border-t border-white/10 pt-6">
-              <p className="text-[0.85rem] text-[#f5c84c]">{pad(index)} / {String(count).padStart(2, '0')}</p>
-              <h3 className="mt-2 text-[clamp(1.6rem,2vw,2.2rem)] leading-tight font-normal text-[#f7f4ee]">{service.title}</h3>
-              <p className="mt-3 max-w-[36rem] text-[1.05rem] leading-relaxed text-[#c5ccda]">{service.body}</p>
+            <li key={service.title} className="border-t border-border pt-6">
+              <p className="text-caption text-brand">{pad(index)} / {String(count).padStart(2, '0')}</p>
+              <h3 className="mt-2 text-title text-text">{service.title}</h3>
+              <p className="mt-3 max-w-[36rem] text-body text-text-secondary">{service.body}</p>
             </li>
           ))}
         </ol>
@@ -379,11 +381,11 @@ export function ServiceOrbit() {
         orbitNode.setAttribute('ry', ry.toFixed(1))
         farNode.setAttribute('rx', (rx * 1.08).toFixed(1))
         farNode.setAttribute('ry', (ry * 0.86).toFixed(1))
-        orbitNode.setAttribute('stroke', '#f4f1ea')
-        orbitNode.setAttribute('stroke-opacity', (dock > 0.55 ? 0.14 : 0.08).toFixed(3))
+        orbitNode.setAttribute('stroke', '#2f5bea')
+        orbitNode.setAttribute('stroke-opacity', (dock > 0.55 ? 0.28 : 0.18).toFixed(3))
         orbitNode.setAttribute('opacity', (1 - exit).toFixed(3))
-        farNode.setAttribute('stroke', '#f4f1ea')
-        farNode.setAttribute('stroke-opacity', '0.035')
+        farNode.setAttribute('stroke', '#1a2f8a')
+        farNode.setAttribute('stroke-opacity', '0.12')
         farNode.setAttribute('opacity', (1 - exit).toFixed(3))
       }
 
@@ -415,7 +417,7 @@ export function ServiceOrbit() {
         outer.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`
         outer.style.opacity = opacity.toFixed(3)
         outer.style.zIndex = String(10 + Math.round(depth * 20 + presence * 40))
-        outer.style.filter = `brightness(${(0.72 + depth * 0.28 + presence * 0.34 + (hovered ? 0.12 : 0)).toFixed(3)})`
+        outer.style.filter = `brightness(${(1 + presence * 0.06 + (hovered ? 0.04 : 0)).toFixed(3)})`
         spin.style.transform = `rotateX(${(service.tilt - presence * 12).toFixed(2)}deg) rotateY(${((shown[index] * 18) + presence * 10).toFixed(2)}deg)`
         if (presence > 0.45) {
           spokeX = width / 2 + x
@@ -496,21 +498,21 @@ export function ServiceOrbit() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative h-[680vh] bg-[#070b14] max-md:h-[520vh]"
+      className="relative h-[680vh] bg-page-white max-md:h-[520vh]"
       aria-label="Services"
     >
-      <div className="sticky top-0 h-svh overflow-hidden text-[#f6f3ec]">
+      <div className="sticky top-0 h-svh overflow-hidden text-text">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 48% 42% at 50% 46%, rgb(47 91 234 / 0.2), transparent 62%), radial-gradient(ellipse 32% 28% at 72% 62%, rgb(245 200 76 / 0.08), transparent 60%), #070b14',
+              'radial-gradient(ellipse 48% 42% at 62% 48%, rgb(47 91 234 / 0.1), transparent 64%), radial-gradient(ellipse 32% 28% at 78% 62%, rgb(245 200 76 / 0.2), transparent 62%), #fbf7f2',
           }}
         />
         <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
-          <ellipse ref={orbitFarRef} fill="none" stroke="#f4f1ea" strokeWidth="1" strokeOpacity="0.04" />
-          <ellipse ref={orbitRef} fill="none" stroke="#f4f1ea" strokeWidth="1" strokeOpacity="0.08" />
+          <ellipse ref={orbitFarRef} fill="none" stroke="#1a2f8a" strokeWidth="1" strokeOpacity="0.12" />
+          <ellipse ref={orbitRef} fill="none" stroke="#2f5bea" strokeWidth="1" strokeOpacity="0.22" />
           <line ref={spokeRef} stroke="#f5c84c" strokeWidth="1" opacity="0" />
         </svg>
 
@@ -533,7 +535,7 @@ export function ServiceOrbit() {
                 if (label) label.style.opacity = '0'
               }}
             >
-              <span className="absolute top-[78%] left-1/2 h-3 w-24 -translate-x-1/2 rounded-full bg-black/50 blur-md" />
+              <span className="absolute top-[78%] left-1/2 h-3 w-24 -translate-x-1/2 rounded-full bg-brand/20 blur-md" />
               <div
                 ref={(node) => {
                   spinRefs.current[index] = node
@@ -546,7 +548,7 @@ export function ServiceOrbit() {
                 ref={(node) => {
                   labelRefs.current[index] = node
                 }}
-                className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 text-[0.78rem] whitespace-nowrap text-[#f6f3ec] opacity-0"
+                className="pointer-events-none absolute top-full left-1/2 mt-3 -translate-x-1/2 text-caption whitespace-nowrap text-text opacity-0"
               >
                 {service.title}
               </span>
@@ -556,26 +558,26 @@ export function ServiceOrbit() {
 
         <div ref={copyRef} className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center px-6">
           <div ref={copyBoxRef} className="w-[min(34rem,88vw)] text-center">
-            <p className="text-[0.78rem] tracking-[0.2em] text-[#f5c84c] uppercase">What we build</p>
-            <div className="relative mt-5 min-h-[13rem] md:min-h-[15rem]">
+            <p className="text-eyebrow text-brand">What we build</p>
+            <div className="relative mt-4 min-h-44 md:min-h-48">
               <div ref={outLayerRef} className="absolute inset-x-0 top-0">
                 <h2
                   ref={outTitleRef}
-                  className="text-[clamp(2.2rem,4vw,3.8rem)] leading-[1.05] font-normal tracking-[-0.03em] whitespace-pre-line text-[#f7f4ee]"
+                  className="text-section-title whitespace-pre-line text-text"
                 >
                   {introTitle}
                 </h2>
-                <p ref={outBodyRef} className="mt-4 max-w-[32rem] text-[1.05rem] leading-relaxed text-[#d5dbe8]" />
+                <p ref={outBodyRef} className="mt-4 max-w-[32rem] text-body text-text-secondary" />
               </div>
               <div ref={inLayerRef} className="absolute inset-x-0 top-0 opacity-0">
                 <p
                   ref={inTitleRef}
-                  className="text-[clamp(2.1rem,3.6vw,3.6rem)] leading-[1.05] font-normal tracking-[-0.03em] text-[#f7f4ee]"
+                  className="text-section-title text-text"
                 />
-                <p ref={inBodyRef} className="mt-4 max-w-[32rem] text-[1.05rem] leading-relaxed text-[#d5dbe8]" />
+                <p ref={inBodyRef} className="mt-4 max-w-[32rem] text-body text-text-secondary" />
               </div>
             </div>
-            <p ref={countRef} className="mt-6 text-[0.95rem] tracking-[0.14em] text-[#f5c84c] opacity-0">
+            <p ref={countRef} className="mt-6 text-caption text-brand opacity-0">
               01 / 06
             </p>
           </div>

@@ -22,7 +22,7 @@ function StageImage({ stage, visible }: { stage: Stage; visible: boolean }) {
         className="absolute inset-0"
         style={{
           background: `
-            linear-gradient(145deg, #e8eefc 0%, #fef6d8 48%, #d9e3fb 100%)
+            linear-gradient(145deg, var(--color-brand-soft) 0%, var(--color-accent-soft) 48%, var(--color-brand-subtle) 100%)
           `,
         }}
       />
@@ -41,7 +41,7 @@ function StageImage({ stage, visible }: { stage: Stage; visible: boolean }) {
           <p className="text-eyebrow text-brand">
             {stage.number}
           </p>
-          <p className="text-[1.15rem] font-medium tracking-tight text-text">{stage.title}</p>
+          <p className="text-title text-text">{stage.title}</p>
         </div>
       )}
     </div>
@@ -86,9 +86,10 @@ export function HowWeWork() {
     >
       <Container variant="wide" className="relative w-full">
         <Eyebrow>{copy.eyebrow}</Eyebrow>
-        <h2 id="how-we-work-title" className="sr-only">
+        <h2 id="how-we-work-title" className="mt-4 max-w-[18ch] text-section-title text-text">
           {copy.title}
         </h2>
+        <p className="mt-4 max-w-[42rem] text-body-large text-text-secondary">{copy.body}</p>
 
         <div
           ref={listRef}
@@ -120,7 +121,6 @@ export function HowWeWork() {
           <ul className="border-t border-border">
             {stages.map((stage, index) => {
               const isActive = hovering ? index === active : index === 0
-              const dimmed = hovering && index !== active
 
               return (
                 <li key={stage.number} className="border-b border-border">
@@ -145,28 +145,16 @@ export function HowWeWork() {
                   >
                     <span
                       className={cn(
-                        'text-[clamp(1.85rem,1.35rem+1.8vw,3.35rem)] leading-none font-medium tracking-tighter transition-colors duration-300',
-                        dimmed ? 'text-text/22' : 'text-text',
-                        !hovering && index !== 0 && 'text-text/28',
-                        isActive && 'text-text',
+                        'text-title transition-colors duration-300',
+                        isActive ? 'text-text' : 'text-text-secondary',
                       )}
                     >
                       {stage.title}
                     </span>
 
-                    <span
-                      className={cn(
-                        'grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-4 transition-colors duration-300',
-                        dimmed ? 'text-text/20' : 'text-text-secondary',
-                        !hovering && index !== 0 && 'text-text/25',
-                        isActive && 'text-text-secondary',
-                      )}
-                    >
+                    <span className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-4">
                       {stage.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-eyebrow text-brand"
-                        >
+                        <span key={tag} className="text-caption text-brand">
                           {tag}
                         </span>
                       ))}
@@ -183,7 +171,7 @@ export function HowWeWork() {
                     <div className="aspect-16/10 max-w-sm overflow-hidden rounded-2xl">
                       <StageImage stage={stage} visible={index === active} />
                     </div>
-                    <p className="mt-3 max-w-md text-body-small text-text-secondary">{stage.body}</p>
+                    <p className="mt-3 max-w-md text-body text-text-secondary">{stage.body}</p>
                   </div>
                 </li>
               )
