@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { cn } from '@/lib/cn.ts'
 import { omitKeys } from '@/lib/omit.ts'
 
-type ButtonVariant = 'primary' | 'brand' | 'secondary' | 'subtle' | 'ghost'
+type ButtonVariant = 'primary' | 'brand' | 'accent' | 'secondary' | 'subtle' | 'ghost'
 type ButtonSize = 'md' | 'lg'
 
 type ButtonShared = {
@@ -42,6 +42,8 @@ const variantClass: Record<ButtonVariant, string> = {
     'bg-button-primary text-text-inverse hover:bg-button-primary-hover active:bg-button-primary-active',
   brand:
     'bg-button-brand text-text-inverse shadow-md hover:bg-button-brand-hover active:bg-brand-active',
+  accent:
+    'bg-accent text-text shadow-md hover:bg-accent-deep active:bg-accent-deep',
   secondary:
     'border border-border bg-surface text-text hover:border-border-strong hover:bg-bg-subtle active:bg-bg-muted',
   subtle: 'bg-bg-subtle text-text hover:bg-bg-muted active:bg-bg-muted',

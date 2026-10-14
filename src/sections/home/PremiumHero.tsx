@@ -1,6 +1,7 @@
 import { m, useReducedMotion } from 'framer-motion'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { Button } from '@/components/ui/Button.tsx'
+import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
 import { premiumHome } from '@/content/premium-home.ts'
 import { HelixStrand, type HelixPointer } from '@/sections/home/HelixStrand.tsx'
 
@@ -78,14 +79,12 @@ export function PremiumHero() {
       <div className="relative z-10 mx-auto flex w-full max-w-[90rem] flex-1 flex-col px-(--page-gutter) pb-3 md:pb-4">
         <div className="flex flex-1 flex-col justify-center py-3 lg:py-2">
           <m.div
-            className="max-w-[38rem]"
+            className="max-w-[40rem]"
             initial={reduced ? false : { opacity: 0, y: 16 }}
             animate={reduced ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
           >
-            <p className="text-[0.72rem] font-medium tracking-[0.16em] text-text-secondary uppercase">
-              {copy.badge}
-            </p>
+            <Eyebrow>{copy.badge}</Eyebrow>
             <h1 id="premium-hero-title" className="mt-3 text-text">
               {copy.titleLead}{' '}
               <span className="lg:block">
@@ -100,7 +99,7 @@ export function PremiumHero() {
               <Button to={copy.primaryTo} variant="brand">
                 {copy.primaryCta}
               </Button>
-              <Button to={copy.secondaryTo} variant="secondary">
+              <Button to={copy.secondaryTo} variant="accent">
                 {copy.secondaryCta}
               </Button>
               <a

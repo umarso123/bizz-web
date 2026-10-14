@@ -14,7 +14,6 @@ type FactCard = (typeof homeContent.facts.cards)[number]
 const scenes: Record<string, string> = {
   healthcare: 'bg-page-dark',
   services: 'bg-surface-dark',
-  industries: 'bg-bg-subtle',
 }
 
 function signedDelta(index: number, focus: number, count: number) {
@@ -78,7 +77,18 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
 
   return (
     <>
-      <div className={cn('absolute inset-0', scenes[card.id] ?? scenes.focus)} aria-hidden="true" />
+      <div
+        className={cn('absolute inset-0', card.id === 'industries' ? undefined : scenes[card.id])}
+        style={
+          card.id === 'industries'
+            ? {
+                background:
+                  'linear-gradient(180deg, #fef6d8 0%, #f8d35a 36%, #f5c84c 68%, #e0b030 100%)',
+              }
+            : undefined
+        }
+        aria-hidden="true"
+      />
       {hasVideo ? (
         <video
           className="absolute inset-0 h-full w-full object-cover"
@@ -139,7 +149,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           'absolute inset-x-0 bottom-0 z-10 flex items-start gap-2.5 px-5 pt-16 pb-5 md:px-6 md:pb-6',
           hasVideo || dark
             ? 'bg-gradient-to-t from-surface-dark from-35% via-surface-dark/92 to-transparent text-text-inverse'
-            : 'bg-gradient-to-t from-bg-subtle from-40% via-bg-subtle/95 to-transparent text-text',
+            : 'bg-gradient-to-t from-[#e0b030] from-42% via-[#f5c84c]/95 to-transparent text-text',
         )}
       >
         <span
