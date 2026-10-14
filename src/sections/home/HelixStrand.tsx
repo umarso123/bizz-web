@@ -23,6 +23,51 @@ type HelixStrandProps = {
   scroll: RefObject<number>
   reduced: boolean
   active: boolean
+  onReady?: () => void
+}
+
+function createRenderer() {
+  const attempts = [
+    {
+      alpha: true,
+      antialias: false,
+      powerPreference: 'high-performance' as const,
+      premultipliedAlpha: false,
+    },
+    {
+      alpha: true,
+      antialias: false,
+      premultipliedAlpha: false,
+    },
+  ]
+
+  for (const options of attempts) {
+    try {
+      const renderer = new WebGLRenderer(options)
+      if (renderer.getContext()) return renderer
+      renderer.dispose()
+    } catch {
+      // The next attempt drops the high-performance GPU request.
+    }
+  }
+
+  return null
+}
+
+function canvasHasInk(renderer: WebGLRenderer, width: number, height: number) {
+  const gl = renderer.getContext()
+  const pixel = new Uint8Array(4)
+  const xs = [0.32, 0.5, 0.68].map((ratio) => Math.floor(width * ratio))
+  const ys = [0.28, 0.46, 0.64, 0.8].map((ratio) => Math.floor(height * ratio))
+
+  for (const x of xs) {
+    for (const y of ys) {
+      gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
+      if (pixel[3] > 12) return true
+    }
+  }
+
+  return false
 }
 
 const deep = new Color('#1a2f8a')
@@ -215,10 +260,12 @@ function buildRope() {
   return geometry
 }
 
-export function HelixStrand({ pointer, scroll, reduced, active }: HelixStrandProps) {
+export function HelixStrand({ pointer, scroll, reduced, active, onReady }: HelixStrandProps) {
   const mountRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef(active)
+  const onReadyRef = useRef(onReady)
   activeRef.current = active
+  onReadyRef.current = onReady
 
   useEffect(() => {
     const container = mountRef.current
@@ -228,12 +275,8 @@ export function HelixStrand({ pointer, scroll, reduced, active }: HelixStrandPro
     const camera = new PerspectiveCamera(36, 1, 0.1, 100)
     camera.position.set(0.15, 0.1, 15.5)
 
-    const renderer = new WebGLRenderer({
-      alpha: true,
-      antialias: false,
-      powerPreference: 'high-performance',
-      premultipliedAlpha: false,
-    })
+    const renderer = createRenderer()
+    if (!renderer) return
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setClearColor(0x000000, 0)
     renderer.domElement.style.width = '100%'
@@ -279,6 +322,7 @@ export function HelixStrand({ pointer, scroll, reduced, active }: HelixStrandPro
 
     let frame = 0
     let running = true
+    let drew = false
     const started = performance.now()
 
     const animate = () => {
@@ -291,7 +335,15 @@ export function HelixStrand({ pointer, scroll, reduced, active }: HelixStrandPro
       group.rotation.y = elapsed * 0.08 + progress * Math.PI
       group.rotation.x = 0.18 - (pointer.current?.y ?? 0) * 0.05
       group.position.y = Math.sin(elapsed * 0.45) * 0.12 - progress * 1.4
-      renderer.render(scene, camera)
+      try {
+        renderer.render(scene, camera)
+        if (!drew && canvasHasInk(renderer, container.clientWidth, container.clientHeight)) {
+          drew = true
+          onReadyRef.current?.()
+        }
+      } catch {
+        running = false
+      }
     }
     animate()
 

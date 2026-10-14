@@ -68,7 +68,7 @@ function ServiceRow({
           transition={{ type: 'spring', stiffness: 300, damping: 24 }}
         />
         <p className="text-caption text-text-muted">0{index + 1}</p>
-        <h2 className="text-[clamp(1.5rem,1.15rem+1vw,2.25rem)] leading-[1.15] font-semibold tracking-[-0.025em] text-text">
+        <h2 className="text-2xl font-medium text-text md:text-3xl">
           {service.title}
         </h2>
         <p className="text-body text-text-secondary">{service.body}</p>
@@ -91,7 +91,7 @@ export function ServicesPage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <main>
+      <main className="studio-page">
         <section className="atmosphere-hero -mt-(--header-clearance) pt-[calc(var(--header-clearance)+2.5rem)] pb-20 md:pt-[calc(var(--header-clearance)+3.5rem)] md:pb-28">
           <Container variant="page" className="relative w-full">
             <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16">
@@ -104,7 +104,7 @@ export function ServicesPage() {
                   <Eyebrow tone="brand">{servicesPage.hero.eyebrow}</Eyebrow>
                 </m.div>
                 <m.h1
-                  className="mt-4 max-w-[12ch] text-[clamp(2.5rem,1.5rem+2.8vw,4.25rem)] leading-[1.04] font-semibold tracking-[-0.03em] text-text"
+                  className="mt-4 max-w-[12ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
                   initial={reduced ? false : { opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.08, ease }}
@@ -190,7 +190,7 @@ export function ServicesPage() {
               {servicesPage.process.stages.map((stage, index) => (
                 <li key={stage.number}>
                   <Reveal delay={index * 0.04}>
-                    <p className="text-[clamp(2.25rem,1.8rem+1.2vw,3.25rem)] leading-none font-medium tracking-[-0.03em] text-brand">
+                    <p className="text-4xl font-medium text-brand md:text-5xl">
                       {stage.number}
                     </p>
                     <h3 className="mt-4 text-title text-text">{stage.title}</h3>
@@ -242,7 +242,7 @@ export function ServicesPage() {
                 <Reveal key={industry} delay={index * 0.04}>
                   <li
                     className={cn(
-                      'rounded-md border px-5 py-3 text-body font-semibold',
+                      'rounded-md border px-5 py-3 text-base font-medium',
                       industry === 'Healthcare'
                         ? 'border-brand/30 bg-brand-subtle text-brand-hover'
                         : 'border-border bg-surface text-text',
@@ -266,7 +266,7 @@ export function ServicesPage() {
             <Reveal className="max-w-[42rem]">
               <h2
                 id="services-cta-title"
-                className="text-[clamp(2.25rem,1.3rem+2.4vw,3.5rem)] leading-[1.06] font-semibold tracking-[-0.03em] text-text-inverse"
+                className="text-3xl font-medium text-text-inverse sm:text-4xl lg:text-5xl"
               >
                 {servicesPage.cta.title}
               </h2>

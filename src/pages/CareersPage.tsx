@@ -17,7 +17,7 @@ export function CareersPage() {
   }, [])
 
   return (
-    <main className="bg-page-white">
+    <main className="studio-page bg-page-white">
       <section className="atmosphere-hero -mt-(--header-clearance) pt-[calc(var(--header-clearance)+2.5rem)] pb-10 md:pb-14">
         <Container variant="wide" className="w-full">
           <Eyebrow>{careersCopy.hero.eyebrow}</Eyebrow>

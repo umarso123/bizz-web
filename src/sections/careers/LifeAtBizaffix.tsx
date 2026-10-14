@@ -84,7 +84,7 @@ export function LifeAtBizaffix() {
           </Eyebrow>
           <h2
             id="life-title"
-            className="mt-4 text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text"
+            className="mt-4 text-3xl font-medium sm:text-4xl text-text"
           >
             {careersCopy.life.headline}
           </h2>

@@ -24,7 +24,7 @@ export function ContactClosing({ onIntent }: { onIntent: (intent: ContactIntent)
       <div id="contact-close" data-scene="close" className="scroll-mt-28 bg-page-brand text-text">
         <div className={cn(contactFrame, 'py-[clamp(4.5rem,12vh,8rem)]')}>
           <h2
-            className="max-w-[11ch] text-[clamp(2.65rem,6.4vw,5.6rem)] leading-[0.96] font-semibold tracking-[-0.045em] text-text"
+            className="max-w-[11ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
             style={{ textWrap: 'wrap' }}
           >
             {contactClose.titleLead}
@@ -47,7 +47,7 @@ export function ContactClosing({ onIntent }: { onIntent: (intent: ContactIntent)
               {contactClose.cta}
               <Arrow />
             </button>
-            <Link to={contactClose.secondaryTo} className="group relative text-[1.0625rem] font-medium text-text no-underline">
+            <Link to={contactClose.secondaryTo} className="group relative text-base font-medium text-text no-underline">
               {contactClose.secondary}
               <span
                 aria-hidden="true"

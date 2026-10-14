@@ -20,7 +20,7 @@ export function JobDetailPage() {
 
   if (!job) {
     return (
-      <main className="bg-page-white py-24 md:py-32">
+      <main className="studio-page bg-page-white py-24 md:py-32">
         <Container variant="page" className="w-full">
           <h1 className="text-page-title text-text">Role not found</h1>
           <p className="mt-4 max-w-[36rem] text-body-large text-text-secondary">

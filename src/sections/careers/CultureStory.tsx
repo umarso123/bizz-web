@@ -40,7 +40,7 @@ export function CultureStory() {
           </Eyebrow>
           <h2
             id="culture-title"
-            className="mt-4 text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text"
+            className="mt-4 text-3xl font-medium sm:text-4xl text-text"
           >
             {careersCopy.culture.headline}
           </h2>
@@ -160,7 +160,7 @@ function CultureObject({
             index % 2 === 0 ? 'bg-brand' : 'bg-[#F66C2A]',
           )}
         />
-        <span className="block text-[1.05rem] leading-snug font-semibold tracking-[-0.02em] text-text">
+        <span className="block text-base font-medium text-text">
           {label}
         </span>
         <span

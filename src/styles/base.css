@@ -161,3 +161,49 @@
 .footer-talk:focus-visible .footer-talk-track {
   animation-play-state: paused;
 }
+
+/*
+ * Secondary pages only. The homepage keeps the scale in home.css.
+ * Named roles step down from the numeric scale: display = 6xl, page = 5xl, section = 4xl.
+ */
+.studio-page {
+  --text-display: clamp(2.75rem, 1.8rem + 2.4vw, 4.5rem);
+  --text-display--line-height: 1.02;
+  --text-display--font-weight: 500;
+  --text-display--letter-spacing: -0.042em;
+
+  --text-page-title: clamp(2.5rem, 1.6rem + 2vw, 3.5rem);
+  --text-page-title--line-height: 1.04;
+  --text-page-title--font-weight: 500;
+  --text-page-title--letter-spacing: -0.038em;
+
+  --text-section-title: clamp(2rem, 1.45rem + 1.4vw, 2.75rem);
+  --text-section-title--line-height: 1.08;
+  --text-section-title--font-weight: 500;
+  --text-section-title--letter-spacing: -0.032em;
+
+  --text-title: clamp(1.5rem, 1.28rem + 0.5vw, 1.75rem);
+  --text-title--line-height: 1.22;
+  --text-title--font-weight: 500;
+  --text-title--letter-spacing: -0.022em;
+
+  --text-card-title: 1.375rem;
+  --text-card-title--line-height: 1.3;
+  --text-card-title--font-weight: 500;
+  --text-card-title--letter-spacing: -0.015em;
+
+  --text-body-large--line-height: 1.65;
+  --text-body-large--letter-spacing: 0em;
+
+  --text-body--line-height: 1.7;
+  --text-body--letter-spacing: 0.004em;
+
+  --text-body-small--line-height: 1.55;
+  --text-body-small--letter-spacing: 0.01em;
+
+  --text-eyebrow--line-height: 1.45;
+  --text-eyebrow--letter-spacing: 0.06em;
+
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0.01em;
+}

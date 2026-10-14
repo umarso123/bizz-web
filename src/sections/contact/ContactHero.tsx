@@ -7,14 +7,14 @@ export function ContactHero() {
       <div className="relative flex min-h-[78svh] flex-col justify-end pt-(--header-clearance) pb-[clamp(3.5rem,10vh,6.5rem)]">
         <div className={contactFrame}>
           <h1
-            className="max-w-[11ch] text-[clamp(2.65rem,6.4vw,5.6rem)] leading-[0.96] font-semibold tracking-[-0.045em] text-text"
+            className="max-w-[11ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
             style={{ textWrap: 'wrap' }}
           >
             {contactIntro.titleLead}
             <br />
             <span className="text-brand">{contactIntro.titleRest}</span>
           </h1>
-          <p className="mt-8 max-w-[34rem] text-[1.125rem] leading-[1.6] text-text-secondary">
+          <p className="mt-8 max-w-[34rem] text-lg text-text-secondary">
             {contactIntro.dek}
           </p>
           <ul className="mt-10 grid gap-3 text-body text-text">

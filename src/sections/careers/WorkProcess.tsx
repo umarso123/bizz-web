@@ -48,7 +48,7 @@ export function WorkProcess() {
           </Eyebrow>
           <h2
             id="how-we-work-title"
-            className="mt-4 text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text"
+            className="mt-4 text-3xl font-medium sm:text-4xl text-text"
           >
             {careersCopy.process.headline}
           </h2>
@@ -58,7 +58,7 @@ export function WorkProcess() {
                 key={stage.id}
                 className="grid gap-3 border-b border-border-subtle py-10 md:grid-cols-[6rem_minmax(0,1fr)] md:gap-10"
               >
-                <p className="text-[clamp(2rem,1.5rem+1vw,2.75rem)] leading-none font-medium tracking-[-0.03em] text-brand">
+                <p className="text-4xl font-medium text-brand md:text-5xl">
                   {stage.number}
                 </p>
                 <div>
@@ -92,7 +92,7 @@ export function WorkProcess() {
           <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
             <h2
               id="how-we-work-title"
-              className="text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text"
+              className="text-3xl font-medium sm:text-4xl text-text"
             >
               {careersCopy.process.headline}
             </h2>
@@ -133,7 +133,7 @@ export function WorkProcess() {
                 >
                   <p
                     className={cn(
-                      'text-[clamp(3.5rem,2.5rem+2vw,5.5rem)] leading-none font-medium tracking-[-0.04em] transition-colors',
+                      'text-5xl font-medium transition-colors sm:text-6xl',
                       active ? 'text-brand' : 'text-border-strong',
                     )}
                   >
@@ -141,7 +141,7 @@ export function WorkProcess() {
                   </p>
                   <h3
                     className={cn(
-                      'mt-4 text-[clamp(1.75rem,1.3rem+1vw,2.5rem)] leading-none font-semibold tracking-[-0.03em] transition-colors',
+                      'mt-4 text-2xl font-medium transition-colors md:text-3xl',
                       active ? 'text-text' : 'text-text-muted',
                     )}
                   >

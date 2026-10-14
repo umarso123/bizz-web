@@ -90,7 +90,7 @@ function JobRow({
         <p className="text-caption text-text-muted">{String(index + 1).padStart(2, '0')}</p>
 
         <div className="min-w-0">
-          <h3 className="text-[clamp(1.5rem,1.15rem+1vw,2.15rem)] leading-[1.15] font-semibold tracking-[-0.025em] text-text">
+          <h3 className="text-xl font-medium text-text sm:text-2xl">
             {job.title}
           </h3>
           <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-body-small text-text-secondary">
@@ -137,7 +137,7 @@ export function JobList() {
           </Eyebrow>
           <h2
             id="open-positions-title"
-            className="mt-4 text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text"
+            className="mt-4 text-3xl font-medium sm:text-4xl text-text"
           >
             {careersCopy.jobs.headline}
           </h2>

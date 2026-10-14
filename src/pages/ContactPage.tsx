@@ -23,7 +23,7 @@ export function ContactPage() {
   }, [])
 
   return (
-    <main id="contact" className="relative overflow-x-clip bg-page-white">
+    <main id="contact" className="studio-page relative overflow-x-clip bg-page-white">
       <ContactHero />
       <ContactOptions intent={intent} onIntent={setIntent} />
       <ContactForm intent={intent} onIntent={setIntent} />

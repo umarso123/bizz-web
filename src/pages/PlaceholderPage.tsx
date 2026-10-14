@@ -6,7 +6,7 @@ type PlaceholderPageProps = {
 
 export function PlaceholderPage({ title }: PlaceholderPageProps) {
   return (
-    <main className="section-y">
+    <main className="studio-page section-y">
       <Container variant="page">
         <h1>{title}</h1>
       </Container>

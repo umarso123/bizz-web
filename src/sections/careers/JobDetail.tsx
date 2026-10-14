@@ -63,7 +63,7 @@ export function JobDetail({ job }: { job: JobPosting }) {
   const reduced = useReducedMotion() === true
 
   return (
-    <main className="bg-page-white">
+    <main className="studio-page bg-page-white">
       <section className="border-b border-border-subtle bg-page-brand pt-10 pb-16 md:pt-14 md:pb-20">
         <Container variant="page" className="w-full">
           <Reveal>
@@ -82,7 +82,7 @@ export function JobDetail({ job }: { job: JobPosting }) {
                 <Eyebrow>
                   {job.department}
                 </Eyebrow>
-                <h1 className="mt-4 text-[clamp(2.25rem,1.4rem+2.4vw,3.75rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-text">
+                <h1 className="mt-4 text-4xl font-medium text-text sm:text-5xl">
                   {job.title}
                 </h1>
                 <p className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-body text-text-secondary">

@@ -60,7 +60,7 @@ export function CareerCultureCta() {
       <Container variant="page" className="relative w-full">
         <m.h2
           id="culture-cta-title"
-          className="mx-auto max-w-[16ch] text-center text-[clamp(2.25rem,1.2rem+3vw,4.5rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-text"
+          className="mx-auto max-w-[16ch] text-center text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
           style={{ y: reduced ? 0 : textY }}
         >
           {words.map((word, index) => (
@@ -97,7 +97,7 @@ export function CareerFinalCta() {
         <Reveal className="max-w-[42rem]">
           <h2
             id="final-cta-title"
-            className="text-[clamp(2.25rem,1.3rem+2.4vw,3.75rem)] leading-[1.06] font-semibold tracking-[-0.03em] text-text"
+            className="text-3xl font-medium text-text sm:text-4xl lg:text-5xl"
           >
             {careersCopy.finalCta.headline}
           </h2>

@@ -32,7 +32,7 @@ export function WhyBizaffixIntro() {
 
         <h2
           id="why-bizaffix-title"
-          className="mt-8 max-w-[18ch] text-[clamp(2.25rem,1.2rem+3vw,4.25rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-text"
+          className="mt-8 max-w-[18ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
         >
           {headlineWords.map((word, index) => {
             const start = index / headlineWords.length

@@ -40,7 +40,7 @@ function TeamCard({
       </div>
       <div className="mt-4">
         <m.p
-          className="text-[1.05rem] font-semibold tracking-[-0.02em] text-text"
+          className="text-base font-medium text-text"
           animate={reduced ? undefined : undefined}
           whileHover={reduced ? undefined : { x: 4 }}
         >
@@ -71,7 +71,7 @@ export function TeamStrip() {
           </Eyebrow>
           <h2
             id="team-title"
-            className="mt-4 text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1.08] font-semibold tracking-[-0.025em] text-text"
+            className="mt-4 text-3xl font-medium sm:text-4xl text-text"
           >
             {careersCopy.team.headline}
           </h2>

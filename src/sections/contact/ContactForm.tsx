@@ -84,7 +84,7 @@ function Choices<T extends string>({
               aria-checked={selected}
               tabIndex={tab}
               className={cn(
-                'min-h-11 cursor-pointer rounded-full border px-4 text-left text-[0.98rem] transition-colors',
+                'min-h-11 cursor-pointer rounded-full border px-4 text-left text-sm font-medium transition-colors',
                 selected
                   ? 'border-text bg-text text-text-inverse'
                   : 'border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text',
@@ -196,7 +196,7 @@ export function ContactForm({
         <div id="project-note" className="scroll-mt-28 max-w-[52rem] rounded-[1.75rem] bg-surface px-6 py-8 shadow-card sm:px-10 sm:py-12">
           {ready ? (
             <div>
-              <h2 id="contact-note-ready" tabIndex={-1} className="text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-text outline-none">
+              <h2 id="contact-note-ready" tabIndex={-1} className="text-3xl font-medium sm:text-4xl text-text outline-none">
                 Your note is ready.
               </h2>
               <p className="mt-5 max-w-[36rem] text-body-large text-text-secondary">
@@ -230,7 +230,7 @@ export function ContactForm({
             </div>
           ) : (
             <form noValidate aria-labelledby="project-note-title" onSubmit={onSubmit}>
-              <h2 id="project-note-title" className="text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-text">
+              <h2 id="project-note-title" className="text-3xl font-medium sm:text-4xl text-text">
                 {intentMeta?.formTitle ?? defaultFormTitle}
               </h2>
               <p className="mt-4 max-w-[34rem] text-body text-text-secondary">
@@ -339,7 +339,7 @@ export function ContactForm({
                       aria-invalid={errors.message ? true : undefined}
                       aria-describedby={errors.message ? 'contact-message-error' : undefined}
                       className={cn(
-                        'mt-4 min-h-36 w-full resize-none overflow-hidden rounded-2xl border bg-bg px-4 py-3 text-[1.0625rem] leading-[1.55] text-text caret-brand outline-none',
+                        'mt-4 min-h-36 w-full resize-none overflow-hidden rounded-2xl border bg-bg px-4 py-3 text-base text-text caret-brand outline-none',
                         errors.message ? 'border-error' : 'border-border focus-visible:border-brand',
                       )}
                       onFocus={() => focusField('message')}
@@ -390,7 +390,7 @@ export function ContactForm({
                             value={when}
                             autoComplete="off"
                             placeholder="Roughly when"
-                            className="w-full bg-transparent py-3 text-[1.0625rem] text-text caret-brand outline-none placeholder:text-text-muted"
+                            className="w-full bg-transparent py-3 text-base text-text caret-brand outline-none placeholder:text-text-muted"
                             onFocus={() => focusField('timing')}
                             onChange={(event) => setWhen(event.target.value)}
                           />
@@ -485,7 +485,7 @@ function Field({
             inputMode={inputMode}
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? errorId : undefined}
-            className="w-full bg-transparent py-3 text-[1.0625rem] text-text caret-brand outline-none"
+            className="w-full bg-transparent py-3 text-base text-text caret-brand outline-none"
             onFocus={onFocus}
             onBlur={onBlur}
             onChange={(event) => onChange(event.target.value)}

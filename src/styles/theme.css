@@ -11,6 +11,51 @@
   --tracking-tighter: -0.04em;
   --tracking-tight: -0.02em;
 
+  /*
+   * Numeric scale for Georgia.
+   * Tracking tightens as size grows. Body stays open so serif text stays readable.
+   * Weights stay on font-medium / font-semibold so those utilities are not fighting the size.
+   */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.45;
+  --text-xs--letter-spacing: 0.04em;
+
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.55;
+  --text-sm--letter-spacing: 0.01em;
+
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.7;
+  --text-base--letter-spacing: 0.004em;
+
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.65;
+  --text-lg--letter-spacing: 0em;
+
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.32;
+  --text-xl--letter-spacing: -0.015em;
+
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 1.22;
+  --text-2xl--letter-spacing: -0.022em;
+
+  --text-3xl: 2.25rem;
+  --text-3xl--line-height: 1.12;
+  --text-3xl--letter-spacing: -0.028em;
+
+  --text-4xl: 2.75rem;
+  --text-4xl--line-height: 1.08;
+  --text-4xl--letter-spacing: -0.032em;
+
+  --text-5xl: 3.5rem;
+  --text-5xl--line-height: 1.04;
+  --text-5xl--letter-spacing: -0.038em;
+
+  --text-6xl: 4.5rem;
+  --text-6xl--line-height: 1.02;
+  --text-6xl--letter-spacing: -0.042em;
+
   --font-sans: Georgia, 'Palatino Linotype', Palatino, serif;
   --color-white: #ffffff;
 

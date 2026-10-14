@@ -161,7 +161,7 @@ function RoleApply({ job }: { job: JobPosting }) {
       <button
         type="submit"
         disabled={sending}
-        className="mt-6 inline-flex min-h-12 items-center rounded-full bg-button-primary px-6 text-body text-text-inverse transition-colors hover:bg-button-primary-hover disabled:opacity-60"
+        className="mt-6 inline-flex min-h-12 items-center rounded-full bg-button-primary px-6 text-sm font-semibold text-text-inverse transition-colors hover:bg-button-primary-hover disabled:opacity-60"
       >
         {sending ? 'Sending' : 'Send CV'}
       </button>
@@ -236,7 +236,7 @@ export function CareerBoard({ activeSlug }: { activeSlug?: string }) {
                     <span className="min-w-0 flex-1">
                       <span
                         className={cn(
-                          'block text-[clamp(1.7rem,1.2rem+1.1vw,2.45rem)] leading-none font-medium tracking-tight',
+                          'block text-2xl font-medium md:text-3xl',
                           on ? 'text-brand' : 'text-text',
                         )}
                       >
@@ -263,7 +263,7 @@ export function CareerBoard({ activeSlug }: { activeSlug?: string }) {
                 {selected.department}
               </p>
               <div className="bg-surface px-6 pt-8 pb-8 shadow-card ring-1 ring-border-subtle md:px-8">
-                <h2 className="text-[clamp(1.85rem,1.3rem+1vw,2.6rem)] leading-tight font-medium tracking-tight text-text">
+                <h2 className="text-2xl font-medium text-text md:text-3xl">
                   {selected.title}
                 </h2>
                 <div className="mt-3">

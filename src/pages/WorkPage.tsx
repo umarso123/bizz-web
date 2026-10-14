@@ -47,7 +47,7 @@ export function WorkPage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <main className="relative -mt-(--header-clearance) bg-page-white text-text">
+      <main className="studio-page relative -mt-(--header-clearance) bg-page-white text-text">
         <section className="atmosphere-hero relative overflow-hidden pt-(--header-clearance)" aria-labelledby="work-title">
 
           <div className="relative z-10 mx-auto w-full max-w-[90rem] px-[clamp(1.5rem,4vw,4.5rem)] pt-14 pb-16 md:pt-20 md:pb-20">
@@ -59,12 +59,12 @@ export function WorkPage() {
             >
               <h1
                 id="work-title"
-                className="text-[clamp(3.25rem,1.6rem+6vw,6.25rem)] leading-[0.95] font-normal tracking-[-0.03em]"
+                className="text-5xl font-medium sm:text-6xl"
               >
                 {copy.title.slice(0, copy.title.lastIndexOf(' '))}{' '}
                 <span className="text-brand">{copy.title.slice(copy.title.lastIndexOf(' ') + 1)}</span>
               </h1>
-              <p className="mx-auto mt-5 max-w-[34rem] text-[1.125rem] leading-relaxed text-text-secondary">
+              <p className="mx-auto mt-5 max-w-[34rem] text-lg text-text-secondary">
                 {copy.intro}
               </p>
             </m.div>
@@ -83,7 +83,7 @@ export function WorkPage() {
                     aria-pressed={selected}
                     onClick={() => setFilter(item)}
                     className={cn(
-                      'inline-flex h-10 items-center rounded-full px-4 text-[0.9375rem] font-medium transition-colors',
+                      'inline-flex h-10 items-center rounded-full px-4 text-sm font-medium transition-colors',
                       'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text',
                       selected
                         ? 'bg-brand text-text-inverse'
@@ -112,7 +112,7 @@ export function WorkPage() {
                       <div className="relative aspect-16/10">
                         <WorkStill slug={study.slug} />
                         <StudyPhoto src={study.image} alt="" />
-                        <span className="absolute bottom-4 left-4 inline-flex max-w-[calc(100%-5.5rem)] items-center gap-2 rounded-full bg-surface/90 px-3 py-1.5 text-[0.8125rem] font-medium text-text backdrop-blur-md">
+                        <span className="absolute bottom-4 left-4 inline-flex max-w-[calc(100%-5.5rem)] items-center gap-2 rounded-full bg-surface/90 px-3 py-1.5 text-xs font-medium text-text backdrop-blur-md">
                           <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
                           <span className="truncate">{study.category}</span>
                         </span>
@@ -127,10 +127,10 @@ export function WorkPage() {
                         </span>
                       </div>
                       <div className="px-6 pt-5 pb-6">
-                        <h2 className="text-[1.65rem] leading-tight font-semibold tracking-[-0.03em] text-text">
+                        <h2 className="text-2xl font-medium text-text">
                           {study.title}
                         </h2>
-                        <p className="mt-2 max-w-[48ch] text-[1.02rem] leading-relaxed text-text-secondary">
+                        <p className="mt-2 max-w-[48ch] text-base text-text-secondary">
                           {study.summary}
                         </p>
                       </div>
@@ -147,7 +147,7 @@ export function WorkPage() {
             <div>
               <h2
                 id="built-title"
-                className="max-w-[9em] text-[clamp(2.8rem,1.4rem+4vw,5rem)] leading-[0.98] font-medium tracking-[-0.03em] wrap-normal"
+                className="max-w-[9em] text-4xl font-medium wrap-normal sm:text-5xl"
               >
                 {workBuiltContent.title}
               </h2>
@@ -172,20 +172,20 @@ export function WorkPage() {
                       <div className="flex justify-end">
                         <span
                           className={cn(
-                            'rounded-full px-3 py-1 text-[0.8125rem] font-medium',
+                            'rounded-full px-3 py-1 text-xs font-medium',
                             brand ? 'bg-text-inverse/16 text-text-inverse' : 'bg-text/10 text-text',
                           )}
                         >
                           {story.industry}
                         </span>
                       </div>
-                      <p className="max-w-[10ch] text-[clamp(2.6rem,1.5rem+2.6vw,4rem)] leading-[0.96] font-semibold tracking-[-0.045em]">
+                      <p className="max-w-[10ch] text-3xl font-medium sm:text-4xl">
                         {story.title}
                       </p>
                       <div className="flex items-end justify-between gap-6">
                         <p
                           className={cn(
-                            'min-w-0 flex-1 text-[1.02rem] leading-relaxed',
+                            'min-w-0 flex-1 text-base',
                             brand ? 'text-text-inverse/85' : 'text-text/75',
                           )}
                         >

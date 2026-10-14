@@ -159,10 +159,10 @@ function FaqList() {
               aria-expanded={expanded}
               onClick={() => setOpen(expanded ? -1 : index)}
             >
-              <span className="text-[1.05rem] font-medium tracking-tight text-text md:text-title">
+              <span className="text-base font-medium text-text md:text-xl">
                 {item.question}
               </span>
-              <span aria-hidden="true" className="text-2xl leading-none text-brand">
+              <span aria-hidden="true" className="text-2xl font-medium text-brand">
                 {expanded ? '×' : '+'}
               </span>
             </button>
@@ -249,7 +249,7 @@ export function CaseStudyPage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <main className="bg-page-white text-text">
+      <main className="studio-page bg-page-white text-text">
         <style>{riseCss}</style>
         <header className="bg-page-white text-text">
           <Container variant="wide" className="w-full pt-6 pb-10 md:pt-10 md:pb-14">
@@ -270,11 +270,11 @@ export function CaseStudyPage() {
                   <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
                   {study.category}
                 </m.p>
-                <h1 className="mt-5 max-w-[12ch] text-[clamp(3rem,1.6rem+4.2vw,5.6rem)] leading-[0.95] font-medium tracking-[-0.045em] text-text">
+                <h1 className="mt-5 max-w-[12ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl">
                   <ClipText immediate>{study.title}</ClipText>
                 </h1>
               </div>
-              <p className="max-w-sm text-[clamp(1.25rem,1rem+0.8vw,1.7rem)] leading-snug font-medium tracking-tight text-text-secondary lg:justify-self-end lg:pb-2 lg:text-right">
+              <p className="max-w-sm text-xl font-medium text-text-secondary md:text-2xl lg:justify-self-end lg:pb-2 lg:text-right">
                 {study.summary}
               </p>
             </div>
@@ -301,7 +301,7 @@ export function CaseStudyPage() {
                   {study.services.map((service) => (
                     <li
                       key={service}
-                      className="rounded-pill bg-bg-subtle px-3.5 py-1.5 text-[0.78rem] font-semibold text-text"
+                      className="rounded-pill bg-bg-subtle px-3.5 py-1.5 text-xs font-medium text-text"
                     >
                       {service}
                     </li>
@@ -318,7 +318,7 @@ export function CaseStudyPage() {
 
             <div className="min-w-0">
               <section>
-                <h2 className="text-page-title">
+                <h2 className="text-3xl font-medium sm:text-4xl lg:text-5xl">
                   <ClipText>Overview</ClipText>
                 </h2>
                 <p className="mt-6 max-w-3xl text-body-large text-text-secondary">{study.description}</p>
@@ -326,7 +326,7 @@ export function CaseStudyPage() {
 
               <section className="mt-20 border-t border-border pt-16 md:mt-28 md:pt-20">
                 <p className="text-eyebrow text-accent-deep">01</p>
-                <h2 className="mt-4 max-w-[14ch] text-[clamp(2.6rem,1.6rem+3.4vw,4.75rem)] leading-[1.02] font-medium tracking-[-0.04em]">
+                <h2 className="mt-4 max-w-[14ch] text-3xl font-medium sm:text-4xl lg:text-5xl">
                   <ClipText>The challenge</ClipText>
                 </h2>
                 <p className="mt-8 max-w-3xl text-body-large text-text-secondary">
@@ -336,7 +336,7 @@ export function CaseStudyPage() {
 
               <section className="mt-20 border-t border-border pt-16 md:mt-28 md:pt-20">
                 <p className="text-eyebrow text-accent-deep">02</p>
-                <h2 className="mt-4 max-w-[14ch] text-[clamp(2.6rem,1.6rem+3.4vw,4.75rem)] leading-[1.02] font-medium tracking-[-0.04em]">
+                <h2 className="mt-4 max-w-[14ch] text-3xl font-medium sm:text-4xl lg:text-5xl">
                   <ClipText>The solution</ClipText>
                 </h2>
                 <p className="mt-8 max-w-3xl text-body-large text-text-secondary">
@@ -363,7 +363,7 @@ export function CaseStudyPage() {
         <section className="bg-page-dark pb-8 text-text-inverse md:pb-12">
           <Container variant="wide" className="w-full border-t border-white/10 pt-16 md:pt-20">
             <p className="text-eyebrow text-white/50">Impact</p>
-            <p className="mt-6 max-w-4xl text-[clamp(1.7rem,1.2rem+1.6vw,2.6rem)] leading-snug font-medium tracking-tight text-white">
+            <p className="mt-6 max-w-4xl text-2xl font-medium text-white md:text-3xl">
               {statement}
             </p>
           </Container>
@@ -371,7 +371,7 @@ export function CaseStudyPage() {
 
         <section className="bg-page-dark pb-20 text-text-inverse md:pb-28">
           <Container variant="wide" className="w-full pt-16 md:pt-20">
-            <h2 className="text-[clamp(2.4rem,1.5rem+3vw,4.25rem)] leading-none font-medium tracking-[-0.04em]">
+            <h2 className="text-3xl font-medium sm:text-4xl lg:text-5xl">
               <ClipText>More projects</ClipText>
             </h2>
             <ul className="mt-10 grid gap-6 sm:grid-cols-2">
@@ -387,7 +387,7 @@ export function CaseStudyPage() {
                       placeholder={`${item.title} visual — not published yet.`}
                     />
                     <p className="mt-4 text-eyebrow text-white/55">{item.category}</p>
-                    <p className="mt-1 text-title text-white">{item.title}</p>
+                    <p className="mt-1 text-xl font-medium text-white md:text-2xl">{item.title}</p>
                   </Link>
                 </li>
               ))}
@@ -399,7 +399,7 @@ export function CaseStudyPage() {
           <Container variant="wide" className="w-full py-20 md:py-28">
             <h2
               id="case-faq-title"
-              className="max-w-[16ch] text-[clamp(2.4rem,1.5rem+3vw,4.25rem)] leading-[1.02] font-medium tracking-[-0.04em]"
+              className="max-w-[16ch] text-3xl font-medium sm:text-4xl lg:text-5xl"
             >
               <ClipText>Frequently asked questions.</ClipText>
             </h2>

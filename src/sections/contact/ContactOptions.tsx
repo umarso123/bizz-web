@@ -34,7 +34,7 @@ export function ContactOptions({
   return (
     <section data-scene="options" className="bg-page-brand pt-[clamp(1.5rem,5vh,3.5rem)] pb-[clamp(2.5rem,6vh,4rem)]">
       <div className={contactFrame}>
-        <h2 className="max-w-[14ch] text-[clamp(2rem,4vw,3.15rem)] leading-[1.05] font-semibold tracking-[-0.035em]">
+        <h2 className="max-w-[14ch] text-3xl font-medium sm:text-4xl">
           Begin anywhere.
         </h2>
         <div className="mt-10 grid max-w-[52rem] gap-3 sm:grid-cols-2">
@@ -53,7 +53,7 @@ export function ContactOptions({
                 )}
                 onClick={() => choose(item.id)}
               >
-                <span className="block text-[clamp(1.35rem,2vw,1.7rem)] leading-none font-semibold tracking-[-0.03em] text-text">
+                <span className="block text-xl font-medium text-text sm:text-2xl">
                   {item.label}
                 </span>
                 <span className={cn('mt-3 block text-body-small', selected ? 'text-brand' : 'text-text-secondary')}>

@@ -47,7 +47,7 @@ export function FoundationPage() {
   }, [])
 
   return (
-    <>
+    <div className="studio-page">
       <Section as="main" spacing="default">
         <Container variant="wide">
           <div className="mx-auto flex w-full max-w-page flex-col gap-16">
@@ -182,6 +182,23 @@ export function FoundationPage() {
               <p className="text-body-small text-text-muted">Small text for secondary information.</p>
               <p className="text-caption text-text-subtle">Caption for metadata.</p>
             </div>
+            <div className="flex flex-col gap-5">
+              <h3>Numeric scale</h3>
+              <p className="text-6xl font-medium text-text">6xl Page hero</p>
+              <p className="text-5xl font-medium text-text">5xl Section display</p>
+              <p className="text-4xl font-medium text-text">4xl Section title</p>
+              <p className="text-3xl font-medium text-text">3xl Subsection</p>
+              <p className="text-2xl font-medium text-text">2xl Card title</p>
+              <p className="text-xl font-medium text-text">xl Supporting title</p>
+              <p className="measure text-lg text-text-secondary">
+                Large body for a short introduction. Georgia needs a little more line height than a sans serif.
+              </p>
+              <p className="measure text-base text-text-secondary">
+                Body text stays at seventeen pixels with open leading so a paragraph is easy to read.
+              </p>
+              <p className="text-sm text-text-muted">Small text for secondary information.</p>
+              <p className="text-xs font-medium text-text-subtle">Extra small for labels and metadata.</p>
+            </div>
           </div>
         </Container>
       </Section>
@@ -207,6 +224,6 @@ export function FoundationPage() {
           </div>
         </Container>
       </Section>
-    </>
+    </div>
   )
 }

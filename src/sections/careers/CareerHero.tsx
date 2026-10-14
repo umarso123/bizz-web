@@ -96,15 +96,15 @@ function FloatingFragment({
 
   const sizeClass =
     fragment.size === 'lg'
-      ? 'px-5 py-3 text-[0.7rem] tracking-[0.18em]'
+      ? 'px-5 py-3 text-xs'
       : fragment.size === 'md'
-        ? 'px-4 py-2.5 text-[0.65rem] tracking-[0.16em]'
-        : 'px-3 py-2 text-[0.6rem] tracking-[0.14em]'
+        ? 'px-4 py-2.5 text-xs'
+        : 'px-3 py-2 text-xs'
 
   return (
     <m.div
       className={cn(
-        'pointer-events-none absolute hidden select-none rounded-md border font-semibold uppercase md:block',
+        'pointer-events-none absolute hidden select-none rounded-md border font-medium uppercase md:block',
         sizeClass,
         fragment.accent
           ? 'border-accent/50 bg-accent-soft text-text'
@@ -281,7 +281,7 @@ export function CareerHero() {
             </m.div>
             <m.h1
               id="careers-hero-title"
-              className="mt-5 text-[clamp(2.75rem,1.6rem+3.2vw,5rem)] leading-[1.02] font-semibold tracking-[-0.03em] text-text"
+              className="mt-5 text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
               initial={reduced ? false : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0 : 0.65, delay: reduced ? 0 : 0.2, ease }}

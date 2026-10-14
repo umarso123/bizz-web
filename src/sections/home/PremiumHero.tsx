@@ -7,6 +7,46 @@ import { HelixStrand, type HelixPointer } from '@/sections/home/HelixStrand.tsx'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
+const strandDots = Array.from({ length: 46 }, (_, index) => {
+  const u = index / 45
+  const y = 36 + u * 728
+  const turn = u * Math.PI * 5.2
+  const radius = 86 + Math.sin(u * 9) * 8
+  return {
+    y,
+    a: 200 + Math.cos(turn) * radius,
+    b: 200 + Math.cos(turn + Math.PI) * radius,
+    gold: index % 7 === 0,
+  }
+})
+
+function StrandMark() {
+  return (
+    <svg viewBox="0 0 400 800" className="h-[min(78vh,40rem)] w-auto max-w-full" aria-hidden="true">
+      {strandDots.map((dot, index) =>
+        index % 8 === 0 ? (
+          <line
+            key={`rung-${dot.y}`}
+            x1={dot.a}
+            x2={dot.b}
+            y1={dot.y}
+            y2={dot.y}
+            stroke="#f5c84c"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        ) : null,
+      )}
+      {strandDots.map((dot) => (
+        <g key={dot.y}>
+          <circle cx={dot.a} cy={dot.y} r={dot.gold ? 7 : 5.5} fill={dot.gold ? '#f5c84c' : '#2f5bea'} />
+          <circle cx={dot.b} cy={dot.y} r="4.5" fill="#1a2f8a" opacity="0.85" />
+        </g>
+      ))}
+    </svg>
+  )
+}
+
 export function PremiumHero() {
   const reduced = useReducedMotion() === true
   const copy = premiumHome.hero
@@ -14,6 +54,7 @@ export function PremiumHero() {
   const pointer = useRef<HelixPointer>({ x: 0, y: 0 })
   const scroll = useRef(0)
   const [inView, setInView] = useState(true)
+  const [strandLive, setStrandLive] = useState(false)
 
   useEffect(() => {
     const node = sectionRef.current
@@ -65,7 +106,20 @@ export function PremiumHero() {
       onPointerMove={onPointerMove}
     >
       <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden h-full w-[52%] overflow-hidden md:block" aria-hidden="true">
-        <HelixStrand pointer={pointer} scroll={scroll} reduced={reduced} active={inView} />
+        <div className="flex h-full items-center justify-center pe-[6%]">
+          <div className={strandLive ? 'hidden' : 'block'}>
+            <StrandMark />
+          </div>
+          <div className="absolute inset-0">
+            <HelixStrand
+              pointer={pointer}
+              scroll={scroll}
+              reduced={reduced}
+              active={inView}
+              onReady={() => setStrandLive(true)}
+            />
+          </div>
+        </div>
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-[90rem] flex-1 flex-col px-(--page-gutter) pb-3 md:pb-4">
