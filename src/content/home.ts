@@ -265,7 +265,7 @@ export const homeContent = {
         title: 'Healthcare',
         caption: 'Clinical decision support, telemedicine, records, exchange, and integration.',
         value: '5',
-        media: null,
+        media: null as string | null,
       },
       {
         id: 'services',
@@ -275,7 +275,7 @@ export const homeContent = {
         title: 'What we build',
         caption: 'Android, iOS, Flutter, web, front and back end, and cloud.',
         value: '6',
-        media: null,
+        media: null as string | null,
       },
       {
         id: 'industries',
@@ -285,7 +285,7 @@ export const homeContent = {
         title: 'Industries',
         caption: 'Healthcare, Educational, Fintech, Fitness, and eCommerce.',
         value: '5',
-        media: null,
+        media: null as string | null,
       },
     ],
   },
