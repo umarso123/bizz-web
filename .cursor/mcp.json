@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "awwwards-design-agent": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "github:umarso123/awwwards-design-mcp"
+      ]
+    }
+  }
+}

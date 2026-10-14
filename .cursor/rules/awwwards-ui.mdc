@@ -1,0 +1,16 @@
+---
+description: Run Awwwards design MCP tools before any UI work
+alwaysApply: true
+---
+
+# Awwwards UI
+
+Before designing, building, or modifying any UI component or page, call the `awwwards-design-agent` MCP tools and wait for their results:
+
+1. `audit_project_design` — pass the project root (or its `package.json`) and install any packages it reports as missing before writing UI.
+2. `get_awwwards_blueprint` — pick the vibe that fits the surface (`dark-luxury-tech`, `editorial-swiss`, or `clean-neo-minimal`) and apply its tokens, type, borders, lighting, and motion.
+3. `get_high_craft_component` — when the work is a bento grid, editorial hero, or floating glass nav, request that `componentType` and follow the returned architecture.
+
+Do not start layout, styling, or component code until those calls have returned. Use the tool output as the design source for structure, motion, and visual tokens.
+
+Published sentences still come from `content/legacy-site.md`.
