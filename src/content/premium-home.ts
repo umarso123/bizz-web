@@ -16,8 +16,6 @@ export const premiumHome = {
     primaryTo: '/contact',
     secondaryCta: 'See our work',
     secondaryTo: '/#featured-projects',
-    scrollCta: 'Scroll for more',
-    scrollTo: '#who-we-work-with',
     milestone: {
       label: 'Healthcare expertise',
       title: ['Clinical Decision', 'Support'] as const,

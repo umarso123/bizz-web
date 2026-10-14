@@ -108,9 +108,9 @@
 /* Hero fold — one viewport on large screens, Georgia display over the body face. */
 .homepage .hero-fold h1 {
   font-family: Georgia, 'Palatino Linotype', Palatino, serif;
-  font-size: clamp(2.75rem, 1.5rem + 2.8vw, 4.5rem);
+  font-size: clamp(2.6rem, 1.3rem + 2.5vw, 4.1rem);
   font-weight: 500;
-  line-height: 1.05;
+  line-height: 0.98;
   letter-spacing: -0.03em;
 }
 
