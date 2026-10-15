@@ -4,6 +4,7 @@ import bankAlfalahTablet from '@/assets/Bank Alfalah/mock Tablet 1.svg?url'
 import familyTreeBoard from '@/assets/family tree/Frame 1000002360.svg?url'
 import familyTreePage from '@/assets/family tree/Logo.svg?url'
 import familyTreeScreens from '@/assets/family tree/Mask group (3).svg?url'
+import familyTreeTablets from '@/assets/family tree/family-tree-tablets.png?url'
 import drugTestingBoard from '@/assets/Drug Testing/Frame 1000002342.svg?url'
 import drugTestingApp from '@/assets/Drug Testing/Midatlantic 1.svg?url'
 import familyTree from '@/assets/Mask group.svg?url'
@@ -18,6 +19,9 @@ import optimizedStrengthIcon from '@/assets/Optimized strength/iPhone iconMockup
 import optimizedStrengthScreens from '@/assets/Optimized strength/138shots_so 2.svg?url'
 import optimizedStrengthTall from '@/assets/Optimized strength/752shots_so 1.svg?url'
 import optimizedStrengthDetail from '@/assets/Optimized strength/123 2 (1).svg?url'
+import poisedDevices from '@/assets/Poised Journey Academy/poised-devices.png?url'
+import poisedJourneyAbout from '@/assets/Poised Journey Academy/poised-journey-about.jpg?url'
+import poisedJourneyHero from '@/assets/Poised Journey Academy/poised-journey-hero.jpg?url'
 import soccerSystems from '@/assets/Group 2609131.svg?url'
 import stepup from '@/assets/stepup 2.svg?url'
 
@@ -31,6 +35,7 @@ export const mockups = {
   familyTreeBoard,
   familyTreePage,
   familyTreeScreens,
+  familyTreeTablets,
   familyTree,
   familyTreeLaptop,
   fitnessBoards,
@@ -43,6 +48,9 @@ export const mockups = {
   optimizedStrengthIcon,
   optimizedStrengthScreens,
   optimizedStrengthTall,
+  poisedDevices,
+  poisedJourneyAbout,
+  poisedJourneyHero,
   soccerSystems,
   stepup,
 } as const

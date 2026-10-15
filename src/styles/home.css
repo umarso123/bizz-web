@@ -323,19 +323,19 @@
   transition: opacity 0.35s linear 0.08s;
 }
 
-.members-card[data-cover='relationships'] {
+.members-card[data-cover='ayesha-fahim'] {
   --members-cover: url('/images/team/cover-relationships.jpg?v=gold');
 }
 
-.members-card[data-cover='vision'] {
+.members-card[data-cover='talha-ahmed-hashmi'] {
   --members-cover: url('/images/team/cover-inspiration.jpg?v=gold');
 }
 
-.members-card[data-cover='solutions'] {
+.members-card[data-cover='shaheer-ahmed'] {
   --members-cover: url('/images/team/cover-together.jpg?v=gold');
 }
 
-.members-card[data-cover='possibilities'] {
+.members-card[data-cover='arshiya-anwer'] {
   --members-cover: url('/images/team/cover-possibilities.jpg?v=gold');
 }
 

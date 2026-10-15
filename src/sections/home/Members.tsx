@@ -56,7 +56,7 @@ function MemberCard({
           <div className="members-sheet">
             <p className="members-name">{person.name}</p>
             <p className="members-role">{person.role}</p>
-            <p className="members-page">{person.page}</p>
+            {person.page ? <p className="members-page">{person.page}</p> : null}
           </div>
         </div>
       </button>

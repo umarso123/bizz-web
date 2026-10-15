@@ -64,6 +64,10 @@ Bizaffix is about revolutionizing the healthcare industry with custom mobile app
 
 **Optimized Strength.** In the expansive world of fitness, while many are motivated to start, the absence of a consolidated, intuitive, and personalized tool often results in lackluster adherence and unsatisfactory progress.
 
+**The Poised Journey Academy.** A learning platform designed to help families plan, personalize, document, and manage their child's homeschool learning journeys. Learning activities, educational goals, progress tracking, learning stories, and available funding sit in one connected experience.
+
+**Family Tree.** Product screens for genealogy mapping, family news feed, events, and member profiles on the web.
+
 ## Articles
 
 - **Driving Digital Health Success: The Power of Clinical Validation and Cultural Competency.** Marketing. August 4, 2025. Opening line on the old site: “The badge protects everyone except the one wearing it—until now, technology is changing that narrative.” What occurs when leading-edge health…

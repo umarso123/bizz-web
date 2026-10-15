@@ -47,12 +47,13 @@ export const featuredProjectsContent = {
     {
       id: 'project-03',
       number: '03',
-      name: 'Educational',
+      name: 'The Poised Journey Academy',
       category: 'Education',
-      description: 'Digital learning products shaped for clarity, engagement, and real outcomes.',
-      image: mockups.stepup,
-      alt: 'Learning app on a phone',
-      href: '/work/educational',
+      description:
+        'A learning platform that helps families plan, personalize, document, and manage homeschool journeys.',
+      image: mockups.poisedJourneyHero,
+      alt: 'The Poised Journey Academy product board with phone mockups',
+      href: '/work/poised-journey-academy',
     },
     {
       id: 'project-04',
@@ -89,9 +90,10 @@ export const featuredProjectsContent = {
       number: '07',
       name: 'Family Tree',
       category: 'Product',
-      description: 'Family Tree product screens for the web experience.',
-      image: mockups.familyTreeScreens,
-      alt: 'Family Tree product board',
+      description:
+        'Genealogy, shared updates, events, and profiles in one family web experience.',
+      image: mockups.familyTreeTablets,
+      alt: 'Family Tree app screens across tablets',
       href: '/work/family-tree',
     },
     {

@@ -5,10 +5,10 @@ import { featuredProjectsContent, type FeaturedProject } from '@/content/feature
 
 const showcase = [
   featuredProjectsContent.projects[1],
-  featuredProjectsContent.projects[0],
   featuredProjectsContent.projects[2],
+  featuredProjectsContent.projects[6],
+  featuredProjectsContent.projects[0],
   featuredProjectsContent.projects[3],
-  featuredProjectsContent.projects[5],
 ]
 
 function CardFace({ project }: { project: FeaturedProject }) {

@@ -101,7 +101,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           aria-hidden="true"
         />
       ) : null}
-      {card.id === 'healthcare' ? (
+      {card.id === 'healthcare' && !hasVideo ? (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-70"

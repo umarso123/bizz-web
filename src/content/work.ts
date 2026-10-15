@@ -157,6 +157,27 @@ export const workPageContent = {
       image: mockups.stepup,
     },
     {
+      slug: 'poised-journey-academy',
+      title: 'The Poised Journey Academy',
+      industry: 'Educational',
+      category: 'Educational · Learning platform',
+      media: 'ink',
+      summary:
+        'A learning platform that helps families plan, personalize, document, and manage homeschool journeys in one place.',
+      description:
+        'Poised Journey Academy is a learning platform designed to help families plan, personalize, document, and manage their child\'s homeschool learning journeys. The platform brings learning activities, educational goals, progress tracking, learning stories, and available funding into one connected experience, making it easier for families to organize their learning journey and keep everything in one place.',
+      challenge:
+        'Homeschool families need one place to plan personalized journeys, track progress, document learning, and understand available funding without juggling disconnected tools.',
+      solution:
+        'We shaped a simple, engaging product experience for journey planning, standards guidance, funding clarity, and learning documentation across web and mobile.',
+      services: ['Product Design', 'UI/UX', 'Web Development', 'Mobile'],
+      image: mockups.poisedJourneyHero,
+      gallery: [
+        { src: mockups.poisedDevices, alt: 'Poised Journey Academy on laptop and tablets' },
+        { src: mockups.poisedJourneyAbout, alt: 'Poised Journey Academy about and goals board' },
+      ],
+    },
+    {
       slug: 'bank-alfalah',
       title: 'Bank Alfalah',
       industry: 'Fintech',
@@ -187,13 +208,20 @@ export const workPageContent = {
       slug: 'family-tree',
       title: 'Family Tree',
       industry: 'Family Tree',
-      category: 'Family Tree',
-      media: 'day',
-      summary: 'Family Tree product screens for the web experience.',
-      description: 'Product visuals for Family Tree.',
-      services: ['Product Design', 'Web Development'],
-      image: mockups.familyTreeScreens,
+      category: 'Product · Family Tree',
+      media: 'ink',
+      summary:
+        'A family platform for genealogy mapping, shared updates, events, and member profiles.',
+      description:
+        'Family Tree brings genealogy views, a family news feed, upcoming events, and profile management into one connected web experience for relatives to stay linked and share history.',
+      challenge:
+        'Families need a clear way to map relationships, share updates, and keep profiles and events in one place.',
+      solution:
+        'We designed product screens for registration, genealogy trees, social feed, and account details across tablet layouts.',
+      services: ['Product Design', 'UI/UX', 'Web Development'],
+      image: mockups.familyTreeTablets,
       gallery: [
+        { src: mockups.familyTreeScreens, alt: 'Family Tree product board' },
         { src: mockups.familyTreePage, alt: 'Family Tree page' },
         { src: mockups.familyTree, alt: 'Family Tree across tablets' },
         { src: mockups.familyTreeLaptop, alt: 'Family Tree on a laptop' },

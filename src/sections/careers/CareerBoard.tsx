@@ -79,7 +79,7 @@ function RoleApply({ job }: { job: JobPosting }) {
   if (sent) {
     return (
       <div className="mt-8 border-t border-border pt-8">
-        <p className="text-title text-text">CV received</p>
+        <p className="text-title">CV received</p>
         <p className="mt-3 max-w-[32rem] text-body text-text-secondary">
           {name.trim()} is with the hiring team for {job.title}.
         </p>
@@ -98,11 +98,13 @@ function RoleApply({ job }: { job: JobPosting }) {
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          'flex min-h-40 cursor-pointer flex-col justify-end border-l-[3px] px-5 py-6 transition-colors',
-          dragging || file ? 'border-accent bg-accent-soft' : 'border-brand/25 bg-page-white',
+          'flex min-h-40 cursor-pointer flex-col justify-end border px-5 py-6',
+          dragging || file
+            ? 'border-accent bg-accent-soft'
+            : 'border-border bg-page-white',
         )}
       >
-        <span className="text-title text-text">{file ? file.name : 'Drop a CV here'}</span>
+        <span className="text-title">{file ? file.name : 'Drop a CV here'}</span>
         <span className="mt-2 text-body-small text-text-secondary">
           {file ? formatBytes(file.size) : 'PDF or Word, up to 6 MB. Or choose a file.'}
         </span>
@@ -161,7 +163,7 @@ function RoleApply({ job }: { job: JobPosting }) {
       <button
         type="submit"
         disabled={sending}
-        className="mt-6 inline-flex min-h-12 items-center rounded-full bg-button-primary px-6 text-sm font-semibold text-text-inverse transition-colors hover:bg-button-primary-hover disabled:opacity-60"
+        className="mt-6 inline-flex min-h-12 items-center rounded-full bg-button-primary px-6 text-body-small font-semibold text-text-inverse hover:bg-button-primary-hover disabled:opacity-60"
       >
         {sending ? 'Sending' : 'Send CV'}
       </button>
@@ -191,8 +193,8 @@ export function CareerBoard({ activeSlug }: { activeSlug?: string }) {
   }
 
   return (
-    <section id="open-positions" className="bg-page-white pb-24 md:pb-32" aria-label="Open roles">
-      <Container variant="wide" className="w-full">
+    <section id="open-positions" className="scroll-mt-28 bg-page-white pt-8 pb-24 md:pb-32" aria-label="Open roles">
+      <Container variant="page" className="w-full">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border">
           <div className="flex flex-wrap gap-x-6" role="group" aria-label="Departments">
             {departments.map((item) => {
@@ -204,8 +206,10 @@ export function CareerBoard({ activeSlug }: { activeSlug?: string }) {
                   aria-pressed={on}
                   onClick={() => filterTo(item)}
                   className={cn(
-                    '-mb-px border-b-2 px-0.5 py-3 text-body focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand',
-                    on ? 'border-accent text-text' : 'border-transparent text-text-secondary',
+                    '-mb-px border-b px-0.5 py-3 text-body focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand',
+                    on
+                      ? 'border-accent text-text'
+                      : 'border-transparent text-text-secondary',
                   )}
                 >
                   {item}
@@ -213,12 +217,12 @@ export function CareerBoard({ activeSlug }: { activeSlug?: string }) {
               )
             })}
           </div>
-          <p className="pb-3 text-body-small text-text-muted">
+          <p className="pb-3 text-body-small text-text-secondary">
             {visible.length} {visible.length === 1 ? 'role' : 'roles'}
           </p>
         </div>
 
-        <div className="mt-2 grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,0.92fr)] lg:gap-16">
+        <div className="mt-2 grid items-start gap-10 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-12 xl:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
           <ul>
             {visible.map((job) => {
               const on = job.slug === selected?.slug
@@ -229,24 +233,19 @@ export function CareerBoard({ activeSlug }: { activeSlug?: string }) {
                     onClick={() => choose(job)}
                     aria-current={on ? 'true' : undefined}
                     className={cn(
-                      'flex w-full items-start gap-5 border-l-[3px] py-7 pr-2 pl-5 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:py-8',
+                      'flex w-full items-start gap-3 border-l py-5 pr-1 pl-4 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:py-6',
                       on ? 'border-accent' : 'border-transparent',
                     )}
                   >
                     <span className="min-w-0 flex-1">
-                      <span
-                        className={cn(
-                          'block text-2xl font-medium md:text-3xl',
-                          on ? 'text-brand' : 'text-text',
-                        )}
-                      >
+                      <span className="block text-xl font-medium text-text md:text-2xl">
                         {job.title}
                       </span>
-                      <span className="mt-3 block">
+                      <span className="mt-2 block">
                         <Meta job={job} />
                       </span>
                     </span>
-                    <span className="pt-1 text-body-small text-text-secondary">{job.department}</span>
+                    <span className="shrink-0 pt-1 text-caption text-text-secondary">{job.department}</span>
                   </button>
                 </li>
               )
@@ -257,22 +256,17 @@ export function CareerBoard({ activeSlug }: { activeSlug?: string }) {
             <article
               id="role-desk"
               key={selected.id}
-              className="pt-5 lg:sticky lg:top-[calc(var(--header-clearance)+1.25rem)] lg:max-h-[calc(100dvh-var(--header-clearance)-2rem)] lg:overflow-y-auto"
+              className="pt-5 lg:sticky lg:top-[calc(var(--header-clearance)+1.25rem)]"
             >
-              <p className="relative z-10 ml-8 inline-block rounded-t-md bg-accent px-4 pt-1.5 pb-1 text-body-small text-text">
-                {selected.department}
-              </p>
-              <div className="bg-surface px-6 pt-8 pb-8 shadow-card ring-1 ring-border-subtle md:px-8">
-                <h2 className="text-2xl font-medium text-text md:text-3xl">
-                  {selected.title}
-                </h2>
+              <p className="text-caption text-brand">{selected.department}</p>
+              <div className="mt-4 rounded-[1.75rem] border border-border-subtle bg-surface px-6 py-8 shadow-[0_24px_60px_rgb(47_91_234/0.08)] ring-1 ring-brand/10 md:px-8">
+                <h2 className="text-2xl font-medium md:text-3xl">{selected.title}</h2>
                 <div className="mt-3">
                   <Meta job={selected} />
                 </div>
                 <p className="mt-5 text-body text-text-secondary">{selected.description}</p>
                 <RoleApply key={selected.id} job={selected} />
-                <h3 className="mt-10 text-title text-text">The work</h3>
-                <ul className="mt-4 space-y-3 border-l border-brand-subtle pl-4">
+                <ul className="mt-10 space-y-3 border-l border-border pl-4">
                   {selected.responsibilities.map((item) => (
                     <li key={item} className="text-body-small text-text-secondary">
                       {item}

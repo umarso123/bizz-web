@@ -27,6 +27,26 @@ export const careersCopy = {
     eyebrow: 'Culture',
     headline: 'How we show up.',
   },
+  pillars: {
+    title: 'What sets us apart',
+    items: [
+      {
+        id: 'remote',
+        label: 'Remote.',
+        body: 'We focus on remote opportunity — so you can do ambitious work from where you work best.',
+      },
+      {
+        id: 'flexible',
+        label: 'Flexible.',
+        body: 'Flexible timing is what sets us apart. The work stays sharp; the hours stay human.',
+      },
+      {
+        id: 'impact',
+        label: 'Impact.',
+        body: 'Product, design, engineering, and healthcare expertise share one table — and ship work with real-world impact.',
+      },
+    ],
+  },
   process: {
     eyebrow: 'Process',
     headline: 'How we work',
@@ -327,14 +347,10 @@ export const gallerySlots: GallerySlot[] = [
 ]
 
 export const teamMembers: TeamMember[] = [
-  { id: 't1', name: 'Name placeholder', role: 'Product Design', photoLabel: 'Portrait placeholder' },
-  { id: 't2', name: 'Name placeholder', role: 'Frontend Engineering', photoLabel: 'Portrait placeholder' },
-  { id: 't3', name: 'Name placeholder', role: 'Product', photoLabel: 'Portrait placeholder' },
-  { id: 't4', name: 'Name placeholder', role: 'Backend Engineering', photoLabel: 'Portrait placeholder' },
-  { id: 't5', name: 'Name placeholder', role: 'Mobile Engineering', photoLabel: 'Portrait placeholder' },
-  { id: 't6', name: 'Name placeholder', role: 'AI / ML', photoLabel: 'Portrait placeholder' },
-  { id: 't7', name: 'Name placeholder', role: 'Healthcare Domain', photoLabel: 'Portrait placeholder' },
-  { id: 't8', name: 'Name placeholder', role: 'Engineering', photoLabel: 'Portrait placeholder' },
+  { id: 'ayesha-fahim', name: 'Ayesha Fahim', role: 'Project manager and design expert', photoLabel: 'Portrait of Ayesha Fahim' },
+  { id: 'talha-ahmed-hashmi', name: 'Talha Ahmed Hashmi', role: 'Full Stack Developer', photoLabel: 'Portrait of Talha Ahmed Hashmi' },
+  { id: 'shaheer-ahmed', name: 'Shaheer Ahmed', role: 'Technical Engineer', photoLabel: 'Portrait of Shaheer Ahmed' },
+  { id: 'arshiya-anwer', name: 'Arshiya Anwer', role: 'Project manager', photoLabel: 'Portrait of Arshiya Anwer' },
 ]
 
 export function getJobBySlug(slug: string): JobPosting | undefined {
