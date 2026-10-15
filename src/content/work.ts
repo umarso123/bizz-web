@@ -17,6 +17,8 @@ export type CaseStudy = {
   title: string
   industry: WorkIndustry | 'Family Tree'
   category: string
+  /** Headline overlaid on the index banner. Defaults to title when omitted. */
+  bannerTitle?: string
   /** One-line blurb on the index list */
   summary: string
   /** Longer intro on the detail page */
@@ -46,6 +48,7 @@ export const workPageContent = {
       industry: 'Healthcare',
       category: 'Healthcare · CDS',
       media: 'ink',
+      bannerTitle: 'Population Health Management',
       summary:
         'Evidence-based experiences designed to support clinical decision-making and seamless workflow integration.',
       description:
@@ -63,6 +66,7 @@ export const workPageContent = {
       industry: 'Healthcare',
       category: 'Healthcare · Telemedicine',
       media: 'ink',
+      bannerTitle: 'Virtual care that stays human',
       summary:
         'Personalized telemedicine platforms that enhance patient-provider connections, access, and operational efficiency.',
       description:
@@ -80,6 +84,7 @@ export const workPageContent = {
       industry: 'Healthcare',
       category: 'Healthcare · HIE',
       media: 'ink',
+      bannerTitle: 'Secure healthcare data exchange',
       summary: 'Secure, scalable HIE development tailored for healthcare data sharing.',
       description:
         'Cutting-edge Health Information Exchange Development: secure, scalable, and tailored to healthcare data-sharing needs.',
@@ -95,6 +100,7 @@ export const workPageContent = {
       industry: 'Healthcare',
       category: 'Healthcare · EHR',
       media: 'day',
+      bannerTitle: 'Records built for the practice',
       summary:
         'User-friendly EHR experiences that streamline practice workflows and safeguard patient data.',
       description:
@@ -111,6 +117,7 @@ export const workPageContent = {
       industry: 'Healthcare',
       category: 'Healthcare · Interop',
       media: 'ink',
+      bannerTitle: 'Systems that finally talk',
       summary:
         'Connected systems that break data barriers and support coordinated patient care.',
       description:
@@ -127,6 +134,7 @@ export const workPageContent = {
       industry: 'Fitness',
       category: 'Fitness · Product',
       media: 'ink',
+      bannerTitle: 'Training that sticks',
       summary:
         'A consolidated, intuitive, and personalized fitness tool built for lasting adherence and progress.',
       description:
@@ -141,7 +149,6 @@ export const workPageContent = {
         { src: mockups.optimizedStrengthScreens, alt: 'Optimized Strength app screens' },
         { src: mockups.optimizedStrengthTall, alt: 'Optimized Strength phone screens' },
         { src: mockups.optimizedStrengthDetail, alt: 'Optimized Strength app detail' },
-        { src: mockups.optimizedStrength, alt: 'Optimized Strength phones' },
       ],
     },
     {
@@ -154,6 +161,7 @@ export const workPageContent = {
       description:
         'Educational industry work across mobile apps, websites, and product experiences, built to make complex learning feel approachable.',
       services: ['Product Design', 'Web Development', 'Mobile'],
+      bannerTitle: 'Learning products with clarity',
       image: mockups.stepup,
     },
     {
@@ -162,6 +170,7 @@ export const workPageContent = {
       industry: 'Educational',
       category: 'Educational · Learning platform',
       media: 'ink',
+      bannerTitle: 'Homeschool journeys, one place',
       summary:
         'A learning platform that helps families plan, personalize, document, and manage homeschool journeys in one place.',
       description:
@@ -171,10 +180,31 @@ export const workPageContent = {
       solution:
         'We shaped a simple, engaging product experience for journey planning, standards guidance, funding clarity, and learning documentation across web and mobile.',
       services: ['Product Design', 'UI/UX', 'Web Development', 'Mobile'],
-      image: mockups.poisedJourneyHero,
+      image: mockups.poisedDevicesPills,
       gallery: [
-        { src: mockups.poisedDevices, alt: 'Poised Journey Academy on laptop and tablets' },
-        { src: mockups.poisedJourneyAbout, alt: 'Poised Journey Academy about and goals board' },
+        { src: mockups.poisedScreens, alt: 'Poised Journey Academy product screens' },
+        { src: mockups.poisedJourneyHero, alt: 'Poised Journey Academy product board' },
+      ],
+    },
+    {
+      slug: 'traino-ai',
+      title: 'Traino.ai',
+      industry: 'Educational',
+      category: 'Educational · AI LMS',
+      media: 'ink',
+      bannerTitle: 'AI-powered training retention',
+      summary:
+        'An AI-powered LMS built to optimize training knowledge retention, engagement, and workforce learning.',
+      description:
+        'Traino.ai is an AI-powered learning management solution for personalized training. The product helps teams boost engagement, streamline development, and transform workforce learning with clear dashboards, team views, and training detail experiences.',
+      challenge:
+        'Organizations need training that people retain, not another LMS that is hard to navigate or easy to ignore.',
+      solution:
+        'We designed Traino.ai around clear learning activity, department tracking, and course detail views so training stays personal, measurable, and easy to manage.',
+      services: ['Product Design', 'UI/UX', 'Web Development'],
+      image: mockups.trainoLaptop,
+      gallery: [
+        { src: mockups.trainoMonitor, alt: 'Traino.ai desktop and floating product screens' },
       ],
     },
     {
@@ -183,6 +213,7 @@ export const workPageContent = {
       industry: 'Fintech',
       category: 'Fintech · Bank Alfalah',
       media: 'ink',
+      bannerTitle: 'Banking across web and tablet',
       summary: 'Bank Alfalah product screens across web and tablet.',
       description: 'Product visuals for Bank Alfalah, covering the web experience and tablet screens.',
       services: ['Product Design', 'Web Development'],
@@ -201,6 +232,7 @@ export const workPageContent = {
       summary: 'Drug testing app screens for the mobile experience.',
       description: 'Product visuals for the drug testing app.',
       services: ['Product Design'],
+      bannerTitle: 'Drug testing on mobile',
       image: mockups.drugTestingBoard,
       gallery: [{ src: mockups.drugTestingApp, alt: 'Drug testing app screens' }],
     },
@@ -210,6 +242,7 @@ export const workPageContent = {
       industry: 'Family Tree',
       category: 'Product · Family Tree',
       media: 'ink',
+      bannerTitle: 'Family history, shared clearly',
       summary:
         'A family platform for genealogy mapping, shared updates, events, and member profiles.',
       description:
@@ -221,9 +254,7 @@ export const workPageContent = {
       services: ['Product Design', 'UI/UX', 'Web Development'],
       image: mockups.familyTreeTablets,
       gallery: [
-        { src: mockups.familyTreeScreens, alt: 'Family Tree product board' },
         { src: mockups.familyTreePage, alt: 'Family Tree page' },
-        { src: mockups.familyTree, alt: 'Family Tree across tablets' },
         { src: mockups.familyTreeLaptop, alt: 'Family Tree on a laptop' },
       ],
     },
@@ -237,9 +268,10 @@ export const workPageContent = {
       description:
         'eCommerce websites and product experiences crafted to captivate audiences and strengthen digital presence.',
       services: ['Web Development', 'UI/UX', 'Product Design'],
-      image: mockups.foodPhones,
+      bannerTitle: 'Commerce without friction',
+      image: mockups.foodScreens,
       gallery: [
-        { src: mockups.foodScreens, alt: 'Food ordering screens' },
+        { src: mockups.foodPhones, alt: 'Food ordering phones' },
         { src: mockups.foodPresentation, alt: 'Food ordering app presentation' },
       ],
     },
@@ -249,6 +281,7 @@ export const workPageContent = {
       industry: 'Fitness',
       category: 'Fitness',
       media: 'ink',
+      bannerTitle: 'Motivation, progress, daily use',
       summary: 'Mobile and web experiences built around motivation, progress, and daily use.',
       description:
         'Mobile and web experiences built around motivation, progress, and daily use.',
@@ -260,6 +293,18 @@ export const workPageContent = {
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {
   return workPageContent.studies.find((study) => study.slug === slug)
+}
+
+/** Index cards: only studies with banner art, capped at 10. */
+export const workIndexLimit = 10
+
+export function getWorkIndexStudies(industry?: WorkIndustry | 'All') {
+  const withArt = workPageContent.studies.filter((study) => Boolean(study.image))
+  const filtered =
+    !industry || industry === 'All'
+      ? withArt
+      : withArt.filter((study) => study.industry === industry)
+  return filtered.slice(0, workIndexLimit)
 }
 
 /** Questions grounded in the published process. No timelines or commercial terms are invented. */

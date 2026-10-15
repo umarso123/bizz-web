@@ -1,11 +1,18 @@
 import { LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { workBuiltContent, workIndustries, workPageContent, type WorkIndustry } from '@/content/work.ts'
+import {
+  getWorkIndexStudies,
+  workBuiltContent,
+  workIndustries,
+  workPageContent,
+  type CaseStudy,
+  type WorkIndustry,
+} from '@/content/work.ts'
 import { cn } from '@/lib/cn.ts'
-import { WorkStill } from '@/sections/work/WorkStill.tsx'
 
 const ease = [0.22, 1, 0.36, 1] as const
+const hoverSpring = { type: 'spring', stiffness: 260, damping: 22, mass: 0.6 } as const
 
 type WorkFilter = 'All' | WorkIndustry
 
@@ -34,8 +41,7 @@ export function WorkPage() {
   const reduced = useReducedMotion() === true
   const copy = workPageContent
   const [filter, setFilter] = useState<WorkFilter>('All')
-  const studies =
-    filter === 'All' ? copy.studies : copy.studies.filter((study) => study.industry === filter)
+  const studies = getWorkIndexStudies(filter)
 
   useEffect(() => {
     const previous = document.title
@@ -102,39 +108,14 @@ export function WorkPage() {
             {studies.length === 0 ? (
               <p className="mt-16 text-center text-text-secondary">{copy.emptyLabel}</p>
             ) : (
-              <ul className="mt-10 grid gap-3 md:mt-12 md:grid-cols-2 md:gap-4">
-                {studies.map((study) => (
-                  <li key={study.slug}>
-                    <Link
-                      to={`/work/${study.slug}`}
-                      className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-border-subtle bg-surface text-text no-underline shadow-card outline-none hover:text-text focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-page-white"
-                    >
-                      <div className="relative aspect-16/10">
-                        <WorkStill slug={study.slug} />
-                        <StudyPhoto src={study.image} alt="" />
-                        <span className="absolute bottom-4 left-4 inline-flex max-w-[calc(100%-5.5rem)] items-center gap-2 rounded-full bg-surface/90 px-3 py-1.5 text-xs font-medium text-text backdrop-blur-md">
-                          <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
-                          <span className="truncate">{study.category}</span>
-                        </span>
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            'absolute right-4 bottom-4 grid size-11 place-items-center rounded-full shadow-[0_8px_20px_rgb(13_18_31/0.28)] transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none',
-                            'bg-brand text-text-inverse',
-                          )}
-                        >
-                          <ArrowMark />
-                        </span>
-                      </div>
-                      <div className="px-6 pt-5 pb-6">
-                        <h2 className="text-2xl font-medium text-text">
-                          {study.title}
-                        </h2>
-                        <p className="mt-2 max-w-[48ch] text-base text-text-secondary">
-                          {study.summary}
-                        </p>
-                      </div>
-                    </Link>
+              <ul className="mt-10 grid grid-cols-2 gap-3 md:mt-12 md:gap-4">
+                {studies.map((study, index) => (
+                  <li key={study.slug} className="min-w-0">
+                    <StudyCard
+                      study={study}
+                      reduced={reduced}
+                      number={String(index + 1).padStart(2, '0')}
+                    />
                   </li>
                 ))}
               </ul>
@@ -213,6 +194,57 @@ export function WorkPage() {
   )
 }
 
+function StudyCard({
+  study,
+  reduced,
+  number,
+}: {
+  study: CaseStudy
+  reduced: boolean
+  number: string
+}) {
+  const bannerTitle = study.bannerTitle ?? study.title
+
+  return (
+    <Link
+      to={`/work/${study.slug}`}
+      className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-black/8 bg-white text-text no-underline shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_24px_48px_rgba(14,14,14,0.04)] outline-none hover:text-text focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-page-white"
+    >
+      <div className="relative aspect-[2.15/1] overflow-hidden bg-page-dark">
+        <StudyPhoto src={study.image} alt="" />
+
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgb(13_18_31/0.45)_0%,rgb(13_18_31/0.12)_38%,rgb(13_18_31/0.08)_55%,rgb(13_18_31/0.55)_100%)]" />
+
+        <div className="absolute top-3 right-3 left-3 z-10 sm:top-3.5 sm:right-4 sm:left-4">
+          <p className="text-[0.6rem] font-semibold tracking-[0.12em] text-white/85 uppercase">
+            Project {number}
+          </p>
+          <p className="mt-1 max-w-[16ch] text-sm font-semibold tracking-[-0.03em] text-white sm:text-base">
+            {bannerTitle}
+          </p>
+        </div>
+
+        <span className="absolute bottom-2.5 left-2.5 z-10 inline-flex max-w-[calc(100%-4.5rem)] items-center gap-1.5 rounded-full bg-white/92 px-2.5 py-1 text-[0.65rem] font-medium text-text backdrop-blur-md sm:bottom-3 sm:left-3 sm:text-xs">
+          <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
+          <span className="truncate">{study.category}</span>
+        </span>
+        <m.span
+          aria-hidden="true"
+          className="absolute right-2.5 bottom-2.5 z-10 grid size-9 place-items-center rounded-full bg-brand text-text-inverse shadow-[0_8px_20px_rgb(13_18_31/0.28)] sm:right-3 sm:bottom-3 sm:size-10"
+          whileHover={reduced ? undefined : { x: 2, y: -2 }}
+          transition={hoverSpring}
+        >
+          <ArrowMark />
+        </m.span>
+      </div>
+      <div className="px-3.5 pt-3.5 pb-4 sm:px-5 sm:pt-4 sm:pb-5">
+        <h2 className="text-base font-medium tracking-[-0.02em] text-text sm:text-xl">{study.title}</h2>
+        <p className="mt-1.5 line-clamp-2 text-xs text-text-secondary sm:text-sm">{study.summary}</p>
+      </div>
+    </Link>
+  )
+}
+
 function StudyPhoto({ src, alt }: { src: string | null; alt: string }) {
   const [visible, setVisible] = useState(false)
 
@@ -223,7 +255,7 @@ function StudyPhoto({ src, alt }: { src: string | null; alt: string }) {
       src={src}
       alt={alt}
       className={cn(
-        'pointer-events-none absolute inset-0 h-full w-full object-cover',
+        'pointer-events-none absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300',
         visible ? 'opacity-100' : 'opacity-0',
       )}
       onLoad={() => setVisible(true)}

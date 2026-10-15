@@ -51,13 +51,24 @@ export const featuredProjectsContent = {
       category: 'Education',
       description:
         'A learning platform that helps families plan, personalize, document, and manage homeschool journeys.',
-      image: mockups.poisedJourneyHero,
-      alt: 'The Poised Journey Academy product board with phone mockups',
+      image: mockups.poisedDevicesPills,
+      alt: 'Poised Journey Academy on laptop and tablets',
       href: '/work/poised-journey-academy',
     },
     {
       id: 'project-04',
       number: '04',
+      name: 'Traino.ai',
+      category: 'Education',
+      description:
+        'An AI-powered LMS built to optimize training knowledge retention and workforce learning.',
+      image: mockups.trainoLaptop,
+      alt: 'Traino.ai dashboard on a laptop',
+      href: '/work/traino-ai',
+    },
+    {
+      id: 'project-05',
+      number: '05',
       name: 'Bank Alfalah',
       category: 'Finance',
       description: 'Bank Alfalah product screens across web and tablet.',
@@ -66,8 +77,8 @@ export const featuredProjectsContent = {
       href: '/work/bank-alfalah',
     },
     {
-      id: 'project-05',
-      number: '05',
+      id: 'project-06',
+      number: '06',
       name: 'Fitness',
       category: 'Wellness',
       description: 'Mobile and web experiences built around motivation, progress, and daily use.',
@@ -76,8 +87,8 @@ export const featuredProjectsContent = {
       href: '/work/fitness',
     },
     {
-      id: 'project-06',
-      number: '06',
+      id: 'project-07',
+      number: '07',
       name: 'eCommerce',
       category: 'Commerce',
       description: 'Storefront and product journeys designed to convert without friction.',
@@ -86,8 +97,8 @@ export const featuredProjectsContent = {
       href: '/work/ecommerce',
     },
     {
-      id: 'project-07',
-      number: '07',
+      id: 'project-08',
+      number: '08',
       name: 'Family Tree',
       category: 'Product',
       description:
@@ -97,8 +108,8 @@ export const featuredProjectsContent = {
       href: '/work/family-tree',
     },
     {
-      id: 'project-08',
-      number: '08',
+      id: 'project-09',
+      number: '09',
       name: 'Drug Testing',
       category: 'Healthcare',
       description: 'Drug testing app screens for the mobile experience.',

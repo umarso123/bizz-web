@@ -113,21 +113,23 @@ function VisualFrame({
   return (
     <div
       ref={ref}
-      className="relative aspect-16/10 overflow-hidden rounded-[1.5rem] bg-page-dark ring-1 ring-black/10 md:rounded-[2rem]"
+      className="relative aspect-[2.1/1] overflow-hidden rounded-[1.25rem] bg-[linear-gradient(145deg,#3d6bf0_0%,#2f5bea_42%,#2549c9_100%)] ring-1 ring-black/10 md:rounded-[1.5rem]"
     >
       {src && !failed ? (
-        <m.img
-          src={src}
-          alt={alt}
-          style={{ y, scale }}
-          className="absolute -inset-[6%] h-[112%] w-[112%] max-w-none object-cover"
-          onError={() => setFailed(true)}
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-        />
+        <div className="absolute inset-0 flex items-center justify-center px-6 py-5 sm:px-10 sm:py-6">
+          <m.img
+            src={src}
+            alt={alt}
+            style={{ y, scale }}
+            className="max-h-[82%] max-w-[82%] object-contain"
+            onError={() => setFailed(true)}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </div>
       ) : (
-        <div className="flex aspect-4/3 items-center justify-center border border-dashed border-black/15 px-8 text-center md:aspect-video">
-          <p className="max-w-sm text-body text-text-secondary">{placeholder}</p>
+        <div className="flex h-full items-center justify-center px-8 text-center">
+          <p className="max-w-sm text-body text-white/80">{placeholder}</p>
         </div>
       )}
     </div>
@@ -348,7 +350,7 @@ export function CaseStudyPage() {
         </Container>
 
         <section className="bg-page-dark py-16 text-text-inverse md:py-24" aria-label="Project visuals">
-          <Container variant="wide" className="flex w-full flex-col gap-6 md:gap-8">
+          <Container variant="wide" className="grid w-full grid-cols-2 gap-3 md:gap-5">
             {gallery.map((frame) => (
               <VisualFrame
                 key={`${frame.alt}-${frame.src ?? 'placeholder'}`}

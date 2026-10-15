@@ -19,11 +19,13 @@ import optimizedStrengthIcon from '@/assets/Optimized strength/iPhone iconMockup
 import optimizedStrengthScreens from '@/assets/Optimized strength/138shots_so 2.svg?url'
 import optimizedStrengthTall from '@/assets/Optimized strength/752shots_so 1.svg?url'
 import optimizedStrengthDetail from '@/assets/Optimized strength/123 2 (1).svg?url'
-import poisedDevices from '@/assets/Poised Journey Academy/poised-devices.png?url'
-import poisedJourneyAbout from '@/assets/Poised Journey Academy/poised-journey-about.jpg?url'
+import poisedDevicesPills from '@/assets/Poised Journey Academy/poised-devices-pills.png?url'
 import poisedJourneyHero from '@/assets/Poised Journey Academy/poised-journey-hero.jpg?url'
+import poisedScreens from '@/assets/Poised Journey Academy/poised-screens.png?url'
 import soccerSystems from '@/assets/Group 2609131.svg?url'
 import stepup from '@/assets/stepup 2.svg?url'
+import trainoLaptop from '@/assets/Traino/traino-laptop.png?url'
+import trainoMonitor from '@/assets/Traino/traino-monitor.png?url'
 
 /** Presentation boards from src/assets. Empty gradient rectangles are not included. */
 export const mockups = {
@@ -48,9 +50,11 @@ export const mockups = {
   optimizedStrengthIcon,
   optimizedStrengthScreens,
   optimizedStrengthTall,
-  poisedDevices,
-  poisedJourneyAbout,
+  poisedDevicesPills,
   poisedJourneyHero,
+  poisedScreens,
   soccerSystems,
   stepup,
+  trainoLaptop,
+  trainoMonitor,
 } as const

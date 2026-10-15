@@ -66,6 +66,8 @@ Bizaffix is about revolutionizing the healthcare industry with custom mobile app
 
 **The Poised Journey Academy.** A learning platform designed to help families plan, personalize, document, and manage their child's homeschool learning journeys. Learning activities, educational goals, progress tracking, learning stories, and available funding sit in one connected experience.
 
+**Traino.ai.** An AI-powered LMS for personalized training, knowledge retention, engagement, and workforce learning.
+
 **Family Tree.** Product screens for genealogy mapping, family news feed, events, and member profiles on the web.
 
 ## Articles

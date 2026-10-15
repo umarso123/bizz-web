@@ -6,19 +6,19 @@ import { featuredProjectsContent, type FeaturedProject } from '@/content/feature
 const showcase = [
   featuredProjectsContent.projects[1],
   featuredProjectsContent.projects[2],
-  featuredProjectsContent.projects[6],
-  featuredProjectsContent.projects[0],
   featuredProjectsContent.projects[3],
+  featuredProjectsContent.projects[7],
+  featuredProjectsContent.projects[0],
 ]
 
 function CardFace({ project }: { project: FeaturedProject }) {
   return (
     <article className="rounded-2xl border border-border/80 bg-white p-3 shadow-[0_16px_36px_rgb(13_18_31/0.12),0_10px_0_-4px_#fff,0_11px_0_-3px_rgb(226_220_210)] sm:p-4">
-      <div className="aspect-[4/3] overflow-hidden rounded-xl bg-brand-soft">
+      <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-xl bg-brand-soft p-6 sm:p-8">
         <img
           src={project.image}
           alt={project.alt}
-          className="h-full w-full object-contain p-3"
+          className="max-h-full max-w-full scale-[0.85] object-contain"
           draggable={false}
         />
       </div>
