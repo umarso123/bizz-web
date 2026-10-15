@@ -1,6 +1,6 @@
 import { m, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { useRef, type ReactNode } from 'react'
-import { bookCall } from '@/app/navigation.ts'
+import { bookCall, bookCallButtonProps } from '@/app/navigation.ts'
 import { Container } from '@/components/layout/Container.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { homeContent } from '@/content/home.ts'
@@ -18,7 +18,7 @@ function MagneticButton({ children }: { children: ReactNode }) {
       onPointerLeave={magnetic.onPointerLeave}
       className="inline-flex"
     >
-      <Button to={bookCall.to} size="lg">
+      <Button {...bookCallButtonProps()} size="lg">
         {children}
       </Button>
     </m.div>

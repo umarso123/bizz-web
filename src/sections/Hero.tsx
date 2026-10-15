@@ -1,6 +1,6 @@
 import { LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion'
 import type { ReactNode } from 'react'
-import { bookCall } from '@/app/navigation.ts'
+import { bookCallButtonProps } from '@/app/navigation.ts'
 import { Container } from '@/components/layout/Container.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { homeContent } from '@/content/home.ts'
@@ -79,7 +79,7 @@ export function Hero() {
 
             <Rise delay={0.38}>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button to={bookCall.to} variant="brand" size="lg">
+                <Button {...bookCallButtonProps()} variant="brand" size="lg">
                   {copy.primaryCta}
                   <span aria-hidden="true">→</span>
                 </Button>

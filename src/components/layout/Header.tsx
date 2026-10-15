@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { bookCall, primaryNavigation } from '@/app/navigation.ts'
 import { BrandLogo } from '@/components/brand/BrandLogo.tsx'
+import { BookCallLink } from '@/components/ui/BookCallLink.tsx'
 import { cn } from '@/lib/cn.ts'
 
 const menuId = 'site-menu'
@@ -107,12 +108,9 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-1">
-            <Link
-              to={bookCall.to}
-              className="inline-flex h-9 items-center rounded-full bg-button-brand px-3 text-[0.8125rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-text-inverse no-underline transition-colors duration-(--duration-standard) ease-standard hover:bg-button-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-10 sm:px-4 sm:text-[0.875rem] md:h-11 md:px-5 md:text-[0.9375rem]"
-            >
+            <BookCallLink className="inline-flex h-9 items-center rounded-full bg-button-brand px-3 text-[0.8125rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-text-inverse no-underline transition-colors duration-(--duration-standard) ease-standard hover:bg-button-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-10 sm:px-4 sm:text-[0.875rem] md:h-11 md:px-5 md:text-[0.9375rem]">
               {bookCall.label}
-            </Link>
+            </BookCallLink>
             <button
               ref={menuButtonRef}
               type="button"

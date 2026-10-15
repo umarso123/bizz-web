@@ -3,7 +3,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { bookCall } from '@/app/navigation.ts'
+import { BookCallLink } from '@/components/ui/BookCallLink.tsx'
 import { homeContent } from '@/content/home.ts'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -243,13 +243,12 @@ export function FloatingHero() {
             <span className="size-1.5 rounded-full" style={{ background: line }} />
             Healthcare
           </span>
-          <Link
-            to={bookCall.to}
+          <BookCallLink
             className="rounded-full px-4 py-2 text-[0.8125rem] font-semibold whitespace-nowrap no-underline shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-[0.875rem]"
             style={{ backgroundColor: line, color: ink, textDecoration: 'none' }}
           >
             {homeContent.hero.primaryCta}
-          </Link>
+          </BookCallLink>
           <Link
             to="/#featured-projects"
             className="rounded-full px-3 py-2 text-[0.8125rem] font-medium whitespace-nowrap no-underline outline-none focus-visible:ring-2 focus-visible:ring-accent sm:text-[0.875rem]"

@@ -1,6 +1,6 @@
 import { LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { bookCall } from '@/app/navigation.ts'
+import { bookCall, bookCallButtonProps } from '@/app/navigation.ts'
 import { Container } from '@/components/layout/Container.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
@@ -128,7 +128,7 @@ export function ServicesPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.24, ease }}
                 >
-                  <Button to={bookCall.to} size="lg" variant="brand">
+                  <Button {...bookCallButtonProps()} size="lg" variant="brand">
                     {bookCall.label}
                   </Button>
                 </m.div>
@@ -274,7 +274,7 @@ export function ServicesPage() {
                 {servicesPage.cta.body}
               </p>
               <div className="mt-8">
-                <Button to={bookCall.to} size="lg" variant="brand">
+                <Button {...bookCallButtonProps()} size="lg" variant="brand">
                   {bookCall.label}
                 </Button>
               </div>

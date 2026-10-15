@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
-import { bookCall } from '@/app/navigation.ts'
 import { Container } from '@/components/layout/Container.tsx'
+import { BookCallLink } from '@/components/ui/BookCallLink.tsx'
 import { studioAddress, studioEmail, studioPhone, studioSocial } from '@/content/contact.ts'
 
 const explore = [
@@ -101,8 +101,7 @@ export function Footer() {
         </nav>
       </Container>
 
-      <Link
-        to={bookCall.to}
+      <BookCallLink
         aria-label="Let’s Talk"
         className="footer-talk group relative block cursor-pointer overflow-hidden py-6 text-brand no-underline transition-colors duration-300 hover:text-brand-hover focus-visible:text-brand-hover md:py-8"
       >
@@ -110,7 +109,7 @@ export function Footer() {
           <TalkUnit />
           <TalkUnit clone />
         </div>
-      </Link>
+      </BookCallLink>
 
       <Container variant="page" className="relative pt-6 pb-8 md:pt-8 md:pb-10">
         <div className="flex flex-col gap-3 text-caption text-text sm:flex-row sm:items-center sm:justify-between">

@@ -1,5 +1,4 @@
-import { Link } from 'react-router'
-import { bookCall } from '@/app/navigation.ts'
+import { BookCallLink } from '@/components/ui/BookCallLink.tsx'
 
 function scallopPath() {
   const bumps = 16
@@ -32,10 +31,7 @@ export function ConnectBanner() {
   return (
     <section className="bg-page-white py-10 md:py-14" aria-label="Reach out">
       <div className="mx-auto w-full max-w-[96rem] px-(--page-gutter)">
-        <Link
-          to={bookCall.to}
-          className="flex flex-col items-start gap-6 rounded-[2.75rem] bg-brand px-7 py-7 no-underline transition-transform duration-300 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between sm:rounded-full sm:px-10 sm:py-8 md:px-14 md:py-9"
-        >
+        <BookCallLink className="flex flex-col items-start gap-6 rounded-[2.75rem] bg-brand px-7 py-7 no-underline transition-transform duration-300 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between sm:rounded-full sm:px-10 sm:py-8 md:px-14 md:py-9">
           <p className="max-w-[46rem] text-[clamp(1.45rem,2.5vw,2.55rem)] leading-[1.05] font-bold tracking-tighter text-white uppercase">
             Want to collaborate? Reach out to us. Let’s connect.
           </p>
@@ -49,7 +45,7 @@ export function ConnectBanner() {
               a call
             </span>
           </span>
-        </Link>
+        </BookCallLink>
       </div>
     </section>
   )

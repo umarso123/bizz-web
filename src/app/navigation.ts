@@ -1,3 +1,5 @@
+import { googleBookingUrl } from '@/content/booking.ts'
+
 /**
  * Primary nav — matches the premium homepage structure.
  */
@@ -16,5 +18,27 @@ export const primaryNavigation = [
 
 export const bookCall = {
   label: 'Book a call',
-  to: '/contact',
 } as const
+
+export type BookCallTarget =
+  | { kind: 'external'; href: string }
+  | { kind: 'internal'; to: '/contact' }
+
+/** Prefer Google Appointment Schedule; fall back to contact until configured. */
+export function getBookCallTarget(): BookCallTarget {
+  if (googleBookingUrl) {
+    return { kind: 'external', href: googleBookingUrl }
+  }
+  return { kind: 'internal', to: '/contact' }
+}
+
+/** Spread onto `Button` — uses `href` for Google booking, `to` for /contact fallback. */
+export function bookCallButtonProps():
+  | { href: string; target: '_blank'; rel: 'noreferrer noopener' }
+  | { to: '/contact' } {
+  const target = getBookCallTarget()
+  if (target.kind === 'external') {
+    return { href: target.href, target: '_blank', rel: 'noreferrer noopener' }
+  }
+  return { to: target.to }
+}
