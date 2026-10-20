@@ -17,8 +17,8 @@ export function HomePage() {
         <WhoWeWorkWith />
         <HowWeWork />
         <Members />
-        <CaseHighlight />
         <HorizontalWork showHeader={false} />
+        <CaseHighlight />
         <ServiceArc />
         <ServiceOrbit />
         <FactsSnapshot />
