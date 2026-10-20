@@ -39,18 +39,18 @@ function placeCards(cards: HTMLElement[], focus: number) {
     let opacity = 1
 
     if (abs <= 1) {
-      shift = sign * 36 * abs
-      scale = 1 - abs * 0.12
-      z = Math.round(40 - abs * 24)
-      drop = abs * 1.8
-      opacity = 1 - abs * 0.08
+      shift = sign * 54 * abs
+      scale = 1 - abs * 0.08
+      z = Math.round(40 - abs * 20)
+      drop = abs * 1.5
+      opacity = 1 - abs * 0.04
     } else {
       const t = Math.min((abs - 1) / 0.5, 1)
-      shift = sign * 36 * (1 - t)
-      scale = 0.88 - t * 0.08
-      z = Math.max(1, Math.round(16 - t * 14))
-      drop = 1.8 * (1 - t)
-      opacity = 0.92 * (1 - t)
+      shift = sign * 54 * (1 - t)
+      scale = 0.92 - t * 0.08
+      z = Math.max(1, Math.round(20 - t * 18))
+      drop = 1.5 * (1 - t)
+      opacity = 0.96 * (1 - t)
     }
 
     const xPercent = -50 + shift

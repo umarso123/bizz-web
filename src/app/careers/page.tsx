@@ -9,6 +9,7 @@ import {
 } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
+import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Container } from '@/components/layout/Container.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
@@ -33,70 +34,74 @@ function CareerHero({ reduced }: { reduced: boolean }) {
       <Container variant="page" className="relative w-full">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14">
           <div>
-            <m.p
-              className="text-2xl font-medium tracking-[-0.03em] text-text sm:text-3xl"
+            <m.div
               initial={reduced ? false : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: reduced ? 0 : 0.45, ease }}
+              className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand-soft/70 px-3.5 py-1 text-xs font-semibold text-brand backdrop-blur-xs"
             >
-              Bizaffix
-            </m.p>
-            <m.div
-              initial={reduced ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.05, ease }}
-            >
-              <Eyebrow className="mt-5">{careersCopy.hero.eyebrow}</Eyebrow>
+              <span className="size-2 rounded-full bg-brand animate-pulse" />
+              <span>Careers at Bizaffix</span>
+              <span className="text-brand/40">·</span>
+              <span className="text-text-secondary font-normal">Remote Worldwide</span>
             </m.div>
+
             <m.h1
               id="careers-hero-title"
-              className="mt-4 max-w-[11ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
+              className="mt-5 max-w-[12ch] text-4xl font-medium tracking-tight text-text sm:text-5xl lg:text-6xl"
               initial={reduced ? false : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.1, ease }}
+              transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.08, ease }}
             >
               A good place to <span className="text-brand">work.</span>
             </m.h1>
+
             <m.p
-              className="mt-6 max-w-[34rem] text-body-large text-text-secondary"
+              className="mt-6 max-w-[34rem] text-body-large text-text-secondary leading-relaxed"
               initial={reduced ? false : { opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.18, ease }}
+              transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.16, ease }}
             >
               {careersCopy.hero.body}
             </m.p>
+
             <m.div
               className="mt-8 flex flex-wrap gap-3"
               initial={reduced ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.26, ease }}
+              transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.24, ease }}
             >
-              <Button href="#open-positions" size="lg" variant="brand">
-                {careersCopy.hero.primaryCta}
+              <Button href="#open-positions" size="lg" variant="brand" className="inline-flex items-center gap-2">
+                <span>{careersCopy.hero.primaryCta}</span>
+                <ArrowDown className="size-4" />
               </Button>
               <Button href="#how-we-work" size="lg" variant="secondary">
                 {careersCopy.process.headline}
               </Button>
             </m.div>
-            <m.dl
-              className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-border pt-6"
+
+            <m.div
+              className="mt-10 grid max-w-lg grid-cols-3 gap-3 border-t border-border-subtle pt-6"
               initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.32, ease }}
+              transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.3, ease }}
             >
-              <div>
-                <dt className="text-caption text-text-muted">Roles</dt>
-                <dd className="mt-1 text-title text-text">{jobPostings.length}</dd>
+              <div className="rounded-xl border border-border-subtle bg-white/60 p-3.5 backdrop-blur-xs">
+                <p className="text-caption text-text-muted">Open Roles</p>
+                <p className="mt-1 text-2xl font-medium text-text">{jobPostings.length}</p>
+                <p className="mt-0.5 text-[11px] text-brand font-medium">Actively hiring</p>
               </div>
-              <div>
-                <dt className="text-caption text-text-muted">Location</dt>
-                <dd className="mt-1 text-title text-text">Remote</dd>
+              <div className="rounded-xl border border-border-subtle bg-white/60 p-3.5 backdrop-blur-xs">
+                <p className="text-caption text-text-muted">Workplace</p>
+                <p className="mt-1 text-2xl font-medium text-text">Remote</p>
+                <p className="mt-0.5 text-[11px] text-text-muted">Worldwide</p>
               </div>
-              <div>
-                <dt className="text-caption text-text-muted">Timing</dt>
-                <dd className="mt-1 text-title text-text">Flexible</dd>
+              <div className="rounded-xl border border-border-subtle bg-white/60 p-3.5 backdrop-blur-xs">
+                <p className="text-caption text-text-muted">Schedule</p>
+                <p className="mt-1 text-2xl font-medium text-text">Flexible</p>
+                <p className="mt-0.5 text-[11px] text-text-muted">Async-friendly</p>
               </div>
-            </m.dl>
+            </m.div>
           </div>
 
           <m.div
@@ -105,41 +110,77 @@ function CareerHero({ reduced }: { reduced: boolean }) {
             animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)' }}
             transition={reduced ? { duration: 0 } : { ...houseSpring, delay: 0.12 }}
           >
-            <div className="overflow-hidden rounded-[1.75rem] bg-page-dark p-6 text-text-inverse shadow-[0_24px_60px_rgb(47_91_234/0.18)] ring-1 ring-brand/20 md:p-8">
-              <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-5">
+            {/* Yellowish Gradient Card */}
+            <div
+              className="relative overflow-hidden rounded-[2rem] p-7 md:p-8 shadow-[0_24px_55px_rgb(224_176_48/0.28)] ring-1 ring-[#e0b030]/40 border border-white/60"
+              style={{
+                background:
+                  'linear-gradient(150deg, #fef8e2 0%, #f9dc72 32%, #f5c84c 68%, #e0b030 100%)',
+              }}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between gap-4 border-b border-[#0d121f]/15 pb-5">
                 <div>
-                  <p className="text-caption text-accent">Open now</p>
-                  <p className="mt-2 text-3xl font-medium tracking-[-0.03em]">{jobPostings.length} roles</p>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0d121f] px-3 py-1 text-xs font-semibold text-[#f8d35a] shadow-xs">
+                    <span className="size-1.5 rounded-full bg-[#f8d35a] animate-pulse" />
+                    <span>Open now</span>
+                  </div>
+                  <p className="mt-3 text-3xl font-medium tracking-tight text-[#0d121f] sm:text-4xl">
+                    {jobPostings.length} roles
+                  </p>
                 </div>
-                <p className="text-body-small text-text-inverse-muted">Healthcare focus</p>
+                <div className="text-right">
+                  <span className="inline-block rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-[#0d121f] backdrop-blur-xs border border-white/40 shadow-xs">
+                    Healthcare focus
+                  </span>
+                </div>
               </div>
-              <ul className="mt-2">
+
+              {/* Roles list */}
+              <ul className="mt-3 divide-y divide-[#0d121f]/10">
                 {preview.map((job, index) => (
                   <li key={job.id}>
                     <Link
                       to={`/careers/${job.slug}`}
-                      className="flex items-baseline justify-between gap-4 border-b border-white/10 py-4 text-text-inverse no-underline transition-colors hover:text-accent"
+                      className="group flex items-center justify-between gap-4 py-3.5 text-[#0d121f] no-underline transition-all hover:translate-x-1"
                     >
-                      <span className="min-w-0">
-                        <span className="mr-3 text-caption text-brand">0{index + 1}</span>
-                        <span className="text-title">{job.title}</span>
+                      <span className="flex items-baseline gap-3 min-w-0">
+                        <span className="font-mono text-xs font-bold text-[#0d121f]/50">
+                          0{index + 1}
+                        </span>
+                        <span className="text-lg font-medium text-[#0d121f] group-hover:text-black transition-colors truncate">
+                          {job.title}
+                        </span>
                       </span>
-                      <span className="shrink-0 text-body-small text-text-inverse-muted">{job.department}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="rounded-full bg-white/65 px-2.5 py-0.5 text-xs font-medium text-[#0d121f]/85 backdrop-blur-xs shadow-2xs">
+                          {job.department}
+                        </span>
+                        <ArrowUpRight className="size-4 text-[#0d121f]/50 transition-all group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </div>
                     </Link>
                   </li>
                 ))}
               </ul>
-              <a
-                href="#open-positions"
-                className="mt-6 inline-flex items-center gap-2 text-body text-accent no-underline"
-              >
-                See all openings
-                <span aria-hidden="true">→</span>
-              </a>
+
+              {/* Footer action */}
+              <div className="mt-6 pt-4 border-t border-[#0d121f]/15 flex items-center justify-between gap-3">
+                <a
+                  href="#open-positions"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#0d121f] px-5 py-2.5 text-body-small font-medium text-white shadow-md hover:bg-black transition-all group"
+                >
+                  <span>See all openings</span>
+                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                </a>
+                <span className="text-xs text-[#0d121f]/75 font-medium hidden sm:inline">
+                  Remote · Flexible
+                </span>
+              </div>
             </div>
+
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -right-4 -bottom-4 -z-10 size-40 rounded-full bg-accent/50 blur-3xl md:size-52"
+              className="pointer-events-none absolute -right-4 -bottom-4 -z-10 size-40 rounded-full bg-accent/40 blur-3xl md:size-52"
             />
           </m.div>
         </div>
