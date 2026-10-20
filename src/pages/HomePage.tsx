@@ -1,5 +1,4 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
-import { CareAudience } from '@/sections/home/CareAudience.tsx'
 import { CaseHighlight } from '@/sections/home/CaseHighlight.tsx'
 import { FactsSnapshot } from '@/sections/home/FactsSnapshot.tsx'
 import { ProjectShowcase } from '@/sections/home/ProjectShowcase.tsx'
@@ -15,7 +14,6 @@ export function HomePage() {
     <LazyMotion features={domAnimation}>
       <main className="homepage bg-page-white">
         <PremiumHero />
-        <CareAudience />
         <WhoWeWorkWith />
         <HowWeWork />
         <Members />

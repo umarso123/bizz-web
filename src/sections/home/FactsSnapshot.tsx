@@ -39,14 +39,14 @@ function placeCards(cards: HTMLElement[], focus: number) {
     let opacity = 1
 
     if (abs <= 1) {
-      shift = sign * 52 * abs
+      shift = sign * 36 * abs
       scale = 1 - abs * 0.12
       z = Math.round(40 - abs * 24)
       drop = abs * 1.8
       opacity = 1 - abs * 0.08
     } else {
       const t = Math.min((abs - 1) / 0.5, 1)
-      shift = sign * 52 * (1 - t)
+      shift = sign * 36 * (1 - t)
       scale = 0.88 - t * 0.08
       z = Math.max(1, Math.round(16 - t * 14))
       drop = 1.8 * (1 - t)
@@ -254,14 +254,13 @@ export function FactsSnapshot() {
             </div>
           </Container>
 
-          <div className="fact-stage relative mt-6 min-h-64 w-full flex-1 sm:mt-8">
+          <div className="fact-stage relative mt-6 w-full sm:mt-8">
           {copy.cards.map((card, index) => (
             <article
               key={card.id}
-              className="fact-card absolute top-1/2 left-1/2 h-full w-[min(74vw,300px)] overflow-hidden rounded-2xl border border-border-subtle shadow-lg sm:w-[min(58vw,460px)] lg:w-[min(44vw,600px)]"
+              className="fact-card absolute top-1/2 left-1/2 overflow-hidden rounded-2xl border border-border-subtle shadow-lg"
               style={{
                 zIndex: index === 0 ? 30 : 12,
-                transform: `translate(-50%, -50%) scale(${index === 0 ? 1 : 0.88})`,
               }}
             >
               <CardFace card={card} reduced={reduced} />

@@ -402,3 +402,46 @@
   }
 }
 
+/* Facts Snapshot 3D Card Stack */
+.fact-stage {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  height: min(60vh, 480px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fact-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(78vw, 320px);
+  max-width: calc(100vw - 2rem);
+  height: min(56vh, 440px);
+  will-change: transform, opacity;
+}
+
+@media (min-width: 640px) {
+  .fact-stage {
+    height: min(64vh, 540px);
+  }
+
+  .fact-card {
+    width: min(56vw, 440px);
+    height: min(60vh, 500px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .fact-stage {
+    height: min(68vh, 580px);
+  }
+
+  .fact-card {
+    width: min(40vw, 540px);
+    height: min(64vh, 540px);
+  }
+}
+
