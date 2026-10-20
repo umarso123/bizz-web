@@ -8,6 +8,7 @@ import { HomePage } from '@/pages/HomePage.tsx'
 import { PlaceholderPage } from '@/pages/PlaceholderPage.tsx'
 import { ServicesPage } from '@/pages/ServicesPage.tsx'
 import { WorkPage } from '@/pages/WorkPage.tsx'
+import { HorizontalWork } from '@/sections/home/HorizontalWork.tsx'
 
 /**
  * Public routes live here. The paths below are temporary central routes
@@ -30,6 +31,10 @@ export function AppRouter() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/__design-system" element={<FoundationPage />} />
       </Route>
+      <Route
+        path="/selected-work"
+        element={<HorizontalWork />}
+      />
     </Routes>
   )
 }

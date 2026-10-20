@@ -1,7 +1,7 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { CaseHighlight } from '@/sections/home/CaseHighlight.tsx'
 import { FactsSnapshot } from '@/sections/home/FactsSnapshot.tsx'
-import { ProjectShowcase } from '@/sections/home/ProjectShowcase.tsx'
+import { HorizontalWork } from '@/sections/home/HorizontalWork.tsx'
 import { HowWeWork } from '@/sections/home/HowWeWork.tsx'
 import { Members } from '@/sections/home/Members.tsx'
 import { PremiumHero } from '@/sections/home/PremiumHero.tsx'
@@ -18,7 +18,7 @@ export function HomePage() {
         <HowWeWork />
         <Members />
         <CaseHighlight />
-        <ProjectShowcase />
+        <HorizontalWork showHeader={false} />
         <ServiceArc />
         <ServiceOrbit />
         <FactsSnapshot />
