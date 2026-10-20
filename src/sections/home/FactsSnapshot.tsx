@@ -39,14 +39,14 @@ function placeCards(cards: HTMLElement[], focus: number) {
     let opacity = 1
 
     if (abs <= 1) {
-      shift = sign * 54 * abs
+      shift = sign * 50 * abs
       scale = 1 - abs * 0.08
       z = Math.round(40 - abs * 20)
       drop = abs * 1.5
       opacity = 1 - abs * 0.04
     } else {
       const t = Math.min((abs - 1) / 0.5, 1)
-      shift = sign * 54 * (1 - t)
+      shift = sign * 50 * (1 - t)
       scale = 0.92 - t * 0.08
       z = Math.max(1, Math.round(20 - t * 18))
       drop = 1.5 * (1 - t)
@@ -128,7 +128,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
         />
       ) : null}
 
-      <div className="absolute inset-0 flex flex-col justify-end px-5 pb-28 md:px-7 md:pb-32">
+      <div className="absolute inset-0 flex flex-col justify-end px-5 pb-16 sm:px-6 sm:pb-18 md:px-7 md:pb-20">
         <p
           className={cn(
             'text-display',
@@ -138,7 +138,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           {card.value}
         </p>
         {card.title ? (
-          <p className={cn('mt-2 text-title', ink)}>
+          <p className={cn('mt-1.5 text-title', ink)}>
             {card.title}
           </p>
         ) : null}
@@ -146,7 +146,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
 
       <p
         className={cn(
-          'absolute inset-x-0 bottom-0 z-10 flex items-start gap-2.5 px-5 pt-16 pb-5 md:px-6 md:pb-6',
+          'absolute inset-x-0 bottom-0 z-10 flex items-start gap-2 px-4.5 pt-12 pb-4 sm:px-6 sm:pb-5',
           hasVideo || dark
             ? 'bg-gradient-to-t from-surface-dark from-35% via-surface-dark/92 to-transparent text-text-inverse'
             : 'bg-gradient-to-t from-[#e0b030] from-42% via-[#f5c84c]/95 to-transparent text-text',
@@ -159,7 +159,7 @@ function CardFace({ card, reduced }: { card: FactCard; reduced: boolean }) {
           )}
           aria-hidden="true"
         />
-        <span className="text-body-small font-medium">{card.caption}</span>
+        <span className="text-body-small font-medium leading-snug">{card.caption}</span>
       </p>
     </>
   )
@@ -254,7 +254,7 @@ export function FactsSnapshot() {
             </div>
           </Container>
 
-          <div className="fact-stage relative mt-6 w-full sm:mt-8">
+          <div className="fact-stage relative mt-8 w-full sm:mt-10">
           {copy.cards.map((card, index) => (
             <article
               key={card.id}
