@@ -1,200 +1,36 @@
-import {
-  LazyMotion,
-  domAnimation,
-  m,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from 'framer-motion'
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
-import { Link, Navigate, useParams } from 'react-router'
+import { LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion'
+import { useEffect, useLayoutEffect, useState } from 'react'
+import { Navigate, useParams } from 'react-router'
+import { bookCall, bookCallButtonProps } from '@/app/navigation.ts'
+import { SectionHeader } from '@/components/common/SectionHeader.tsx'
 import { Container } from '@/components/layout/Container.tsx'
-import { featuredProjectsContent } from '@/content/featured-projects.ts'
-import { servicesPage } from '@/content/services.ts'
+import { PageHero } from '@/components/layout/PageHero.tsx'
+import { Button } from '@/components/ui/Button.tsx'
+import { HexMark } from '@/components/ui/HexMark.tsx'
+import { TextLink } from '@/components/ui/TextLink.tsx'
 import { caseStudyFaqs, getCaseStudy, workPageContent, type CaseStudy } from '@/content/work.ts'
 import { cn } from '@/lib/cn.ts'
+import { StudyCard, StudyMedia } from '@/sections/work/WorkStill.tsx'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-const notes = {
-  duration: 'Duration is not published for this study.',
-  toolsLead: 'The tools used on this study are not published.',
-  narrative: 'This part of the study is not published yet.',
-  visual: 'Additional project visual — not published yet.',
-} as const
+type Chapter = { id: string; title: string; body: string }
 
-function relatedStudies(slug: string): CaseStudy[] {
-  const featured = featuredProjectsContent.projects
-    .map((project) => getCaseStudy(project.href.replace(/^\/work\//, '')))
-    .filter((study): study is CaseStudy => study != null && study.slug !== slug)
-
-  if (featured.length > 0) return featured.slice(0, 4)
-  return workPageContent.studies.filter((study) => study.slug !== slug).slice(0, 4)
+/** Only the parts of the story the record actually has. Nothing is padded out. */
+function chaptersFor(study: CaseStudy): Chapter[] {
+  const chapters: Chapter[] = [{ id: 'overview', title: 'Overview', body: study.description }]
+  if (study.challenge) chapters.push({ id: 'challenge', title: 'The challenge', body: study.challenge })
+  if (study.solution) chapters.push({ id: 'approach', title: 'Our approach', body: study.solution })
+  return chapters
 }
 
-const riseCss = `
-@keyframes case-rise {
-  from { transform: translateY(110%); }
-  to { transform: translateY(0); }
-}
-.case-rise {
-  animation: case-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .case-rise { animation: none; transform: none; }
-}
-`
-
-function ClipText({
-  children,
-  className,
-  immediate = false,
-}: {
-  children: ReactNode
-  className?: string
-  immediate?: boolean
-}) {
-  const reduced = useReducedMotion() === true
-  const ref = useRef<HTMLSpanElement>(null)
-  const [shown, setShown] = useState(immediate || reduced)
-
-  useEffect(() => {
-    if (immediate || reduced) return
-    const node = ref.current
-    if (!node) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return
-        setShown(true)
-        observer.disconnect()
-      },
-      { threshold: 0.35 },
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [immediate, reduced])
-
-  return (
-    <span ref={ref} className="block overflow-hidden pb-[0.12em]">
-      <span
-        className={cn(
-          'block',
-          className,
-          reduced ? undefined : shown ? 'case-rise' : 'translate-y-[110%]',
-        )}
-      >
-        {children}
-      </span>
-    </span>
-  )
-}
-
-function VisualFrame({
-  src,
-  alt,
-  placeholder,
-  priority = false,
-}: {
-  src: string | null
-  alt: string
-  placeholder: string
-  priority?: boolean
-}) {
-  const reduced = useReducedMotion() === true
-  const [failed, setFailed] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  })
-  const y = useTransform(scrollYProgress, [0, 1], reduced ? ['0%', '0%'] : ['5%', '-5%'])
-  const scale = useTransform(scrollYProgress, [0, 1], reduced ? [1, 1] : [1.045, 1])
-
-  return (
-    <div
-      ref={ref}
-      className="relative aspect-[2.1/1] overflow-hidden rounded-[1.25rem] bg-[linear-gradient(145deg,#3d6bf0_0%,#2f5bea_42%,#2549c9_100%)] ring-1 ring-black/10 md:rounded-[1.5rem]"
-    >
-      {src && !failed ? (
-        <div className="absolute inset-0 flex items-center justify-center px-6 py-5 sm:px-10 sm:py-6">
-          <m.img
-            src={src}
-            alt={alt}
-            style={{ y, scale }}
-            className="max-h-[82%] max-w-[82%] object-contain"
-            onError={() => setFailed(true)}
-            loading={priority ? 'eager' : 'lazy'}
-            decoding="async"
-          />
-        </div>
-      ) : (
-        <div className="flex h-full items-center justify-center px-8 text-center">
-          <p className="max-w-sm text-body text-white/80">{placeholder}</p>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function MetaBlock({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div>
-      <p className="text-eyebrow text-text-muted">{label}</p>
-      <div className="mt-3">{children}</div>
-    </div>
-  )
-}
-
-function FaqList() {
-  const [open, setOpen] = useState(0)
-  const reduced = useReducedMotion() === true
-
-  return (
-    <div className="border-t border-border">
-      {caseStudyFaqs.map((item, index) => {
-        const expanded = open === index
-        return (
-          <div key={item.question} className="border-b border-border">
-            <button
-              type="button"
-              className="flex w-full items-center justify-between gap-6 py-6 text-left"
-              aria-expanded={expanded}
-              onClick={() => setOpen(expanded ? -1 : index)}
-            >
-              <span className="text-base font-medium text-text md:text-xl">
-                {item.question}
-              </span>
-              <span aria-hidden="true" className="text-2xl font-medium text-brand">
-                {expanded ? '×' : '+'}
-              </span>
-            </button>
-            <m.div
-              initial={false}
-              animate={{ height: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
-              transition={{ duration: reduced ? 0 : 0.35, ease }}
-              className="overflow-hidden"
-            >
-              <p className="max-w-3xl pb-6 text-body text-text-secondary">{item.answer}</p>
-            </m.div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-function HeroVisual({ children }: { children: ReactNode }) {
-  const reduced = useReducedMotion() === true
-  return (
-    <m.div
-      className="mt-8 md:mt-10"
-      initial={reduced ? false : { opacity: 0, y: 28 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduced ? 0 : 0.8, delay: reduced ? 0 : 0.12, ease }}
-    >
-      {children}
-    </m.div>
-  )
+/** Same industry first, then healthcare, then everything else. */
+function relatedStudies(study: CaseStudy): CaseStudy[] {
+  const others: CaseStudy[] = workPageContent.studies.filter((item) => item.slug !== study.slug)
+  const same = others.filter((item) => item.industry === study.industry)
+  const healthcare = others.filter((item) => item.industry === 'Healthcare' && item.industry !== study.industry)
+  const rest = others.filter((item) => item.industry !== study.industry && item.industry !== 'Healthcare')
+  return [...same, ...healthcare, ...rest].slice(0, 3)
 }
 
 function setMetaDescription(content: string) {
@@ -214,9 +50,275 @@ function setMetaDescription(content: string) {
   }
 }
 
+/** Which chapter is in the reading band, for the "you are here" station. */
+function useActiveChapter(ids: readonly string[]) {
+  const key = ids.join('|')
+  const [active, setActive] = useState(ids[0] ?? '')
+
+  useEffect(() => {
+    const nodes = key
+      .split('|')
+      .map((id) => document.getElementById(id))
+      .filter((node): node is HTMLElement => node !== null)
+    if (nodes.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        const first = visible[0]
+        if (first) setActive(first.target.id)
+      },
+      { rootMargin: '-30% 0px -60% 0px' },
+    )
+    nodes.forEach((node) => observer.observe(node))
+    return () => observer.disconnect()
+  }, [key])
+
+  return active
+}
+
+function StudyFacts({ study }: { study: CaseStudy }) {
+  return (
+    <dl className="grid gap-6 border-t border-border pt-6 sm:grid-cols-2 lg:grid-cols-1">
+      <div>
+        <dt className="text-eyebrow text-text-muted">Industry</dt>
+        <dd className="mt-2 inline-flex items-center gap-2 text-body text-text">
+          {study.industry === 'Healthcare' ? <HexMark variant="solid" size={10} /> : null}
+          {study.industry}
+        </dd>
+      </div>
+      <div>
+        <dt className="text-eyebrow text-text-muted">Focus</dt>
+        <dd className="mt-2 text-body text-text">{study.category}</dd>
+      </div>
+      <div className="sm:col-span-2 lg:col-span-1">
+        <dt className="text-eyebrow text-text-muted">Services</dt>
+        <dd className="mt-3">
+          <ul className="flex flex-wrap gap-2">
+            {study.services.map((service) => (
+              <li key={service} className="rounded-pill border border-border px-3 py-1 text-caption text-text">
+                {service}
+              </li>
+            ))}
+          </ul>
+        </dd>
+      </div>
+    </dl>
+  )
+}
+
+function ChapterRoute({ chapters, active }: { chapters: readonly Chapter[]; active: string }) {
+  return (
+    <nav aria-label="On this page" className="sticky top-32">
+      <p className="text-eyebrow text-text-muted">On this page</p>
+      <ol className="mt-5 border-l-2 border-border">
+        {chapters.map((chapter) => {
+          const current = chapter.id === active
+          return (
+            <li key={chapter.id} className="relative">
+              <HexMark
+                variant={current ? 'active' : 'station'}
+                size={12}
+                className="absolute top-1/2 -left-[7px] -translate-y-1/2"
+              />
+              <a
+                href={`#${chapter.id}`}
+                aria-current={current ? 'location' : undefined}
+                className={cn(
+                  'block py-2.5 pl-6 text-body-small no-underline transition-colors duration-(--duration-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
+                  current ? 'font-semibold text-text hover:text-text' : 'text-text-secondary hover:text-text',
+                )}
+              >
+                {chapter.title}
+              </a>
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
+  )
+}
+
+function PlusMark({ open }: { open: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'relative grid size-9 shrink-0 place-items-center rounded-pill border transition-colors duration-(--duration-standard)',
+        open ? 'border-text bg-text text-text-inverse' : 'border-border-strong text-text',
+      )}
+    >
+      <span className="absolute h-[2px] w-3.5 rounded-full bg-current" />
+      <span
+        className={cn(
+          'absolute h-3.5 w-[2px] rounded-full bg-current transition-transform duration-300 ease-standard',
+          open && 'scale-y-0',
+        )}
+      />
+    </span>
+  )
+}
+
+function FaqList() {
+  const reduced = useReducedMotion() === true
+  const [open, setOpen] = useState(0)
+
+  return (
+    <ul className="border-t border-border">
+      {caseStudyFaqs.map((item, index) => {
+        const expanded = open === index
+        const panelId = `case-faq-${index}`
+        return (
+          <li key={item.question} className="border-b border-border">
+            <h3 className="text-card-title">
+              <button
+                type="button"
+                aria-expanded={expanded}
+                aria-controls={panelId}
+                onClick={() => setOpen(expanded ? -1 : index)}
+                className="flex w-full items-center justify-between gap-6 py-6 text-left text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:py-7"
+              >
+                <span>{item.question}</span>
+                <PlusMark open={expanded} />
+              </button>
+            </h3>
+            <m.div
+              id={panelId}
+              initial={false}
+              animate={{ height: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
+              transition={{ duration: reduced ? 0 : 0.35, ease }}
+              className="overflow-hidden"
+              aria-hidden={!expanded}
+            >
+              <p className="max-w-[40rem] pb-7 text-body text-text-secondary">{item.answer}</p>
+            </m.div>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+function CaseStudyView({ study }: { study: CaseStudy }) {
+  const chapters = chaptersFor(study)
+  const active = useActiveChapter(chapters.map((chapter) => chapter.id))
+  const frames = study.gallery ?? []
+  const related = relatedStudies(study)
+
+  return (
+    <LazyMotion features={domAnimation}>
+      <main className="studio-page">
+        <PageHero
+          zone={workPageContent.eyebrow}
+          meta={study.industry}
+          title={study.title}
+          titleId="case-title"
+          intro={study.summary}
+          actions={
+            <>
+              <Button {...bookCallButtonProps()} size="lg" variant="primary">
+                {bookCall.label}
+              </Button>
+              <TextLink to="/work">{workPageContent.backLabel}</TextLink>
+            </>
+          }
+          aside={<StudyFacts study={study} />}
+        >
+          <div className="relative mt-14 aspect-4/3 overflow-hidden rounded-2xl bg-bg-subtle sm:aspect-video md:mt-20 lg:aspect-[2.2/1]">
+            <StudyMedia slug={study.slug} image={study.image} alt={`${study.title} product visual`} priority />
+          </div>
+        </PageHero>
+
+        <section className="bg-page-white section-y" aria-label={`${study.title} story`}>
+          <Container variant="wide" className="w-full">
+            <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+              <div className="hidden lg:col-span-3 lg:block">
+                <ChapterRoute chapters={chapters} active={active} />
+              </div>
+              <div className="lg:col-span-8 lg:col-start-5">
+                {chapters.map((chapter, index) => (
+                  <section
+                    key={chapter.id}
+                    id={chapter.id}
+                    aria-labelledby={`${chapter.id}-title`}
+                    className={cn('scroll-mt-32', index > 0 && 'mt-16 border-t border-border pt-16 md:mt-24 md:pt-24')}
+                  >
+                    <h2 id={`${chapter.id}-title`} className="text-section-title text-text">
+                      {chapter.title}
+                    </h2>
+                    <p className="mt-6 max-w-[40rem] text-body-large text-text-secondary md:mt-8">{chapter.body}</p>
+                  </section>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        {frames.length > 0 ? (
+          <section className="bg-page-white pb-(--section-space)" aria-labelledby="visuals-title">
+            <Container variant="wide" className="w-full">
+              <div className="rounded-2xl bg-night-route p-4 sm:p-6 md:p-10">
+                <h2 id="visuals-title" className="px-2 pt-4 pb-8 text-title text-text-inverse md:px-4 md:pt-6 md:pb-10">
+                  Project visuals
+                </h2>
+                <ul className={cn('grid gap-4 md:gap-6', frames.length > 1 && 'md:grid-cols-2')}>
+                  {frames.map((frame, index) => (
+                    <li key={frame.src} className={cn(frames.length === 3 && index === 0 && 'md:col-span-2')}>
+                      <div className="relative aspect-video overflow-hidden rounded-xl bg-white/6">
+                        <StudyMedia slug={study.slug} image={frame.src} alt={frame.alt} fit="contain" />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Container>
+          </section>
+        ) : null}
+
+        <section className="bg-bg-subtle section-y" aria-labelledby="related-title">
+          <Container variant="wide" className="w-full">
+            <SectionHeader
+              title="More case studies"
+              titleId="related-title"
+              action={<TextLink to="/work">All case studies</TextLink>}
+            />
+            <ul className="mt-14 grid gap-x-8 gap-y-14 md:mt-16 md:grid-cols-3">
+              {related.map((item) => (
+                <li key={item.slug}>
+                  <StudyCard study={item} />
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+
+        <section className="bg-page-white section-y" aria-labelledby="case-faq-title">
+          <Container variant="wide" className="w-full">
+            <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-4">
+                <h2 id="case-faq-title" className="max-w-[14ch] text-section-title text-text">
+                  Frequently asked questions
+                </h2>
+                <p className="mt-5 max-w-[24rem] text-body text-text-secondary">
+                  How a study moves from the first conversation to something people can use.
+                </p>
+              </div>
+              <div className="lg:col-span-7 lg:col-start-6">
+                <FaqList />
+              </div>
+            </div>
+          </Container>
+        </section>
+      </main>
+    </LazyMotion>
+  )
+}
+
 /**
- * One case-study layout for every study.
- * Copy and images come from the study record. Missing facts stay labeled as unpublished.
+ * One case-study layout for every study. Copy and images come from the study
+ * record; parts the record doesn't have are left out rather than padded.
  */
 export function CaseStudyPage() {
   const { slug } = useParams()
@@ -229,7 +331,7 @@ export function CaseStudyPage() {
   useEffect(() => {
     if (!study) return
     const previousTitle = document.title
-    document.title = `${study.title} · Bizaffix`
+    document.title = `${study.title} | Bizaffix`
     const restoreMeta = setMetaDescription(study.summary)
     return () => {
       document.title = previousTitle
@@ -239,181 +341,5 @@ export function CaseStudyPage() {
 
   if (!study) return <Navigate to="/work" replace />
 
-  const frames = [
-    ...(study.image ? [{ src: study.image, alt: `${study.title} visual` }] : []),
-    ...(study.gallery ?? []),
-  ]
-  const [hero, ...rest] = frames
-  const gallery = rest.length > 0 ? rest : [{ src: null as string | null, alt: notes.visual }]
-  const statement = study.solution ?? study.summary
-  const others = relatedStudies(study.slug)
-  const tools = servicesPage.technologies.items.join(', ')
-
-  return (
-    <LazyMotion features={domAnimation}>
-      <main className="studio-page bg-page-white text-text">
-        <style>{riseCss}</style>
-        <header className="bg-page-white text-text">
-          <Container variant="wide" className="w-full pt-6 pb-10 md:pt-10 md:pb-14">
-            <Link
-              to="/work"
-              className="inline-flex items-center gap-2 text-body-small font-semibold text-text-secondary no-underline transition-colors hover:text-text"
-            >
-              <span aria-hidden="true">←</span>
-              {workPageContent.backLabel}
-            </Link>
-
-            <div className="mt-10 grid items-end gap-10 lg:mt-16 lg:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.7fr)] lg:gap-16">
-              <div>
-                <m.p
-                  className="inline-flex items-center gap-2 rounded-pill border border-border px-3 py-1 text-eyebrow text-text-secondary"
-                  initial={false}
-                >
-                  <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
-                  {study.category}
-                </m.p>
-                <h1 className="mt-5 max-w-[12ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl">
-                  <ClipText immediate>{study.title}</ClipText>
-                </h1>
-              </div>
-              <p className="max-w-sm text-xl font-medium text-text-secondary md:text-2xl lg:justify-self-end lg:pb-2 lg:text-right">
-                {study.summary}
-              </p>
-            </div>
-
-            <HeroVisual>
-              <VisualFrame
-                src={hero?.src ?? null}
-                alt={hero?.alt ?? study.title}
-                placeholder={`${study.title} visual — not published yet.`}
-                priority
-              />
-            </HeroVisual>
-          </Container>
-        </header>
-
-        <Container variant="wide" className="w-full py-16 md:py-24">
-          <div className="grid gap-14 lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:gap-20">
-            <aside className="flex flex-col gap-10 lg:sticky lg:top-28 lg:self-start">
-              <MetaBlock label="Duration">
-                <p className="text-body text-text-secondary">{notes.duration}</p>
-              </MetaBlock>
-              <MetaBlock label="Services">
-                <ul className="flex flex-wrap gap-2">
-                  {study.services.map((service) => (
-                    <li
-                      key={service}
-                      className="rounded-pill bg-bg-subtle px-3.5 py-1.5 text-xs font-medium text-text"
-                    >
-                      {service}
-                    </li>
-                  ))}
-                </ul>
-              </MetaBlock>
-              <MetaBlock label="Tools">
-                <p className="text-body text-text-secondary">{notes.toolsLead}</p>
-                <p className="mt-3 text-body-small text-text-muted">
-                  Studio technologies: {tools}.
-                </p>
-              </MetaBlock>
-            </aside>
-
-            <div className="min-w-0">
-              <section>
-                <h2 className="text-3xl font-medium sm:text-4xl lg:text-5xl">
-                  <ClipText>Overview</ClipText>
-                </h2>
-                <p className="mt-6 max-w-3xl text-body-large text-text-secondary">{study.description}</p>
-              </section>
-
-              <section className="mt-20 border-t border-border pt-16 md:mt-28 md:pt-20">
-                <p className="text-eyebrow text-accent-deep">01</p>
-                <h2 className="mt-4 max-w-[14ch] text-3xl font-medium sm:text-4xl lg:text-5xl">
-                  <ClipText>The challenge</ClipText>
-                </h2>
-                <p className="mt-8 max-w-3xl text-body-large text-text-secondary">
-                  {study.challenge ?? notes.narrative}
-                </p>
-              </section>
-
-              <section className="mt-20 border-t border-border pt-16 md:mt-28 md:pt-20">
-                <p className="text-eyebrow text-accent-deep">02</p>
-                <h2 className="mt-4 max-w-[14ch] text-3xl font-medium sm:text-4xl lg:text-5xl">
-                  <ClipText>The solution</ClipText>
-                </h2>
-                <p className="mt-8 max-w-3xl text-body-large text-text-secondary">
-                  {study.solution ?? notes.narrative}
-                </p>
-              </section>
-            </div>
-          </div>
-        </Container>
-
-        <section className="bg-page-dark py-16 text-text-inverse md:py-24" aria-label="Project visuals">
-          <Container variant="wide" className="grid w-full grid-cols-2 gap-3 md:gap-5">
-            {gallery.map((frame) => (
-              <VisualFrame
-                key={`${frame.alt}-${frame.src ?? 'placeholder'}`}
-                src={frame.src}
-                alt={frame.alt}
-                placeholder={notes.visual}
-              />
-            ))}
-          </Container>
-        </section>
-
-        <section className="bg-page-dark pb-8 text-text-inverse md:pb-12">
-          <Container variant="wide" className="w-full border-t border-white/10 pt-16 md:pt-20">
-            <p className="text-eyebrow text-white/50">Impact</p>
-            <p className="mt-6 max-w-4xl text-2xl font-medium text-white md:text-3xl">
-              {statement}
-            </p>
-          </Container>
-        </section>
-
-        <section className="bg-page-dark pb-20 text-text-inverse md:pb-28">
-          <Container variant="wide" className="w-full pt-16 md:pt-20">
-            <h2 className="text-3xl font-medium sm:text-4xl lg:text-5xl">
-              <ClipText>More projects</ClipText>
-            </h2>
-            <ul className="mt-10 grid gap-6 sm:grid-cols-2">
-              {others.map((item) => (
-                <li key={item.slug}>
-                  <Link
-                    to={`/work/${item.slug}`}
-                    className="group block text-inherit no-underline outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                  >
-                    <VisualFrame
-                      src={item.image}
-                      alt={`${item.title} visual`}
-                      placeholder={`${item.title} visual — not published yet.`}
-                    />
-                    <p className="mt-4 text-eyebrow text-white/55">{item.category}</p>
-                    <p className="mt-1 text-xl font-medium text-white md:text-2xl">{item.title}</p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </section>
-
-        <section className="bg-page-white" aria-labelledby="case-faq-title">
-          <Container variant="wide" className="w-full py-20 md:py-28">
-            <h2
-              id="case-faq-title"
-              className="max-w-[16ch] text-3xl font-medium sm:text-4xl lg:text-5xl"
-            >
-              <ClipText>Frequently asked questions.</ClipText>
-            </h2>
-            <p className="mt-4 max-w-xl text-body text-text-secondary">
-              How a study moves from the first conversation to something people can use.
-            </p>
-            <div className="mt-12">
-              <FaqList />
-            </div>
-          </Container>
-        </section>
-      </main>
-    </LazyMotion>
-  )
+  return <CaseStudyView key={study.slug} study={study} />
 }

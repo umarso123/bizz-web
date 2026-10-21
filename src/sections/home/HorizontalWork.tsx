@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState, type ReactNode, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { Link } from 'react-router'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Wayfinder } from '@/components/ui/Wayfinder.tsx'
 import { mockups } from '@/content/mockups.ts'
+import { cn } from '@/lib/cn.ts'
+import { WorkStill } from '@/sections/work/WorkStill.tsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -9,8 +13,15 @@ gsap.registerPlugin(ScrollTrigger)
 /*                               DESIGN TOKENS                                */
 /* -------------------------------------------------------------------------- */
 
-const FONT_HEADING = "'Inter Tight', 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
-const FONT_MONO = "'JetBrains Mono', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace"
+/** House face, spelled out for canvas text measuring (canvas can't read CSS vars). */
+const FONT_HEADING = "'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+
+/** Legacy project types (content/legacy-site.md). */
+const PROJECT_TYPES = ['Website', 'Logo', 'UI/UX', 'Product', 'Dashboard'] as const
+
+/** Shared look for the text-style links inside the track. */
+const trackLink =
+  'inline-flex items-center text-body-small font-semibold text-text underline decoration-brand/45 decoration-[1.5px] underline-offset-[0.3em] transition-[text-decoration-color,text-decoration-thickness] duration-200 hover:text-text hover:decoration-brand hover:decoration-[2.5px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand'
 
 /**
  * Hold duration at the end of the pinned section, expressed as a fraction of viewport height.
@@ -28,7 +39,8 @@ export interface ProjectItem {
   title: string
   category: string
   description: string
-  image: string
+  /** null: no published board, so the card shows the drawn product still. */
+  image: string | null
   alt?: string
   link?: string
   verticalOffset?: 'top' | 'lower'
@@ -39,32 +51,32 @@ export interface ProjectItem {
  */
 export const defaultProjects: ProjectItem[] = [
   {
-    id: 'traino-ai',
+    id: 'clinical-decision-support',
     number: '01',
+    title: 'Clinical Decision Support',
+    category: 'Digital health, CDS',
+    description: 'Custom healthcare experiences spanning clinical workflows, care access, and connected data.',
+    image: null,
+    alt: 'Clinical decision support product still',
+    link: '/work/clinical-decision-support',
+    verticalOffset: 'top',
+  },
+  {
+    id: 'traino-ai',
+    number: '02',
     title: 'Traino.ai',
-    category: 'Education · AI LMS',
+    category: 'Education, AI learning platform',
     description: 'An AI-powered LMS built to optimize training knowledge retention and workforce learning.',
     image: mockups.trainoLaptop,
     alt: 'Traino.ai dashboard on laptop',
     link: '/work/traino-ai',
-    verticalOffset: 'top',
-  },
-  {
-    id: 'clinical-decision-support',
-    number: '02',
-    title: 'Clinical Decision Support',
-    category: 'Digital Health · CDS',
-    description: 'Custom healthcare experiences spanning clinical workflows, care access, and connected data.',
-    image: mockups.healthcare,
-    alt: 'Clinical Decision Support interface on tablet',
-    link: '/work/clinical-decision-support',
     verticalOffset: 'lower', // ~90px lower down
   },
   {
     id: 'poised-journey-academy',
     number: '03',
     title: 'The Poised Journey Academy',
-    category: 'Education · Homeschooling',
+    category: 'Education, homeschooling',
     description: 'A learning platform that helps families plan, personalize, document, and manage homeschool journeys.',
     image: mockups.poisedDevicesPills,
     alt: 'Poised Journey Academy on laptop and tablets',
@@ -75,7 +87,7 @@ export const defaultProjects: ProjectItem[] = [
     id: 'optimized-strength',
     number: '04',
     title: 'Optimized Strength',
-    category: 'Fitness · Connected Health',
+    category: 'Fitness',
     description: 'A consolidated, intuitive fitness product designed for lasting adherence and progress.',
     image: mockups.optimizedStrengthIcon,
     alt: 'Optimized Strength application preview',
@@ -133,10 +145,12 @@ function useFitText({
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        ctx.font = `500 100px ${fontFamily}`
+        // Match the rendered words: semibold, condensed (75%) signage width
+        ctx.font = `600 100px ${fontFamily}`
+        if ('fontStretch' in ctx) ctx.fontStretch = 'condensed'
         wordWidthAt100 = ctx.measureText(longestWord).width
-        // Negative letter-spacing adjustment (-0.06em)
-        wordWidthAt100 = Math.max(100, wordWidthAt100 - longestWord.length * 5)
+        // Negative letter-spacing adjustment (-0.04em)
+        wordWidthAt100 = Math.max(100, wordWidthAt100 - longestWord.length * 4)
       }
 
       // 1. Font size bounded by panel width (so "DEVELOPMENT" NEVER breaks or wraps)
@@ -168,115 +182,6 @@ function useFitText({
 }
 
 /* -------------------------------------------------------------------------- */
-/*                               FIXED HEADER                                 */
-/* -------------------------------------------------------------------------- */
-
-export interface FixedHeaderProps {
-  logo?: ReactNode
-  onMenuClick?: () => void
-  onTalkClick?: () => void
-  isMuted?: boolean
-  onToggleSound?: () => void
-}
-
-export function FixedHeader({
-  logo,
-  onMenuClick,
-  onTalkClick,
-  isMuted = true,
-  onToggleSound,
-}: FixedHeaderProps) {
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-10 md:py-6 pointer-events-none select-none">
-      <div className="pointer-events-auto flex items-center">
-        {logo ?? (
-          <a
-            href="/"
-            className="flex items-center gap-2.5 text-[var(--color-text)] no-underline transition-opacity hover:opacity-80"
-            aria-label="Bizaffix Home"
-          >
-            <svg
-              className="w-7 h-7 text-[var(--color-brand)] shrink-0"
-              viewBox="0 0 32 32"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d="M16 2L3 28h26L16 2zm0 7.8L23.4 24H8.6L16 9.8z" />
-              <polygon points="16,13 11,23 21,23" />
-            </svg>
-            <span
-              className="text-[20px] md:text-[22px] font-bold tracking-[-0.04em] uppercase text-[var(--color-text)]"
-              style={{ fontFamily: FONT_HEADING }}
-            >
-              BIZAFFIX<sup>®</sup>
-            </span>
-          </a>
-        )}
-      </div>
-
-      <div className="pointer-events-auto flex items-center gap-2.5 md:gap-3.5">
-        <button
-          type="button"
-          onClick={onToggleSound}
-          className="group relative flex size-11 items-center justify-center rounded-full bg-[var(--color-border-subtle)] text-[var(--color-text-secondary)] transition-all hover:bg-[var(--color-border)] hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-[var(--color-brand)] cursor-pointer"
-          aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
-          title={isMuted ? 'Play sound' : 'Mute sound'}
-        >
-          {isMuted ? (
-            <svg
-              className="w-4 h-4 text-[var(--color-text-muted)] transition-colors group-hover:text-[var(--color-text)]"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <line x1="23" y1="9" x2="17" y2="15" />
-              <line x1="17" y1="9" x2="23" y2="15" />
-            </svg>
-          ) : (
-            <svg
-              className="w-4 h-4 text-[var(--color-brand)] animate-pulse"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-            </svg>
-          )}
-        </button>
-
-        <button
-          type="button"
-          onClick={onTalkClick}
-          className="flex h-[42px] md:h-[46px] items-center justify-center rounded-full bg-[var(--color-button-primary)] px-6 text-[12px] md:text-[13px] font-semibold tracking-wider text-[var(--color-text-inverse)] uppercase transition-all hover:bg-[var(--color-button-primary-hover)] hover:shadow-md active:scale-95 focus-visible:outline-2 focus-visible:outline-[var(--color-brand)] cursor-pointer"
-          style={{ fontFamily: FONT_HEADING }}
-        >
-          LET&apos;S TALK
-        </button>
-
-        <button
-          type="button"
-          onClick={onMenuClick}
-          className="flex h-[42px] md:h-[46px] items-center justify-center gap-1.5 rounded-full border border-[var(--color-border-strong)] bg-transparent px-5 text-[12px] md:text-[13px] font-semibold tracking-wider text-[var(--color-text)] uppercase transition-all hover:bg-black/5 active:scale-95 focus-visible:outline-2 focus-visible:outline-[var(--color-brand)] cursor-pointer"
-          style={{ fontFamily: FONT_HEADING }}
-        >
-          <span>MENU</span>
-          <span className="text-[14px] leading-none font-bold">=</span>
-        </button>
-      </div>
-    </header>
-  )
-}
-
-/* -------------------------------------------------------------------------- */
 /*                            SERVICES SECTION                                */
 /* -------------------------------------------------------------------------- */
 
@@ -287,7 +192,7 @@ export interface ServicesSectionProps {
 
 export function ServicesSection({ className = '', id = 'our-services' }: ServicesSectionProps) {
   const panelRef = useRef<HTMLDivElement>(null)
-  const services = ['A.I.', 'DESIGN', 'DEVELOPMENT', 'BRANDING']
+  const services = ['Healthcare', 'Design', 'Development', 'Branding']
   const [hoveredService, setHoveredService] = useState<number | null>(null)
 
   const dynamicFontSize = useFitText({
@@ -304,60 +209,34 @@ export function ServicesSection({ className = '', id = 'our-services' }: Service
     <section
       ref={panelRef}
       id={id}
-      className={`relative w-screen min-w-[100vw] h-screen bg-white shrink-0 flex flex-col justify-center px-[8vw] z-10 select-none pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-8 ${className}`}
-      aria-label="Our Services"
-      style={{
-        boxSizing: 'border-box',
-      }}
+      className={cn(
+        'relative z-10 flex h-screen w-screen min-w-[100vw] shrink-0 flex-col justify-center px-[8vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-8 select-none',
+        className,
+      )}
+      aria-label="What we do"
     >
-      {/* Top-left small uppercase label below navbar */}
-      <div className="mb-4 md:mb-6">
-        <p
-          className="inline-flex items-center gap-2 font-mono text-[13px] md:text-[15px] tracking-[0.1em] text-[var(--color-text-secondary)] uppercase"
-          style={{ fontFamily: FONT_MONO }}
-        >
-          <span className="inline-block size-2 rounded-full bg-[var(--color-accent)]" />
-          OUR SERVICES
-        </p>
-      </div>
+      <Wayfinder label="What we do" className="mb-6 max-w-[60rem] md:mb-8" />
 
-      {/* Giant stacked words in tight grotesk with Masked Reveal & Interactive Hover Dimming */}
+      {/* Giant stacked words at signage width; scroll highlights each in turn */}
       <div className="flex flex-col justify-center">
         {services.map((service, index) => {
           const isHovered = hoveredService === index
           const isDimmed = hoveredService !== null && !isHovered
-          const isAI = service === 'A.I.'
+          const isLead = index === 0
 
           return (
             <div key={service} className="overflow-hidden py-0.5">
               <span
                 onMouseEnter={() => setHoveredService(index)}
                 onMouseLeave={() => setHoveredService(null)}
-                className={`service-word inline-block font-normal leading-[0.82] tracking-[-0.06em] uppercase cursor-pointer transition-all duration-300 ${
-                  isHovered
-                    ? '!text-[var(--color-brand)] !opacity-100 translate-x-3 md:translate-x-4'
-                    : isDimmed
-                    ? '!opacity-25 blur-[0.5px] text-[var(--color-text)]'
-                    : 'text-[var(--color-text)]'
-                }`}
-                style={{
-                  fontSize: `${dynamicFontSize}px`,
-                  fontFamily: FONT_HEADING,
-                  whiteSpace: 'nowrap',
-                  wordBreak: 'keep-all',
-                  overflowWrap: 'normal',
-                  hyphens: 'none',
-                  display: 'inline-block',
-                }}
-              >
-                {isAI ? (
-                  <>
-                    A<span className="text-[var(--color-accent)]">.</span>I
-                    <span className="text-[var(--color-accent)]">.</span>
-                  </>
-                ) : (
-                  service
+                className={cn(
+                  'service-word inline-block leading-[0.86] font-semibold tracking-[-0.04em] whitespace-nowrap [font-stretch:75%] transition-[color,opacity] duration-300',
+                  isHovered ? 'text-brand! opacity-100!' : isDimmed ? 'text-text opacity-30!' : 'text-text',
                 )}
+                style={{ fontSize: `${dynamicFontSize}px` }}
+              >
+                {service}
+                {isLead ? <span className="text-accent">.</span> : null}
               </span>
             </div>
           )
@@ -373,16 +252,12 @@ export function ServicesSection({ className = '', id = 'our-services' }: Service
 
 export interface HorizontalWorkProps {
   projects?: ProjectItem[]
-  showHeader?: boolean
-  logo?: ReactNode
   className?: string
   viewAllLink?: string
 }
 
 export function HorizontalWork({
   projects: projectList = defaultProjects,
-  showHeader = false, // false by default inside site layout to avoid overlapping navbar
-  logo,
   className = '',
   viewAllLink = '/work',
 }: HorizontalWorkProps) {
@@ -390,7 +265,6 @@ export function HorizontalWork({
   const trackRef = useRef<HTMLDivElement>(null)
   const introHeadingRef = useRef<HTMLHeadingElement>(null)
 
-  const [isMuted, setIsMuted] = useState(true)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeCardIndex, setActiveCardIndex] = useState(1)
 
@@ -461,14 +335,14 @@ export function HorizontalWork({
       // ===================================================================
       // SEGMENT 2: Hold segment (extra scroll distance of HOLD_VH ~ 80vh)
       // The Services panel stays pinned and fully visible while words highlight sequentially:
-      // Word 0 (A.I.) -> Word 1 (DESIGN) -> Word 2 (DEVELOPMENT) -> Word 3 (BRANDING) -> all normal
+      // Word 0 (HEALTHCARE) -> Word 1 (DESIGN) -> Word 2 (DEVELOPMENT) -> Word 3 (BRANDING) -> all normal
       // ===================================================================
       const serviceWordElements = track.querySelectorAll<HTMLElement>('.service-word')
 
       if (serviceWordElements.length === 4 && !prefersReducedMotion) {
         const step = holdDist / 5
 
-        // Step 1: Word 0 ("A.I.") highlights in brand color, others dim to ~35%
+        // Step 1: Word 0 ("HEALTHCARE") highlights in brand color, others dim to ~35%
         tl.to(
           serviceWordElements[0],
           { color: 'var(--color-brand)', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
@@ -681,98 +555,64 @@ export function HorizontalWork({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full overflow-hidden ${className}`}
-      style={{
-        backgroundColor: 'var(--color-page-white, #fbf7f2)',
-        backgroundImage: `
-          radial-gradient(ellipse 65% 50% at 88% 12%, rgb(47 91 234 / 0.07), transparent 70%),
-          radial-gradient(ellipse 45% 40% at 12% 88%, rgb(245 200 76 / 0.05), transparent 60%),
-          linear-gradient(180deg, var(--color-page-white, #fbf7f2) 0%, var(--color-brand-soft, #e8eefc) 65%, var(--color-bg-subtle, #f7f1ea) 100%)
-        `,
-        fontFamily: FONT_HEADING,
-      }}
+      id="selected-work"
+      className={cn('relative w-full overflow-hidden', className)}
     >
-      {/* Optional Standalone Header */}
-      {showHeader && (
-        <FixedHeader
-          logo={logo}
-          isMuted={isMuted}
-          onToggleSound={() => setIsMuted((prev) => !prev)}
-        />
-      )}
-
       {/* Custom "View" Cursor Pill for Cards */}
       {!isTouchDevice && isCursorVisible && (
         <div
-          className="fixed pointer-events-none z-50 rounded-full bg-[var(--color-brand)] px-3.5 py-1 text-[11px] font-mono font-semibold tracking-wider text-white uppercase shadow-lg -translate-x-1/2 -translate-y-1/2 transition-transform duration-75 ease-out select-none"
+          aria-hidden="true"
+          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-1/2 rounded-pill bg-text px-4 py-1.5 text-caption font-semibold text-text-inverse shadow-md transition-transform duration-75 ease-out select-none"
           style={{
             left: `${cursorPos.x}px`,
             top: `${cursorPos.y}px`,
-            fontFamily: FONT_MONO,
           }}
         >
-          View
+          View project
         </div>
       )}
 
       {/* Horizontal Flex Track (Pinned on Desktop, Native Scroll on Mobile) */}
       <div
         ref={trackRef}
-        className="flex h-screen w-max will-change-transform md:flex-row flex-col md:h-screen h-auto md:w-max w-full"
+        className="relative flex h-screen w-max will-change-transform md:flex-row flex-col md:h-screen h-auto md:w-max w-full"
       >
         {/* ================================================================= */}
         {/* 1. INTRO PANEL (~45vw)                                            */}
         {/* ================================================================= */}
         <section
-          className="relative flex h-screen w-screen md:w-[44vw] md:min-w-[40vw] md:max-w-[48vw] shrink-0 flex-col justify-between pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 px-[6vw] border-b md:border-b-0 md:border-r border-[var(--color-border)]/60"
-          aria-label="Selected Work Introduction"
+          className="relative flex h-screen w-screen shrink-0 flex-col justify-between border-b border-border px-[6vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 md:w-[44vw] md:min-w-[40vw] md:max-w-[48vw] md:border-r md:border-b-0"
+          aria-labelledby="selected-work-title"
         >
-          {/* Top Label */}
-          <div className="flex items-center gap-2">
-            <span className="size-2 rounded-full bg-[var(--color-brand)]" />
-            <span
-              className="font-mono text-[12px] md:text-[13px] tracking-widest text-[var(--color-text-secondary)] uppercase"
-              style={{ fontFamily: FONT_MONO }}
-            >
-              PORTFOLIO SHOWCASE
-            </span>
-          </div>
+          <Wayfinder label="Work" meta={`${projectList.length} projects`} />
 
           {/* Heading with line-by-line reveal */}
           <div className="my-auto py-6">
             <h2
+              id="selected-work-title"
               ref={introHeadingRef}
-              className="text-[clamp(54px,7.8vw,125px)] font-normal leading-[0.92] tracking-[-0.05em] text-[var(--color-text)]"
-              style={{ fontFamily: FONT_HEADING }}
+              className="text-[clamp(3.25rem,6.6vw,7.25rem)] leading-[0.9] font-semibold tracking-[-0.04em] text-text [font-stretch:78%]"
             >
               <span className="block overflow-hidden">
-                <span className="intro-line inline-block">Selected work</span>
+                <span className="intro-line inline-block">Selected</span>
               </span>
               <span className="block overflow-hidden">
-                <span className="intro-line inline-block">&amp; explorations</span>
+                <span className="intro-line inline-block">work</span>
               </span>
             </h2>
 
-            {/* VIEW ALL PROJECTS → link */}
-            <div className="mt-10 md:mt-14">
-              <a
-                href={viewAllLink}
-                className="group relative inline-flex items-center justify-between w-[240px] md:w-[270px] border-b border-[var(--color-border-strong)] pb-1.5 font-mono text-[13px] md:text-[15px] tracking-[0.05em] text-[var(--color-text)] uppercase transition-colors hover:text-[var(--color-brand)] hover:border-[var(--color-brand)] no-underline"
-                style={{ fontFamily: FONT_MONO }}
-              >
-                <span>VIEW ALL PROJECTS</span>
-                <span className="transition-transform duration-300 group-hover:translate-x-2 text-[var(--color-brand)]">
-                  →
-                </span>
-                <span className="absolute -bottom-[1px] left-0 w-full h-[1.5px] bg-[var(--color-brand)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
+            <p className="mt-8 max-w-[24rem] text-body-large text-text-secondary">
+              Explored our projects yet? Have a look.
+            </p>
+
+            <div className="mt-6">
+              <Link to={viewAllLink} className={trackLink}>
+                View all projects
+              </Link>
             </div>
           </div>
 
-          {/* Subtle Bottom Note */}
-          <div className="text-[13px] text-[var(--color-text-muted)]">
-            Explore recent digital health, education &amp; AI platforms.
-          </div>
+          <p className="text-caption text-text-muted">Digital health, education, and fitness products.</p>
         </section>
 
         {/* ================================================================= */}
@@ -784,16 +624,16 @@ export function HorizontalWork({
           return (
             <section
               key={project.id}
-              className="project-card-panel relative flex h-screen w-screen md:w-[38vw] md:min-w-[36vw] md:max-w-[42vw] shrink-0 flex-col justify-center px-[5.5vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 border-b md:border-b-0 md:border-r border-[var(--color-border)]/60"
+              className="project-card-panel relative flex h-screen w-screen shrink-0 flex-col justify-center border-b border-border px-[5.5vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 md:w-[38vw] md:min-w-[36vw] md:max-w-[42vw] md:border-r md:border-b-0"
               aria-label={project.title}
               onMouseMove={handleCardMouseMove}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             >
-              {/* Entire Card is an Interactive Link */}
-              <a
-                href={project.link ?? `/work/${project.id}`}
-                className="group block no-underline focus-visible:outline-2 focus-visible:outline-[var(--color-brand)] rounded-xl"
+              {/* Entire card is one link */}
+              <Link
+                to={project.link ?? `/work/${project.id}`}
+                className="group block rounded-xl no-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
               >
                 {/* Staggered Vertical Offset container: card 1 top, card 2 ~90px lower, card 3 top */}
                 <div
@@ -803,61 +643,36 @@ export function HorizontalWork({
                 >
                   {/* GSAP Parallax Card Container */}
                   <div className="card-parallax-wrap">
-                    {/* Card Image: Aspect ratio ~1.46:1, rounded 12px, overflow hidden, slight scale 1.05 -> 1 on hover */}
-                    <div className="relative aspect-[1.46/1] w-full overflow-hidden rounded-[12px] bg-[var(--color-brand-soft)] shadow-[0_16px_36px_rgb(13_18_31/0.07)] border border-[var(--color-border)]/80">
+                    {/* Media well: white on the ward zone, flat, card-level radius */}
+                    <div className="relative aspect-[1.46/1] w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors duration-300 group-hover:border-border-strong">
                       {/* Inner Image Mover for Dual-Layer Parallax */}
                       <div className="card-img-mover absolute -inset-y-[10%] inset-x-0 w-full h-[120%] flex items-center justify-center p-6">
-                        <img
-                          src={project.image}
-                          alt={project.alt ?? project.title}
-                          loading="lazy"
-                          className="h-full w-full object-contain transform-gpu scale-[1.04] transition-transform duration-700 ease-out group-hover:scale-100"
-                        />
+                        {project.image ? (
+                          <img
+                            src={project.image}
+                            alt={project.alt ?? project.title}
+                            loading="lazy"
+                            className="h-full w-full object-contain transform-gpu scale-[1.04] transition-transform duration-700 ease-out group-hover:scale-100"
+                          />
+                        ) : (
+                          <div className="absolute inset-0">
+                            <WorkStill slug={project.id} />
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Below Image Information */}
-                    <div className="mt-5 md:mt-6">
-                      {/* Title: 28-32px, weight 400, tracking -0.03em */}
-                      <h3
-                        className="text-[26px] md:text-[30px] font-normal tracking-[-0.03em] text-[var(--color-text)] leading-tight transition-colors group-hover:text-[var(--color-brand)]"
-                        style={{ fontFamily: FONT_HEADING }}
-                      >
-                        {project.title}
-                      </h3>
-
-                      {/* Description: full width over 2 lines, no line-clamp truncation, not squeezed by link */}
-                      <p
-                        className="mt-2.5 text-[15px] md:text-[17px] text-[var(--color-text-secondary)] leading-[1.4] w-full"
-                        style={{ fontFamily: FONT_HEADING }}
-                      >
-                        {project.description}
-                      </p>
-
-                      {/* Link Row Below Description: aligned cleanly across the bottom */}
-                      <div className="mt-4 flex items-center justify-between pt-2.5 border-t border-[var(--color-border)]/70">
-                        <span
-                          className="text-[12px] font-mono tracking-widest text-[var(--color-text-muted)] uppercase"
-                          style={{ fontFamily: FONT_MONO }}
-                        >
-                          {project.category}
-                        </span>
-
-                        <div
-                          className="relative inline-flex items-center gap-2 font-mono text-[12px] md:text-[13px] tracking-[0.05em] text-[var(--color-text)] uppercase group-hover:text-[var(--color-brand)] transition-colors"
-                          style={{ fontFamily: FONT_MONO }}
-                        >
-                          <span>EXPLORE PROJECT</span>
-                          <span className="transition-transform duration-300 group-hover:translate-x-1.5 text-[var(--color-brand)]">
-                            →
-                          </span>
-                          <span className="absolute -bottom-[2px] left-0 w-full h-[1.5px] bg-[var(--color-brand)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                        </div>
-                      </div>
+                    <div className="mt-6">
+                      <p className="inline-flex rounded-pill bg-accent/70 px-2.5 py-0.5 text-caption font-medium text-text">{project.category}</p>
+                      <h3 className="mt-2 text-title text-text">{project.title}</h3>
+                      <p className="mt-3 w-full max-w-[34rem] text-body text-text-secondary">{project.description}</p>
+                      <span className="mt-4 inline-flex text-body-small font-semibold text-text underline decoration-brand/45 decoration-[1.5px] underline-offset-[0.3em] transition-[text-decoration-color,text-decoration-thickness] duration-200 group-hover:decoration-accent-deep group-hover:decoration-[2.5px]">
+                        View case study
+                      </span>
                     </div>
                   </div>
                 </div>
-              </a>
+              </Link>
             </section>
           )
         })}
@@ -866,50 +681,29 @@ export function HorizontalWork({
         {/* 3. CLOSING PANEL (~38vw)                                          */}
         {/* ================================================================= */}
         <section
-          className="relative flex h-screen w-screen md:w-[38vw] md:min-w-[36vw] md:max-w-[42vw] shrink-0 flex-col items-center justify-center text-center px-[5vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 border-b md:border-b-0 md:border-r border-[var(--color-border)]/60"
-          aria-label="Collection Summary"
+          className="relative flex h-screen w-screen shrink-0 flex-col justify-center border-b border-border px-[5vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 md:w-[38vw] md:min-w-[36vw] md:max-w-[42vw] md:border-r md:border-b-0"
+          aria-labelledby="project-types-title"
         >
-          <div className="max-w-[480px] flex flex-col items-center">
-            {/* Centered statement text: ~40px, tight tracking */}
-            <p
-              className="text-[28px] sm:text-[34px] md:text-[38px] font-normal tracking-[-0.035em] text-[var(--color-text)] leading-[1.2]"
-              style={{ fontFamily: FONT_HEADING }}
-            >
-              Discover our complete collection of digital experiences, brands, and platforms.
-            </p>
-
-            {/* VIEW ALL PROJECTS → link */}
-            <div className="mt-8 md:mt-10">
-              <a
-                href={viewAllLink}
-                className="group relative inline-flex items-center justify-between w-[230px] md:w-[260px] border-b border-[var(--color-border-strong)] pb-1.5 font-mono text-[13px] md:text-[15px] tracking-[0.05em] text-[var(--color-text)] uppercase transition-colors hover:text-[var(--color-brand)] hover:border-[var(--color-brand)] no-underline"
-                style={{ fontFamily: FONT_MONO }}
-              >
-                <span>VIEW ALL PROJECTS</span>
-                <span className="transition-transform duration-300 group-hover:translate-x-2 text-[var(--color-brand)]">
-                  →
-                </span>
-                <span className="absolute -bottom-[1px] left-0 w-full h-[1.5px] bg-[var(--color-brand)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
+          <div className="max-w-[26rem]">
+            <h3 id="project-types-title" className="text-title text-text">
+              What we make
+            </h3>
+            <ul className="mt-6 border-t border-border">
+              {PROJECT_TYPES.map((type) => (
+                <li
+                  key={type}
+                  className="flex items-center justify-between border-b border-border py-3.5 text-body text-text"
+                >
+                  {type}
+                  <span aria-hidden="true" className="size-1.5 rotate-45 rounded-[1px] bg-border-strong" />
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6">
+              <Link to={viewAllLink} className={trackLink}>
+                View all projects
+              </Link>
             </div>
-          </div>
-
-          {/* Thin 'X' cross mark sitting on the right divider line with brand accent color */}
-          <div
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-20 hidden md:flex items-center justify-center pointer-events-none select-none text-[var(--color-accent)]"
-            aria-hidden="true"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            >
-              <line x1="3" y1="3" x2="13" y2="13" />
-              <line x1="13" y1="3" x2="3" y2="13" />
-            </svg>
           </div>
         </section>
 
@@ -922,33 +716,19 @@ export function HorizontalWork({
       {/* =================================================================== */}
       {/* 5. BOTTOM BAR: ACTIVE CARD COUNTER + THIN PROGRESS LINE             */}
       {/* =================================================================== */}
-      <div className="hidden md:flex absolute bottom-5 left-10 right-10 z-30 items-center justify-between pointer-events-none select-none">
-        {/* "01 / 0N" Counter in Mono */}
-        <div
-          className="font-mono text-[12px] tracking-widest text-[var(--color-text-secondary)] font-medium"
-          style={{ fontFamily: FONT_MONO }}
-        >
-          <span>{String(activeCardIndex).padStart(2, '0')}</span>
-          <span className="mx-1 text-[var(--color-text-muted)]">/</span>
-          <span className="text-[var(--color-text-muted)]">
-            {String(projectList.length).padStart(2, '0')}
-          </span>
-        </div>
-
-        {/* Thin Progress Track with Brand Accent Thumb */}
-        <div className="flex items-center gap-3">
-          <span
-            className="font-mono text-[11px] tracking-wider text-[var(--color-text-muted)] uppercase"
-            style={{ fontFamily: FONT_MONO }}
-          >
-            PROGRESS
-          </span>
-          <div className="w-[120px] h-[2px] bg-[var(--color-border)] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[var(--color-brand)] transition-all duration-75 ease-out rounded-full"
-              style={{ width: `${Math.min(100, Math.max(0, scrollProgress * 100))}%` }}
-            />
-          </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-10 bottom-5 left-10 z-30 hidden items-center gap-4 select-none md:flex"
+      >
+        <p className="shrink-0 text-caption text-text-secondary tabular-nums">
+          Project {activeCardIndex} of {projectList.length}
+        </p>
+        {/* The route so far */}
+        <div className="h-0.5 flex-1 overflow-hidden rounded-full bg-border">
+          <div
+            className="h-full rounded-full bg-brand transition-[width] duration-75 ease-out"
+            style={{ width: `${Math.min(100, Math.max(0, scrollProgress * 100))}%` }}
+          />
         </div>
       </div>
     </div>

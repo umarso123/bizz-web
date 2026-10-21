@@ -1,18 +1,18 @@
-import { LazyMotion, domAnimation } from 'framer-motion'
 import { useEffect } from 'react'
-import { Link, useParams } from 'react-router'
-import { Container } from '@/components/layout/Container.tsx'
+import { useParams } from 'react-router'
+import { PageHero } from '@/components/layout/PageHero.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { getJobBySlug } from '@/content/careers.ts'
-import { JobDetail } from '@/sections/careers/JobDetail.tsx'
+import { CareersZoneLink, JobDetail } from '@/sections/careers/JobDetail.tsx'
 
+/** /careers/:slug: one role, or a clear way back when the listing is gone. */
 export function JobDetailPage() {
   const { slug = '' } = useParams()
   const job = getJobBySlug(slug)
 
   useEffect(() => {
     const previousTitle = document.title
-    document.title = job ? `${job.title} · Careers · Bizaffix` : 'Role not found · Bizaffix'
+    document.title = job ? `${job.title} | Bizaffix` : 'Role not found | Bizaffix'
     return () => {
       document.title = previousTitle
     }
@@ -20,30 +20,21 @@ export function JobDetailPage() {
 
   if (!job) {
     return (
-      <main className="studio-page bg-page-white py-24 md:py-32">
-        <Container variant="page" className="w-full">
-          <h1 className="text-page-title text-text">Role not found</h1>
-          <p className="mt-4 max-w-[36rem] text-body-large text-text-secondary">
-            This listing is unavailable. Browse open positions on the careers page.
-          </p>
-          <div className="mt-8">
-            <Button to="/careers#open-positions" size="lg">
+      <main className="studio-page bg-page-white">
+        <PageHero
+          zone={<CareersZoneLink />}
+          title="This role isn’t open."
+          titleId="job-title"
+          intro="The listing you followed has closed or moved. Every role that’s open right now is on the careers page."
+          actions={
+            <Button to="/careers#open-positions" variant="primary" size="lg">
               View open positions
             </Button>
-          </div>
-          <p className="mt-6">
-            <Link to="/careers" className="text-body-small font-semibold text-brand-hover no-underline">
-              Back to Careers
-            </Link>
-          </p>
-        </Container>
+          }
+        />
       </main>
     )
   }
 
-  return (
-    <LazyMotion features={domAnimation}>
-      <JobDetail job={job} />
-    </LazyMotion>
-  )
+  return <JobDetail job={job} />
 }

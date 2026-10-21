@@ -1,287 +1,262 @@
-import { LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion'
+import { useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
 import { bookCall, bookCallButtonProps } from '@/app/navigation.ts'
+import { SectionHeader } from '@/components/common/SectionHeader.tsx'
 import { Container } from '@/components/layout/Container.tsx'
+import { PageHero } from '@/components/layout/PageHero.tsx'
 import { Button } from '@/components/ui/Button.tsx'
-import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
+import { HexMark } from '@/components/ui/HexMark.tsx'
+import { TextLink } from '@/components/ui/TextLink.tsx'
 import { servicesPage } from '@/content/services.ts'
 import { cn } from '@/lib/cn.ts'
-import { Reveal } from '@/sections/home/Reveal.tsx'
 
-const ease = [0.2, 0, 0, 1] as const
+type Service = (typeof servicesPage.services)[number]
 
-function ServiceRow({
-  service,
-  index,
-  hovered,
-  setHovered,
-  reduced,
-}: {
-  service: (typeof servicesPage.services)[number]
-  index: number
-  hovered: number | null
-  setHovered: (index: number | null) => void
-  reduced: boolean
-}) {
-  const isHovered = hovered === index
-  const neighbor = hovered !== null && hovered !== index && Math.abs(hovered - index) === 1
+const serviceById = new Map<string, Service>(
+  servicesPage.services.map((service) => [service.id, service] as const),
+)
+
+function countLabel(count: number, noun: string) {
+  return `${count} ${noun}${count === 1 ? '' : 's'}`
+}
+
+function HeroMedia() {
+  const reduced = useReducedMotion() === true
+  // The night-route field shows until the video has a frame, never a black box.
+  const [ready, setReady] = useState(false)
 
   return (
-    <m.li
-      onPointerEnter={() => setHovered(index)}
-      onPointerLeave={() => setHovered(null)}
-      animate={
-        reduced
-          ? undefined
-          : {
-              y: isHovered ? -3 : neighbor ? 2 : 0,
-              scale: isHovered ? 1.01 : 1,
+    <div className="overflow-hidden rounded-2xl bg-night-route">
+      <video
+        className={cn(
+          'aspect-4/3 w-full object-cover transition-opacity duration-700 motion-reduce:transition-none',
+          ready ? 'opacity-100' : 'opacity-0',
+        )}
+        src="/videos/facts/colleagues-presenting-healthcare.mp4"
+        autoPlay={!reduced}
+        muted
+        loop
+        playsInline
+        controls={reduced}
+        preload={reduced ? 'metadata' : 'auto'}
+        onLoadedData={() => setReady(true)}
+        aria-label="Colleagues presenting a healthcare product on a laptop"
+      />
+    </div>
+  )
+}
+
+/** Healthcare first: the five solutions as stations on one route. */
+function HealthcareBand() {
+  const copy = servicesPage.healthcare
+
+  return (
+    <section id="healthcare" className="bg-page-white pt-8 md:pt-14" aria-labelledby="services-healthcare-title">
+      <Container variant="wide" className="w-full">
+        <div className="rounded-2xl bg-night-route px-6 pt-12 pb-4 text-text-inverse sm:px-10 md:px-14 md:pt-16">
+          <SectionHeader
+            inverse
+            eyebrow={copy.eyebrow}
+            meta={countLabel(copy.offers.length, 'solution')}
+            title={copy.title}
+            titleId="services-healthcare-title"
+            description={copy.body}
+            action={
+              <Button to={copy.ctaTo} variant="inverse" size="lg">
+                {copy.cta}
+              </Button>
             }
-      }
-      transition={{ type: 'spring', stiffness: 280, damping: 24 }}
-    >
-      <article
-        id={service.slug}
-        className="group relative grid scroll-mt-28 gap-4 border-b border-border-subtle py-10 md:grid-cols-[5rem_minmax(0,1fr)_minmax(0,26rem)] md:items-baseline md:gap-10 md:py-12"
-      >
-        <m.span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-[-1rem] inset-y-2 -z-10 rounded-xl md:inset-x-[-1.5rem]"
-          animate={{
-            opacity: isHovered && !reduced ? 1 : 0,
-            backgroundColor: isHovered ? 'rgb(232 238 252 / 0.9)' : 'transparent',
-          }}
-          transition={{ duration: 0.25 }}
+          />
+
+          <ul className="mt-14 grid sm:grid-cols-2 md:mt-20 lg:grid-cols-5">
+            {copy.offers.map((offer, index) => (
+              <li key={offer.title} className="relative border-t-2 border-brand pt-9 pr-6 pb-10">
+                <HexMark
+                  variant={index === 0 ? 'active' : 'station'}
+                  size={18}
+                  className="absolute -top-2.5 left-0"
+                />
+                <h3 className="text-card-title text-text-inverse">
+                  <Link
+                    to={offer.to}
+                    className="text-text-inverse no-underline decoration-accent decoration-2 underline-offset-[0.25em] before:absolute before:inset-0 hover:text-text-inverse hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                  >
+                    {offer.title}
+                  </Link>
+                </h3>
+                <p className="mt-3 max-w-[22rem] text-body-small text-text-inverse-muted">{offer.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+/** The six services, grouped by the platform they ship on. */
+function ServiceGroups() {
+  return (
+    <section className="bg-page-white section-y" aria-labelledby="services-list-title">
+      <Container variant="wide" className="w-full">
+        <SectionHeader
+          title={servicesPage.intro.title}
+          titleId="services-list-title"
+          description={servicesPage.intro.body}
         />
-        <m.span
-          aria-hidden="true"
-          className="absolute top-1/2 left-0 h-10 w-[3px] -translate-y-1/2 rounded-full"
-          animate={{
-            scaleY: isHovered ? 1 : 0.3,
-            opacity: isHovered ? 1 : 0,
-            backgroundColor: isHovered
-              ? index % 2 === 0
-                ? '#2f5bea'
-                : '#f5c84c'
-              : 'transparent',
-          }}
-          transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-        />
-        <p className="text-caption text-text-muted">0{index + 1}</p>
-        <h2 className="text-2xl font-medium text-text md:text-3xl">
-          {service.title}
-        </h2>
-        <p className="text-body text-text-secondary">{service.body}</p>
-      </article>
-    </m.li>
+
+        <div className="mt-14 md:mt-20">
+          {servicesPage.groups.map((group) => (
+            <div
+              key={group.id}
+              className="grid gap-8 border-t border-border py-10 md:py-14 lg:grid-cols-12 lg:gap-8"
+            >
+              <div className="lg:col-span-3">
+                <h3 className="text-title text-text">{group.label}</h3>
+                <p className="mt-2 text-caption text-text-muted tabular-nums">
+                  {countLabel(group.services.length, 'service')}
+                </p>
+              </div>
+              <ul className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-9 lg:grid-cols-3">
+                {group.services.map((id) => {
+                  const service = serviceById.get(id)
+                  if (!service) return null
+                  return (
+                    <li key={service.id}>
+                      <article id={service.slug} className="scroll-mt-32">
+                        <h4 className="text-card-title text-text">{service.title}</h4>
+                        <p className="mt-3 max-w-[28rem] text-body text-text-secondary">{service.body}</p>
+                      </article>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+/** The five steps are a real sequence, so they sit on a route with numbered stations. */
+function ProcessRoute() {
+  const stages = servicesPage.process.stages
+
+  return (
+    <section className="bg-bg-subtle section-y" aria-labelledby="process-title">
+      <Container variant="wide" className="w-full">
+        <SectionHeader title={servicesPage.process.title} titleId="process-title" />
+
+        <ol className="mt-14 grid gap-12 md:mt-20 lg:grid-cols-5 lg:gap-0">
+          {stages.map((stage, index) => (
+            <li
+              key={stage.number}
+              className={cn(
+                'relative pl-12 lg:pr-8 lg:pl-0',
+                // The segment to the next station: down on small screens, across on wide ones.
+                'before:absolute before:top-6 before:-bottom-12 before:left-[10.5px] before:w-[3px] before:bg-brand last:before:hidden',
+                'lg:before:top-[10.5px] lg:before:right-0 lg:before:bottom-auto lg:before:left-6 lg:before:h-[3px] lg:before:w-auto',
+              )}
+            >
+              <HexMark
+                variant={index === 0 ? 'active' : 'station'}
+                size={24}
+                className="absolute top-0 left-0 lg:static lg:block"
+              />
+              <p className="text-caption text-text-muted tabular-nums lg:mt-6">{stage.number}</p>
+              <h3 className="mt-2 text-title text-text">{stage.title}</h3>
+              <p className="mt-3 max-w-[22rem] text-body-small text-text-secondary">{stage.body}</p>
+            </li>
+          ))}
+        </ol>
+      </Container>
+    </section>
+  )
+}
+
+/** Directory board: the tools the work uses, and the industries it serves. */
+function Directory() {
+  const { technologies, industries } = servicesPage
+
+  return (
+    <section className="bg-page-white section-y" aria-label="Technologies and industries">
+      <Container variant="wide" className="w-full">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
+          <h2 id="tech-title" className="max-w-[16ch] text-title text-text lg:col-span-4">
+            {technologies.title}
+          </h2>
+          <ul className="grid grid-cols-2 border-t border-border sm:grid-cols-3 lg:col-span-7 lg:col-start-6">
+            {technologies.items.map((name) => (
+              <li key={name} className="border-b border-border py-5 pr-4 text-title text-text">
+                {name}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-20 grid gap-10 md:mt-28 lg:grid-cols-12 lg:gap-8">
+          <h2 id="industries-title" className="max-w-[16ch] text-title text-text lg:col-span-4">
+            {industries.title}
+          </h2>
+          <ul className="border-t border-border lg:col-span-7 lg:col-start-6">
+            {industries.items.map((industry) => {
+              const lead = industry === 'Healthcare'
+              return (
+                <li
+                  key={industry}
+                  className="flex min-h-16 items-center justify-between gap-4 border-b border-border py-3"
+                >
+                  <span className={cn('flex items-center gap-3 text-card-title', lead ? 'text-text' : 'text-text-secondary')}>
+                    <HexMark variant={lead ? 'active' : 'outline'} size={14} className={lead ? undefined : 'text-border-strong'} />
+                    {industry}
+                  </span>
+                  {lead ? (
+                    <TextLink to="/healthcare" inline>
+                      {servicesPage.healthcare.cta}
+                    </TextLink>
+                  ) : null}
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      </Container>
+    </section>
   )
 }
 
 export function ServicesPage() {
-  const reduced = useReducedMotion() === true
-  const [hovered, setHovered] = useState<number | null>(null)
-
   useEffect(() => {
     const previousTitle = document.title
-    document.title = 'Services · Bizaffix'
+    document.title = 'Services | Bizaffix'
     return () => {
       document.title = previousTitle
     }
   }, [])
 
   return (
-    <LazyMotion features={domAnimation}>
-      <main className="studio-page">
-        <section className="atmosphere-hero -mt-(--header-clearance) pt-[calc(var(--header-clearance)+2.5rem)] pb-20 md:pt-[calc(var(--header-clearance)+3.5rem)] md:pb-28">
-          <Container variant="page" className="relative w-full">
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16">
-              <div>
-                <m.div
-                  initial={reduced ? false : { opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reduced ? 0 : 0.55, ease }}
-                >
-                  <Eyebrow tone="brand">{servicesPage.hero.eyebrow}</Eyebrow>
-                </m.div>
-                <m.h1
-                  className="mt-4 max-w-[12ch] text-4xl font-medium text-text sm:text-5xl lg:text-6xl"
-                  initial={reduced ? false : { opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.08, ease }}
-                >
-                  {servicesPage.hero.title.slice(0, servicesPage.hero.title.lastIndexOf(' '))}{' '}
-                  <span className="text-brand">
-                    {servicesPage.hero.title.slice(servicesPage.hero.title.lastIndexOf(' ') + 1)}
-                  </span>
-                </m.h1>
-                <m.p
-                  className="mt-6 max-w-[38rem] text-body-large text-text-secondary"
-                  initial={reduced ? false : { opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.16, ease }}
-                >
-                  {servicesPage.hero.body}
-                </m.p>
-                <m.div
-                  className="mt-8"
-                  initial={reduced ? false : { opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.24, ease }}
-                >
-                  <Button {...bookCallButtonProps()} size="lg" variant="brand">
-                    {bookCall.label}
-                  </Button>
-                </m.div>
-              </div>
-              <Reveal delay={0.1}>
-                <div className="overflow-hidden rounded-[1.75rem] bg-page-dark shadow-[0_24px_60px_rgb(47_91_234/0.16)] ring-1 ring-brand/15">
-                  <video
-                    className="aspect-video w-full object-cover"
-                    src={'/videos/Colleagues_presenting_healthcare\u2026_1080p_20261008150328.mp4'}
-                    autoPlay={!reduced}
-                    muted
-                    loop
-                    playsInline
-                    controls={reduced}
-                    preload="metadata"
-                    aria-label="Colleagues presenting a healthcare product on a laptop"
-                  />
-                </div>
-                <Eyebrow className="mt-8">From idea to reality</Eyebrow>
-                <p className="mt-4 text-title text-text">{servicesPage.intro.title}</p>
-                <p className="mt-4 text-body text-text-secondary">{servicesPage.intro.body}</p>
-              </Reveal>
-            </div>
-          </Container>
-        </section>
-
-        <section className="bg-page-white py-20 md:py-28" aria-labelledby="services-list-title">
-          <Container variant="page" className="w-full">
-            <Reveal className="max-w-[36rem]">
-              <Eyebrow tone="brand">What we offer</Eyebrow>
-              <h2 id="services-list-title" className="mt-4 text-section-title text-text">
-                Six practices. One studio.
-              </h2>
-            </Reveal>
-            <ul className="mt-12 border-t border-border-subtle">
-              {servicesPage.services.map((service, index) => (
-                <ServiceRow
-                  key={service.id}
-                  service={service}
-                  index={index}
-                  hovered={hovered}
-                  setHovered={setHovered}
-                  reduced={reduced}
-                />
-              ))}
-            </ul>
-          </Container>
-        </section>
-
-        <section className="bg-page-brand py-20 md:py-28" aria-labelledby="process-title">
-          <Container variant="page" className="w-full">
-            <Reveal className="max-w-[36rem]">
-              <Eyebrow tone="brand">{servicesPage.process.eyebrow}</Eyebrow>
-              <h2 id="process-title" className="mt-4 text-section-title text-text">
-                {servicesPage.process.title}
-              </h2>
-            </Reveal>
-            <ol className="mt-14 grid gap-x-16 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-              {servicesPage.process.stages.map((stage, index) => (
-                <li key={stage.number}>
-                  <Reveal delay={index * 0.04}>
-                    <p className="text-4xl font-medium text-brand md:text-5xl">
-                      {stage.number}
-                    </p>
-                    <h3 className="mt-4 text-title text-text">{stage.title}</h3>
-                    <p className="mt-3 max-w-[28rem] text-body text-text-secondary">{stage.body}</p>
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        'mt-6 block h-px origin-left bg-brand',
-                        index % 2 === 0 ? 'w-16' : 'w-24',
-                      )}
-                    />
-                  </Reveal>
-                </li>
-              ))}
-            </ol>
-          </Container>
-        </section>
-
-        <section className="bg-page-white py-16 md:py-20" aria-labelledby="tech-title">
-          <Container variant="page" className="w-full">
-            <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-              <div className="max-w-[28rem]">
-                <Eyebrow>{servicesPage.technologies.eyebrow}</Eyebrow>
-                <h2 id="tech-title" className="mt-3 text-title text-text">
-                  {servicesPage.technologies.title}
-                </h2>
-              </div>
-              <ul className="flex flex-wrap gap-x-6 gap-y-2">
-                {servicesPage.technologies.items.map((name) => (
-                  <li key={name} className="text-body text-text-secondary">
-                    {name}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </Container>
-        </section>
-
-        <section className="bg-page-brand py-20 md:py-28" aria-labelledby="industries-title">
-          <Container variant="page" className="w-full">
-            <Reveal className="max-w-[36rem]">
-              <Eyebrow tone="brand">{servicesPage.industries.eyebrow}</Eyebrow>
-              <h2 id="industries-title" className="mt-4 text-section-title text-text">
-                {servicesPage.industries.title}
-              </h2>
-            </Reveal>
-            <ul className="mt-12 flex flex-wrap gap-3">
-              {servicesPage.industries.items.map((industry, index) => (
-                <Reveal key={industry} delay={index * 0.04}>
-                  <li
-                    className={cn(
-                      'rounded-md border px-5 py-3 text-base font-medium',
-                      industry === 'Healthcare'
-                        ? 'border-brand/30 bg-brand-subtle text-brand-hover'
-                        : 'border-border bg-surface text-text',
-                    )}
-                  >
-                    {industry}
-                  </li>
-                </Reveal>
-              ))}
-            </ul>
-            <Reveal className="mt-8">
-              <Button to="/healthcare" variant="secondary">
-                Explore healthcare
-              </Button>
-            </Reveal>
-          </Container>
-        </section>
-
-        <section className="bg-page-dark py-24 text-text-inverse md:py-32" aria-labelledby="services-cta-title">
-          <Container variant="page" className="relative w-full">
-            <Reveal className="max-w-[42rem]">
-              <h2
-                id="services-cta-title"
-                className="text-3xl font-medium text-text-inverse sm:text-4xl lg:text-5xl"
-              >
-                {servicesPage.cta.title}
-              </h2>
-              <p className="mt-5 max-w-[36rem] text-body-large text-text-inverse/80">
-                {servicesPage.cta.body}
-              </p>
-              <div className="mt-8">
-                <Button {...bookCallButtonProps()} size="lg" variant="brand">
-                  {bookCall.label}
-                </Button>
-              </div>
-            </Reveal>
-          </Container>
-        </section>
-      </main>
-    </LazyMotion>
+    <main className="studio-page">
+      <PageHero
+        zone={servicesPage.hero.eyebrow}
+        meta={countLabel(servicesPage.services.length, 'service')}
+        title={servicesPage.hero.title}
+        intro={servicesPage.hero.body}
+        actions={
+          <>
+            <Button {...bookCallButtonProps()} size="lg" variant="primary">
+              {bookCall.label}
+            </Button>
+            <TextLink to="/healthcare">{servicesPage.healthcare.cta}</TextLink>
+          </>
+        }
+        aside={<HeroMedia />}
+      />
+      <HealthcareBand />
+      <ServiceGroups />
+      <ProcessRoute />
+      <Directory />
+    </main>
   )
 }

@@ -5,22 +5,13 @@
 
 export const premiumHome = {
   hero: {
-    badge: 'HealthTech innovation',
-    titleLead: 'Digital products that',
-    titleMove: 'move',
-    titleItalic: 'healthcare',
-    titleBridge: 'forward for',
-    titleAccent: 'care teams.',
-    body: 'We design, build and grow apps, platforms and brands for health, wellness and care teams, fast, clear and human-centred.',
+    badge: 'Healthcare technology studio',
+    title: 'Digital products that move healthcare forward.',
+    body: 'We design and engineer mobile apps, web platforms, and healthcare solutions, from idea to reality, with clarity people can use.',
     primaryCta: 'Book a call',
-    primaryTo: '/contact',
     secondaryCta: 'See our work',
-    secondaryTo: '/#featured-projects',
-    milestone: {
-      label: 'Healthcare expertise',
-      title: ['Clinical Decision', 'Support'] as const,
-      body: 'Bizaffix is about revolutionizing the healthcare industry with custom mobile applications, websites, designs, and branding solutions.',
-    },
+    secondaryTo: '/#selected-work',
+    also: 'Healthcare leads. We also build for Educational, Fintech, Fitness, and eCommerce teams.',
   },
   facts: {
     cards: [

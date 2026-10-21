@@ -1,56 +1,60 @@
-import { m, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router'
+import { SectionHeader } from '@/components/common/SectionHeader.tsx'
 import { Container } from '@/components/layout/Container.tsx'
+import { PageHero } from '@/components/layout/PageHero.tsx'
 import { Button } from '@/components/ui/Button.tsx'
-import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
+import { HexMark } from '@/components/ui/HexMark.tsx'
+import { TextLink } from '@/components/ui/TextLink.tsx'
+import { careersCopy, jobPostings } from '@/content/careers.ts'
+import { roleCount } from '@/sections/careers/careerData.ts'
+import { RoleDirectory } from '@/sections/careers/CareerBoard.tsx'
+import { RoleApply } from '@/sections/careers/RoleApply.tsx'
 import type { JobPosting } from '@/types/careers.ts'
-import { Reveal } from '@/sections/home/Reveal.tsx'
-import { useMagnetic } from '@/sections/careers/useCareerMotion.ts'
 
-function BackArrow() {
+/** The zone label links back, so the wayfinding rule doubles as a breadcrumb. */
+export function CareersZoneLink() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path
-        d="M12.5 8H3.5M7 3.5L3.5 8 7 12.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function MagneticApply({ href, label }: { href: string; label: string }) {
-  const reduced = useReducedMotion() === true
-  const magnetic = useMagnetic({ strength: 0.2, disabled: reduced })
-
-  return (
-    <m.div
-      ref={magnetic.ref as React.RefObject<HTMLDivElement>}
-      style={{ x: magnetic.x, y: magnetic.y }}
-      onPointerMove={magnetic.onPointerMove}
-      onPointerLeave={magnetic.onPointerLeave}
-      className="inline-flex w-full sm:w-auto"
+    <Link
+      to="/careers"
+      className="text-text no-underline decoration-brand underline-offset-[0.3em] hover:text-text hover:underline"
     >
-      <Button href={href} size="lg" className="w-full sm:w-auto">
-        {label}
-      </Button>
-    </m.div>
+      Careers
+    </Link>
   )
 }
 
-function DetailList({ title, items }: { title: string; items: string[] }) {
+function RoleFacts({ job }: { job: JobPosting }) {
+  const facts = [
+    { label: 'Team', value: job.department },
+    { label: 'Location', value: job.location },
+    { label: 'Type', value: job.employmentType },
+    { label: 'Experience', value: job.experience },
+  ]
+
   return (
-    <section className="mt-12 md:mt-14">
+    <div className="rounded-xl border border-border bg-surface/90 p-6 backdrop-blur-sm sm:p-7">
+      <p className="text-eyebrow text-text-muted">Role details</p>
+      <dl className="mt-4 border-t border-border">
+        {facts.map((fact) => (
+          <div key={fact.label} className="flex items-baseline justify-between gap-6 border-b border-border py-3.5">
+            <dt className="text-body-small text-text-secondary">{fact.label}</dt>
+            <dd className="text-right text-body-small font-medium text-text">{fact.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
+function DetailList({ title, items }: { title: string; items: readonly string[] }) {
+  if (items.length === 0) return null
+  return (
+    <section className="border-t border-border pt-8">
       <h2 className="text-title text-text">{title}</h2>
-      <ul className="mt-5 space-y-3">
+      <ul className="mt-6 grid gap-4">
         {items.map((item) => (
-          <li key={item} className="flex gap-3 text-body text-text-secondary">
-            <span
-              aria-hidden="true"
-              className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand"
-            />
+          <li key={item} className="flex gap-4 text-body text-text-secondary">
+            <HexMark variant="solid" size={10} className="mt-[0.5em]" />
             <span>{item}</span>
           </li>
         ))}
@@ -59,92 +63,72 @@ function DetailList({ title, items }: { title: string; items: string[] }) {
   )
 }
 
+/**
+ * A single role: spec sheet up top, the brief in a reading column,
+ * and the application beside it (sticky when the screen is tall enough to hold it).
+ */
 export function JobDetail({ job }: { job: JobPosting }) {
-  const reduced = useReducedMotion() === true
+  const others = jobPostings.filter((item) => item.id !== job.id)
 
   return (
-    <main className="studio-page bg-page-white">
-      <section className="border-b border-border-subtle bg-page-brand pt-10 pb-16 md:pt-14 md:pb-20">
-        <Container variant="page" className="w-full">
-          <Reveal>
-            <Link
-              to="/careers#open-positions"
-              className="inline-flex items-center gap-2 text-body-small font-semibold text-text-secondary no-underline hover:text-text"
-            >
-              <BackArrow />
-              All positions
-            </Link>
-          </Reveal>
+    <main className="studio-page bg-page-white text-text">
+      <PageHero
+        zone={<CareersZoneLink />}
+        meta={`${job.department}, ${job.location}`}
+        title={job.title}
+        titleId="job-title"
+        intro={job.description}
+        actions={
+          <>
+            <Button href="#apply" variant="primary" size="lg">
+              Apply for this role
+            </Button>
+            <TextLink to="/careers#open-positions">All open positions</TextLink>
+          </>
+        }
+        aside={<RoleFacts job={job} />}
+      />
 
-          <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-16">
-            <div>
-              <Reveal>
-                <Eyebrow>
-                  {job.department}
-                </Eyebrow>
-                <h1 className="mt-4 text-4xl font-medium text-text sm:text-5xl">
-                  {job.title}
-                </h1>
-                <p className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-body text-text-secondary">
-                  <span>{job.location}</span>
-                  <span aria-hidden="true" className="text-border-strong">
-                    ·
-                  </span>
-                  <span>{job.employmentType}</span>
-                  <span aria-hidden="true" className="text-border-strong">
-                    ·
-                  </span>
-                  <span>{job.experience}</span>
+      <section className="section-y bg-page-white" aria-label="About the role">
+        <Container variant="wide" className="w-full">
+          <div className="grid gap-16 lg:grid-cols-12 lg:gap-8">
+            <div className="flex max-w-[47.5rem] flex-col gap-14 lg:col-span-7">
+              {job.status === 'placeholder' ? (
+                <p className="rounded-lg bg-warning-soft px-4 py-3 text-body-small text-warning">
+                  {careersCopy.jobs.placeholderNote}
                 </p>
-                {job.status === 'placeholder' ? (
-                  <p className="mt-4 text-body-small text-text-muted">
-                    Example role listing. Replace with a live opening when available.
-                  </p>
-                ) : null}
-              </Reveal>
+              ) : null}
+              <DetailList title="What you’ll do" items={job.responsibilities} />
+              <DetailList title="What you’ll bring" items={job.requirements} />
+              <DetailList title="Nice to have" items={job.niceToHave} />
             </div>
 
-            <aside className="lg:sticky lg:top-28">
-              <m.div
-                className="rounded-xl border border-border bg-surface p-5 shadow-sm"
-                initial={reduced ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.15 }}
+            <div className="lg:col-span-5">
+              <div
+                id="apply"
+                className="scroll-mt-28 [@media(min-width:64rem)_and_(min-height:48rem)]:sticky [@media(min-width:64rem)_and_(min-height:48rem)]:top-[calc(var(--header-clearance)+1.5rem)]"
               >
-                <p className="text-body-small text-text-secondary">
-                  Ready to join the conversation?
-                </p>
-                <div className="mt-4">
-                  <MagneticApply href={job.applyUrl} label="Apply for this role" />
-                </div>
-              </m.div>
-            </aside>
+                <RoleApply key={job.id} job={job} />
+              </div>
+            </div>
           </div>
         </Container>
       </section>
 
-      <section className="py-16 md:py-24">
-        <Container variant="reading" className="w-full">
-          <Reveal>
-            <h2 className="text-title text-text">Overview</h2>
-            <p className="mt-5 text-body-large text-text-secondary">{job.description}</p>
-          </Reveal>
-
-          <Reveal delay={0.06}>
-            <DetailList title="Responsibilities" items={job.responsibilities} />
-          </Reveal>
-          <Reveal delay={0.08}>
-            <DetailList title="What you'll bring" items={job.requirements} />
-          </Reveal>
-          <Reveal delay={0.1}>
-            <DetailList title="Nice to have" items={job.niceToHave} />
-          </Reveal>
-
-          <Reveal className="mt-16 border-t border-border-subtle pt-10 md:hidden">
-            <MagneticApply href={job.applyUrl} label="Apply for this role" />
-          </Reveal>
-        </Container>
-      </section>
+      {others.length > 0 ? (
+        <section className="section-y border-t border-border-subtle bg-page-white" aria-labelledby="other-roles-title">
+          <Container variant="wide" className="w-full">
+            <SectionHeader
+              eyebrow={careersCopy.jobs.eyebrow}
+              meta={roleCount(jobPostings.length)}
+              title="Other open roles"
+              titleId="other-roles-title"
+              action={<TextLink to="/careers#open-positions">All open positions</TextLink>}
+            />
+            <RoleDirectory jobs={others} className="mt-12 md:mt-16" />
+          </Container>
+        </section>
+      ) : null}
     </main>
   )
 }

@@ -1,35 +1,155 @@
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { SectionHeader } from '@/components/common/SectionHeader.tsx'
 import { Container } from '@/components/layout/Container.tsx'
-import { Section } from '@/components/layout/Section.tsx'
+import { PageHero } from '@/components/layout/PageHero.tsx'
 import { Badge } from '@/components/ui/Badge.tsx'
 import { Button } from '@/components/ui/Button.tsx'
-import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
+import { HexMark } from '@/components/ui/HexMark.tsx'
 import { Surface } from '@/components/ui/Surface.tsx'
 import { TextLink } from '@/components/ui/TextLink.tsx'
+import { Wayfinder } from '@/components/ui/Wayfinder.tsx'
+import {
+  CareWorkspaceShot,
+  CdsShot,
+  EhrShot,
+  HieShot,
+  InteropShot,
+  TelemedicineShot,
+} from '@/components/visuals/HealthShots.tsx'
+import { FintechShot, FitnessShot } from '@/components/visuals/IndustryShots.tsx'
+import { cn } from '@/lib/cn.ts'
 
-const arrowIcon = (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
+/* Values mirror src/styles/theme.css. Update both together. */
+const coreColours = [
+  { name: 'Ink', token: 'text', value: '#0d121f', className: 'bg-text', role: 'Text and dark buttons' },
+  { name: 'Clinic white', token: 'page-white', value: '#ffffff', className: 'bg-page-white', role: 'The page' },
+  { name: 'Ward', token: 'bg-subtle', value: '#f5f7fb', className: 'bg-bg-subtle', role: 'Quiet zones and media wells' },
+  { name: 'Route blue', token: 'brand', value: '#234ed1', className: 'bg-brand', role: 'The route line, links, brand button' },
+  {
+    name: 'Night route',
+    token: 'surface-brand-deep',
+    value: '#14245f',
+    className: 'bg-surface-brand-deep',
+    role: 'Healthcare zone and closing panel',
+  },
+  { name: 'Signal gold', token: 'accent', value: '#fde36e', className: 'bg-accent', role: 'The active station only' },
+] as const
 
-type SwatchProps = {
-  name: string
-  value: string
-  className: string
+const supportColours = [
+  { name: 'Muted surface', token: 'bg-muted', value: '#edf1f7', className: 'bg-bg-muted' },
+  { name: 'Brand hover', token: 'brand-hover', value: '#2549c9', className: 'bg-brand-hover' },
+  { name: 'Brand soft', token: 'brand-soft', value: '#e8eefc', className: 'bg-brand-soft' },
+  { name: 'Mist', token: 'mist', value: '#c9d7f8', className: 'bg-mist' },
+  { name: 'Night', token: 'surface-brand-night', value: '#0f1b4a', className: 'bg-surface-brand-night' },
+  { name: 'Gold soft', token: 'accent-soft', value: '#fef6d8', className: 'bg-accent-soft' },
+  { name: 'Border subtle', token: 'border-subtle', value: '#ebeff5', className: 'bg-border-subtle' },
+  { name: 'Border', token: 'border', value: '#dde3ec', className: 'bg-border' },
+  { name: 'Border strong', token: 'border-strong', value: '#c3ccd9', className: 'bg-border-strong' },
+  { name: 'Text secondary', token: 'text-secondary', value: '#5a6472', className: 'bg-text-secondary' },
+  { name: 'Success', token: 'success', value: '#247f5a', className: 'bg-success' },
+  { name: 'Error', token: 'error', value: '#c73a42', className: 'bg-error' },
+] as const
+
+const typeScale = [
+  {
+    role: 'Display',
+    className: 'text-display text-text',
+    spec: 'text-display, 48–100px, 600, 80% wide',
+    sample: 'From idea to reality',
+  },
+  {
+    role: 'Page title',
+    className: 'text-page-title text-text',
+    spec: 'text-page-title, 44–80px, 600, 82% wide',
+    sample: 'Partner in disruption',
+  },
+  {
+    role: 'Section title',
+    className: 'text-section-title text-text',
+    spec: 'text-section-title, 34–60px, 600, 85% wide',
+    sample: 'Healthcare is where we go deep',
+  },
+  {
+    role: 'Title',
+    className: 'text-title text-text',
+    spec: 'text-title, 22–28px, 600, 92% wide',
+    sample: 'Clinical Decision Support',
+  },
+  {
+    role: 'Card title',
+    className: 'text-card-title text-text',
+    spec: 'text-card-title, 19–22px, 600, 96% wide',
+    sample: 'Telemedicine Development',
+  },
+  {
+    role: 'Body large',
+    className: 'text-body-large text-text-secondary measure',
+    spec: 'text-body-large, 18–20px, 400',
+    sample: 'Experience the power of innovation, and let us attune our interactive services to your healthcare business.',
+  },
+  {
+    role: 'Body',
+    className: 'text-body text-text-secondary measure',
+    spec: 'text-body, 17px, 400',
+    sample:
+      'Break healthcare data barriers with our Integration and Interoperability services. Smooth data exchange for informed decisions, and fewer errors.',
+  },
+  {
+    role: 'Small',
+    className: 'text-body-small text-text-secondary measure',
+    spec: 'text-body-small, 15px, 400',
+    sample: 'Secure, scalable healthcare data sharing, tailored to your needs.',
+  },
+  { role: 'Label', className: 'text-eyebrow text-text', spec: 'text-eyebrow, 14px, 500, sentence case', sample: 'Healthcare' },
+  { role: 'Caption', className: 'text-caption text-text-muted', spec: 'text-caption, 13px, 400', sample: 'August 4, 2025' },
+] as const
+
+const hexVariants = ['station', 'active', 'solid', 'outline', 'inverse'] as const
+
+const radii = [
+  { name: 'Feature panel', className: 'h-32 w-full rounded-2xl', value: 'rounded-2xl, 36px' },
+  { name: 'Card and media', className: 'h-32 w-full rounded-xl', value: 'rounded-xl, 28px' },
+  { name: 'Small surface', className: 'h-32 w-full rounded-lg', value: 'rounded-lg, 20px' },
+  { name: 'Control', className: 'h-12 w-40 rounded-pill', value: 'rounded-pill' },
+] as const
+
+const index = [
+  { label: 'Colour', href: '#colour' },
+  { label: 'Type', href: '#type' },
+  { label: 'Controls', href: '#controls' },
+  { label: 'Wayfinding', href: '#wayfinding' },
+  { label: 'Layout', href: '#layout' },
+  { label: 'Visuals', href: '#visuals' },
+] as const
+
+/** Product visuals: drawn in code, sample data only, labelled as illustrations. */
+const visuals = [
+  { name: 'Care workspace', note: 'Healthcare industry, homepage healthcare zone', Shot: CareWorkspaceShot },
+  { name: 'Clinical decision support', note: 'CDS case study and homepage work card', Shot: CdsShot },
+  { name: 'Telemedicine', note: 'Telemedicine case study', Shot: TelemedicineShot },
+  { name: 'Health information exchange', note: 'HIE case study, Research step', Shot: HieShot },
+  { name: 'Electronic health records', note: 'EHR case study', Shot: EhrShot },
+  { name: 'Integration and interoperability', note: 'Interoperability case study', Shot: InteropShot },
+  { name: 'Fintech', note: 'Fintech industry', Shot: FintechShot },
+  { name: 'Fitness', note: 'Fitness study', Shot: FitnessShot },
+] as const
+
+function Specimen({ id, children, subtle = false }: { id: string; children: ReactNode; subtle?: boolean }) {
+  return (
+    <section
+      id={id}
+      className={cn('scroll-mt-28 section-y', subtle ? 'bg-bg-subtle' : 'bg-page-white')}
+      aria-labelledby={`${id}-title`}
+    >
+      <Container variant="wide" className="w-full">
+        {children}
+      </Container>
+    </section>
+  )
 }
 
-function Swatch({ name, value, className }: SwatchProps) {
-  return (
-    <figure className="flex min-w-0 flex-col gap-2">
-      <div className={`h-14 rounded-md border border-border ${className}`} />
-      <figcaption className="flex flex-col gap-1">
-        <span className="text-body-small text-text">{name}</span>
-        <span className="text-caption text-text-muted">{value}</span>
-      </figcaption>
-    </figure>
-  )
+function Caption({ children }: { children: ReactNode }) {
+  return <p className="text-caption text-text-muted">{children}</p>
 }
 
 export function FoundationPage() {
@@ -39,7 +159,7 @@ export function FoundationPage() {
     meta.content = 'noindex'
     document.head.appendChild(meta)
     const previousTitle = document.title
-    document.title = 'Design system'
+    document.title = 'Design system | Bizaffix'
     return () => {
       meta.remove()
       document.title = previousTitle
@@ -47,183 +167,312 @@ export function FoundationPage() {
   }, [])
 
   return (
-    <div className="studio-page">
-      <Section as="main" spacing="default">
-        <Container variant="wide">
-          <div className="mx-auto flex w-full max-w-page flex-col gap-16">
-            <header className="flex flex-col gap-4">
-              <Eyebrow>Internal preview</Eyebrow>
-              <h1 className="text-display">Component specimen</h1>
-              <p className="measure text-body-large">
-                Reusable primitives for later pages. This is not a website page.
-              </p>
-            </header>
+    <main className="studio-page">
+      <PageHero
+        zone="Design system"
+        meta="Internal preview"
+        title="Care wayfinding"
+        titleId="design-system-title"
+        intro="Tokens and components shared by every page. This page is not linked from the site; the full spec lives in docs/design-system.md. The top of this page is a live PageHero."
+        actions={index.map((item) => (
+          <Button key={item.href} href={item.href} variant="secondary">
+            {item.label}
+          </Button>
+        ))}
+      />
 
-            <div className="flex flex-col gap-8" id="buttons">
-              <h2>Buttons</h2>
+      <Specimen id="colour">
+        <SectionHeader
+          eyebrow="Colour"
+          meta="6 core tokens"
+          title="Clinic white, ink, and one route blue."
+          titleId="colour-title"
+          description="Gold marks the active station and nothing else. Status colours are only for status."
+        />
+        <ul className="mt-14 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:mt-20 lg:grid-cols-3">
+          {coreColours.map((colour) => (
+            <li key={colour.token} className="flex flex-col gap-4">
+              <div className={cn('h-28 rounded-xl border border-border', colour.className)} />
+              <div>
+                <p className="text-card-title text-text">{colour.name}</p>
+                <p className="mt-1 text-body-small text-text-secondary">{colour.role}</p>
+                <p className="mt-2 text-caption text-text-muted">
+                  {colour.token}, {colour.value}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <ul className="mt-16 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
+          {supportColours.map((colour) => (
+            <li key={colour.token} className="flex flex-col gap-3">
+              <div className={cn('h-14 rounded-lg border border-border', colour.className)} />
+              <div>
+                <p className="text-body-small text-text">{colour.name}</p>
+                <p className="text-caption text-text-muted">
+                  {colour.token}, {colour.value}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Specimen>
+
+      <Specimen id="type" subtle>
+        <SectionHeader
+          eyebrow="Type"
+          meta="Instrument Sans"
+          title="One family, set like signage."
+          titleId="type-title"
+          description="Headings narrow as they grow, from 80% wide at display size to 100% for body text. Sentence case throughout; no capitals for labels, no monospace."
+        />
+        <ul className="mt-14 border-t border-border md:mt-20">
+          {typeScale.map((style) => (
+            <li key={style.role} className="grid gap-4 border-b border-border py-8 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-3">
+                <p className="text-body-small text-text">{style.role}</p>
+                <Caption>{style.spec}</Caption>
+              </div>
+              <p className={cn('lg:col-span-9', style.className)}>{style.sample}</p>
+            </li>
+          ))}
+        </ul>
+      </Specimen>
+
+      <Specimen id="controls">
+        <SectionHeader
+          eyebrow="Controls"
+          title="Flat pills, plain words."
+          titleId="controls-title"
+          description="Buttons carry no arrows and no shadows. Text links are underlined, and the underline thickens on hover."
+        />
+
+        <div className="mt-14 grid gap-12 md:mt-20 lg:grid-cols-12 lg:gap-8">
+          <div className="flex flex-col gap-10 lg:col-span-7">
+            <div className="flex flex-col gap-4">
+              <Caption>Variants</Caption>
               <div className="flex flex-wrap items-center gap-3">
                 <Button>Primary</Button>
+                <Button variant="brand">Brand</Button>
+                <Button variant="accent">Accent</Button>
                 <Button variant="secondary">Secondary</Button>
                 <Button variant="subtle">Subtle</Button>
                 <Button variant="ghost">Ghost</Button>
-                <Button disabled>Disabled</Button>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4">
+              <Caption>Sizes, states, and elements</Caption>
+              <div className="flex flex-wrap items-center gap-3">
                 <Button size="lg">Large</Button>
-                <Button variant="secondary" leadingIcon={arrowIcon}>
-                  With icon
-                </Button>
-                <Button href="#buttons">Anchor</Button>
-                <Button to="/">Route</Button>
+                <Button disabled>Disabled</Button>
                 <Button loading>Loading</Button>
+                <Button variant="secondary" leadingIcon={<HexMark variant="active" size={14} />}>
+                  With station
+                </Button>
+                <Button href="#controls" variant="secondary">
+                  Anchor
+                </Button>
+                <Button to="/" variant="secondary">
+                  Route
+                </Button>
               </div>
             </div>
-
-            <div className="flex flex-col gap-4" id="text-links">
-              <h2>Text links</h2>
-              <div className="flex flex-col items-start gap-3">
-                <TextLink href="#text-links">Specimen link</TextLink>
-                <TextLink href="#text-links" trailingIcon={arrowIcon}>
-                  Specimen link with icon
+            <div className="flex flex-col gap-4">
+              <Caption>Text links: ink and brand tones</Caption>
+              <div className="flex flex-wrap items-center gap-x-8">
+                <TextLink href="#controls">View all services</TextLink>
+                <TextLink href="#controls" tone="brand">
+                  View Case Study
                 </TextLink>
-                <TextLink to="/">Route link</TextLink>
               </div>
             </div>
-
-            <div className="flex flex-col gap-6">
-              <h2>Eyebrows and badges</h2>
-              <div className="flex flex-col items-start gap-3">
-                <Eyebrow>Default eyebrow</Eyebrow>
-                <Eyebrow tone="brand">Brand eyebrow</Eyebrow>
-                <Eyebrow>Internal preview</Eyebrow>
-              </div>
+            <div className="flex flex-col gap-4">
+              <Caption>Badges</Caption>
               <div className="flex flex-wrap gap-2">
                 <Badge>Neutral</Badge>
-                <Badge variant="brand">Brand</Badge>
+                <Badge variant="brand">Marketing</Badge>
                 <Badge variant="success">Success</Badge>
               </div>
             </div>
+          </div>
 
-            <SectionHeader
-              eyebrow="Specimen"
-              title="Left-aligned header"
-              titleId="left-header"
-              description="A short supporting sentence that stays within the reading measure."
-              action={<Button variant="secondary">Action</Button>}
-            />
+          <div className="flex flex-col gap-8 rounded-2xl bg-night-route p-8 text-text-inverse md:p-10 lg:col-span-5">
+            <Wayfinder label="On night route" meta="Inverse" inverse />
+            <p className="text-title text-text-inverse">Controls for dark panels.</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="inverse" size="lg">
+                Book a call
+              </Button>
+              <Button variant="inverse-outline" size="lg">
+                See our work
+              </Button>
+            </div>
+            <TextLink href="#controls" tone="inverse">
+              info@bizaffix.com
+            </TextLink>
+          </div>
+        </div>
+      </Specimen>
 
-            <div className="flex flex-col gap-6">
-              <h2>Surfaces</h2>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Surface variant="plain" className="p-6">
-                  <p className="text-body-small text-text">Plain</p>
-                </Surface>
-                <Surface variant="bordered" className="p-6">
-                  <p className="text-body-small text-text">Bordered</p>
-                </Surface>
-                <Surface variant="subtle" className="p-6">
-                  <p className="text-body-small text-text">Subtle</p>
-                </Surface>
-                <Surface variant="raised" className="p-6">
-                  <p className="text-body-small text-text">Raised</p>
-                </Surface>
-              </div>
+      <Specimen id="wayfinding" subtle>
+        <SectionHeader
+          eyebrow="Wayfinding"
+          meta="Wayfinder, HexMark"
+          title="Zones, routes, and stations."
+          titleId="wayfinding-title"
+          description="A Wayfinder opens a section a visitor might navigate to. Hexagons mark stations; gold means you are here."
+        />
+
+        <div className="mt-14 grid gap-12 md:mt-20 lg:grid-cols-12 lg:gap-8">
+          <div className="flex flex-col gap-8 lg:col-span-7">
+            <div className="flex flex-col gap-3">
+              <Caption>Label only</Caption>
+              <Wayfinder label="Healthcare" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <Caption>With meta</Caption>
+              <Wayfinder label="Services" meta="6 services" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <Caption>Drawn once on load, for the page-top marker</Caption>
+              <Wayfinder label="About" meta="Austin, Texas" draw />
             </div>
           </div>
-        </Container>
-      </Section>
 
-      <Section background="brand" spacing="compact" aria-labelledby="center-header">
-        <Container variant="page">
-          <SectionHeader
-            align="center"
-            eyebrow="Specimen"
-            eyebrowTone="brand"
-            title="Centered header"
-            titleId="center-header"
-            description="Centered copy stays in a narrow column so the line length remains comfortable."
-          />
-        </Container>
-      </Section>
+          <div className="lg:col-span-4 lg:col-start-9">
+            <Caption>HexMark variants at 12, 24, and 40px</Caption>
+            <ul className="mt-4 border-t border-border">
+              {hexVariants.map((variant) => (
+                <li key={variant} className="flex items-center gap-5 border-b border-border py-4">
+                  <span className="flex items-center gap-4 text-text">
+                    <HexMark variant={variant} size={12} />
+                    <HexMark variant={variant} size={24} />
+                    <HexMark variant={variant} size={40} />
+                  </span>
+                  <span className="text-body-small text-text">{variant}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Specimen>
 
-      <Section spacing="compact" aria-labelledby="containers-heading">
-        <Container variant="wide">
-          <h2 id="containers-heading">Containers</h2>
+      <Specimen id="layout">
+        <SectionHeader
+          eyebrow="Layout"
+          meta="12 columns"
+          title="Section intros, shape, and width."
+          titleId="layout-title"
+          description="Radius follows hierarchy. Shadows belong to things that float, like the header and menus."
+        />
+
+        <div className="mt-14 flex flex-col gap-16 md:mt-20">
+          <div className="flex flex-col gap-6">
+            <Caption>SectionHeader, left: title on the left, supporting text against it</Caption>
+            <div className="rounded-2xl border border-border p-6 md:p-10">
+              <SectionHeader
+                eyebrow="Specimen"
+                meta="Left"
+                title="A section title sits on the left."
+                description="Supporting text sits against it, inside a comfortable measure, with an optional action."
+                action={<Button variant="secondary">Action</Button>}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <Caption>SectionHeader, center: for closing moments</Caption>
+            <div className="rounded-2xl bg-bg-subtle px-6 py-12 md:py-16">
+              <SectionHeader
+                align="center"
+                eyebrow="Specimen"
+                title="Centered for closing moments."
+                description="Centered copy stays in a narrow column so the line length stays comfortable."
+                action={<Button>Book a call</Button>}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <Caption>Radius hierarchy</Caption>
+            <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {radii.map((radius) => (
+                <li key={radius.name} className="flex flex-col gap-3">
+                  <div className={cn('border border-border bg-bg-subtle', radius.className)} />
+                  <div>
+                    <p className="text-body-small text-text">{radius.name}</p>
+                    <Caption>{radius.value}</Caption>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <Caption>Surfaces</Caption>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Surface variant="plain" className="border border-dashed border-border p-6">
+                <p className="text-body-small text-text">Plain</p>
+              </Surface>
+              <Surface variant="bordered" className="p-6">
+                <p className="text-body-small text-text">Bordered</p>
+              </Surface>
+              <Surface variant="subtle" className="p-6">
+                <p className="text-body-small text-text">Subtle</p>
+              </Surface>
+              <Surface variant="raised" className="p-6">
+                <p className="text-body-small text-text">Raised, for floating things</p>
+              </Surface>
+            </div>
+          </div>
+        </div>
+      </Specimen>
+
+      <Specimen id="visuals" subtle>
+        <SectionHeader
+          eyebrow="Visuals"
+          meta={`${visuals.length} scenes`}
+          title="Product visuals."
+          titleId="visuals-title"
+          description="Drawn in code with the house type and colours, so they stay light and scale like images. Sample data only, and each one is labelled as an illustration."
+        />
+        <div className="mt-12 grid gap-8 md:mt-16 md:grid-cols-2">
+          {visuals.map(({ name, note, Shot }) => (
+            <figure key={name}>
+              <div className="relative aspect-[16/11] overflow-hidden rounded-xl border border-border-subtle">
+                <Shot />
+              </div>
+              <figcaption className="mt-3">
+                <p className="text-card-title text-text">{name}</p>
+                <p className="text-body-small text-text-secondary">{note}</p>
+              </figcaption>
+            </figure>
+          ))}
+          <figure className="md:col-span-2">
+            <div className="relative aspect-[16/11] overflow-hidden rounded-2xl bg-night-route md:aspect-[2.2/1]">
+              <CareWorkspaceShot tone="night" />
+            </div>
+            <figcaption className="mt-3 text-body-small text-text-secondary">Night tone, on dark panels</figcaption>
+          </figure>
+        </div>
+      </Specimen>
+
+      <section className="pb-(--section-space)" aria-label="Containers">
+        <Container variant="wide" className="w-full pb-6">
+          <Caption>Containers</Caption>
         </Container>
-        <div className="mt-6 flex flex-col gap-4">
-          <Container variant="wide" className="rounded-md border border-border-strong py-4">
-            <p className="text-body-small text-text">Wide, 1440px</p>
+        <div className="flex flex-col gap-4">
+          <Container variant="wide" className="rounded-lg border border-border-strong py-4">
+            <p className="text-body-small text-text">Wide, 90rem: sections</p>
           </Container>
-          <Container variant="page" className="rounded-md border border-border py-4">
-            <p className="text-body-small text-text">Page, 1280px</p>
+          <Container variant="page" className="rounded-lg border border-border py-4">
+            <p className="text-body-small text-text">Page, 80rem</p>
           </Container>
-          <Container variant="reading" className="rounded-md border border-border-subtle py-4">
-            <p className="text-body-small text-text">Reading, 760px</p>
+          <Container variant="reading" className="rounded-lg border border-border-subtle py-4">
+            <p className="text-body-small text-text">Reading, 47.5rem: long text</p>
           </Container>
         </div>
-      </Section>
-
-      <Section background="brand" spacing="compact">
-        <Container variant="page">
-          <div className="flex flex-col gap-8">
-            <h2>Typography</h2>
-            <div className="flex flex-col gap-6">
-              <p className="text-display text-text">Display</p>
-              <p className="text-page-title text-text">Page title</p>
-              <p className="text-section-title text-text">Section title</p>
-              <p className="text-title text-text">Title</p>
-              <p className="text-card-title text-text">Card title</p>
-              <p className="measure text-body-large">
-                Large body for short introductions. The line length stays inside a comfortable
-                reading measure.
-              </p>
-              <p className="measure">
-                Body text for paragraphs. Long lines stop around sixty-eight characters so the
-                text stays easy to read on wide screens.
-              </p>
-              <p className="text-body-small text-text-muted">Small text for secondary information.</p>
-              <p className="text-caption text-text-subtle">Caption for metadata.</p>
-            </div>
-            <div className="flex flex-col gap-5">
-              <h3>Numeric scale</h3>
-              <p className="text-6xl font-medium text-text">6xl Page hero</p>
-              <p className="text-5xl font-medium text-text">5xl Section display</p>
-              <p className="text-4xl font-medium text-text">4xl Section title</p>
-              <p className="text-3xl font-medium text-text">3xl Subsection</p>
-              <p className="text-2xl font-medium text-text">2xl Card title</p>
-              <p className="text-xl font-medium text-text">xl Supporting title</p>
-              <p className="measure text-lg text-text-secondary">
-                Large body for a short introduction. Georgia needs a little more line height than a sans serif.
-              </p>
-              <p className="measure text-base text-text-secondary">
-                Body text stays at seventeen pixels with open leading so a paragraph is easy to read.
-              </p>
-              <p className="text-sm text-text-muted">Small text for secondary information.</p>
-              <p className="text-xs font-medium text-text-subtle">Extra small for labels and metadata.</p>
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      <Section spacing="compact">
-        <Container variant="page">
-          <div className="flex flex-col gap-8">
-            <h2>Color</h2>
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
-              <Swatch name="Page" value="#FFFFFF" className="bg-bg" />
-              <Swatch name="Subtle" value="#F8FAFC" className="bg-bg-subtle" />
-              <Swatch name="Muted surface" value="#F4F7F9" className="bg-bg-muted" />
-              <Swatch name="Warm" value="#FAF8F4" className="bg-surface-warm" />
-              <Swatch name="Brand" value="#2F5BEA" className="bg-brand" />
-              <Swatch name="Brand hover" value="#2549C9" className="bg-brand-hover" />
-              <Swatch name="Brand active" value="#1E3DB0" className="bg-brand-active" />
-              <Swatch name="Brand soft" value="#E8EEFC" className="bg-brand-soft" />
-              <Swatch name="Brand subtle" value="#D9E3FB" className="bg-brand-subtle" />
-              <Swatch name="Success soft" value="#EDF8F2" className="bg-success-soft" />
-              <Swatch name="Warning soft" value="#FFF6E8" className="bg-warning-soft" />
-              <Swatch name="Error soft" value="#FFF0F1" className="bg-error-soft" />
-            </div>
-          </div>
-        </Container>
-      </Section>
-    </div>
+      </section>
+    </main>
   )
 }

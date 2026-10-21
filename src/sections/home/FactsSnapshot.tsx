@@ -247,6 +247,7 @@ export function FactsSnapshot() {
         >
           <Container variant="wide" className="relative w-full shrink-0 pt-4">
             <div className="mx-auto max-w-160 text-center">
+              <p className="mb-3 text-eyebrow text-brand-hover">At a glance</p>
               <h2 id="facts-title" className="text-section-title text-text">
                 {copy.title}
               </h2>

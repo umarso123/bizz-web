@@ -260,9 +260,9 @@ function Pane({
 
 function ReducedServices() {
   return (
-    <section id="services" className="section-y bg-page-white text-text" aria-label="Services">
+    <section id="healthcare" className="section-y bg-page-white text-text" aria-label="Healthcare solutions">
       <div className="container-page">
-        <p className="text-eyebrow text-brand">What we build</p>
+        <p className="text-eyebrow text-brand-hover">Digital health</p>
         <h2 className="mt-4 max-w-[18ch] text-section-title text-text">
           Healthcare technology, built around care.
         </h2>
@@ -497,9 +497,9 @@ export function ServiceOrbit() {
   return (
     <section
       ref={sectionRef}
-      id="services"
-      className="relative h-[680vh] bg-page-white max-md:h-[520vh]"
-      aria-label="Services"
+      id="healthcare"
+      className="relative h-[540vh] bg-page-white max-md:h-[440vh]"
+      aria-label="Healthcare solutions"
     >
       <div className="sticky top-0 h-svh overflow-hidden text-text">
         <div
@@ -507,7 +507,7 @@ export function ServiceOrbit() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 48% 42% at 62% 48%, rgb(47 91 234 / 0.1), transparent 64%), radial-gradient(ellipse 32% 28% at 78% 62%, rgb(245 200 76 / 0.2), transparent 62%), #fbf7f2',
+              'radial-gradient(ellipse 48% 42% at 62% 48%, rgb(47 91 234 / 0.1), transparent 64%), radial-gradient(ellipse 32% 28% at 78% 62%, rgb(245 200 76 / 0.2), transparent 62%), var(--color-page-white)',
           }}
         />
         <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
@@ -558,7 +558,7 @@ export function ServiceOrbit() {
 
         <div ref={copyRef} className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center px-6">
           <div ref={copyBoxRef} className="w-[min(34rem,88vw)] text-center">
-            <p className="text-eyebrow text-brand">What we build</p>
+            <p className="text-eyebrow text-brand-hover">Digital health</p>
             <div className="relative mt-4 min-h-44 md:min-h-48">
               <div ref={outLayerRef} className="absolute inset-x-0 top-0">
                 <h2

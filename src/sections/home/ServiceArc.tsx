@@ -269,7 +269,7 @@ function FloatingMark({
 
 function ServiceStack() {
   return (
-    <section id="service-offerings" className="section-y bg-bg-subtle" aria-label="Services">
+    <section id="services" className="section-y bg-bg-subtle" aria-label="Services">
       <div className="container-wide">
         <ol className="space-y-16 md:space-y-20">
           {services.map((service, index) => (
@@ -316,7 +316,7 @@ export function ServiceArc() {
   const service = services[active]
 
   return (
-    <section ref={ref} id="service-offerings" className="relative h-[620vh] bg-bg-subtle" aria-label="Services">
+    <section ref={ref} id="services" className="relative h-[440vh] bg-bg-subtle" aria-label="Services">
       <div className="sticky top-0 h-svh overflow-hidden">
         <div
           aria-hidden="true"

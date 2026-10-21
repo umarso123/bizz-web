@@ -46,9 +46,9 @@ export const workPageContent = {
       slug: 'clinical-decision-support',
       title: 'Clinical Decision Support',
       industry: 'Healthcare',
-      category: 'Healthcare · CDS',
+      category: 'Clinical decision support',
       media: 'ink',
-      bannerTitle: 'Population Health Management',
+      bannerTitle: 'Real-time, evidence-based recommendations',
       summary:
         'Evidence-based experiences designed to support clinical decision-making and seamless workflow integration.',
       description:
@@ -58,13 +58,13 @@ export const workPageContent = {
       solution:
         'We design CDS experiences that integrate into clinical flow, improving efficiency so professionals can focus on exceptional care.',
       services: ['Product Design', 'Frontend & Backend Development', 'Cloud Development'],
-      image: mockups.healthcare,
+      image: null,
     },
     {
       slug: 'telemedicine',
       title: 'Telemedicine',
       industry: 'Healthcare',
-      category: 'Healthcare · Telemedicine',
+      category: 'Virtual care',
       media: 'ink',
       bannerTitle: 'Virtual care that stays human',
       summary:
@@ -82,7 +82,7 @@ export const workPageContent = {
       slug: 'health-information-exchange',
       title: 'Health Information Exchange',
       industry: 'Healthcare',
-      category: 'Healthcare · HIE',
+      category: 'Health data exchange',
       media: 'ink',
       bannerTitle: 'Secure healthcare data exchange',
       summary: 'Secure, scalable HIE development tailored for healthcare data sharing.',
@@ -98,7 +98,7 @@ export const workPageContent = {
       slug: 'electronic-health-records',
       title: 'Electronic Health Records',
       industry: 'Healthcare',
-      category: 'Healthcare · EHR',
+      category: 'Health records',
       media: 'day',
       bannerTitle: 'Records built for the practice',
       summary:
@@ -115,7 +115,7 @@ export const workPageContent = {
       slug: 'integration-interoperability',
       title: 'Integration & Interoperability',
       industry: 'Healthcare',
-      category: 'Healthcare · Interop',
+      category: 'Integration',
       media: 'ink',
       bannerTitle: 'Systems that finally talk',
       summary:
@@ -132,7 +132,7 @@ export const workPageContent = {
       slug: 'optimized-strength',
       title: 'Optimized Strength',
       industry: 'Fitness',
-      category: 'Fitness · Product',
+      category: 'Fitness product',
       media: 'ink',
       bannerTitle: 'Training that sticks',
       summary:
@@ -155,7 +155,7 @@ export const workPageContent = {
       slug: 'educational',
       title: 'Educational',
       industry: 'Educational',
-      category: 'Educational',
+      category: 'Learning products',
       media: 'day',
       summary: 'Digital learning products shaped for clarity, engagement, and real outcomes.',
       description:
@@ -168,7 +168,7 @@ export const workPageContent = {
       slug: 'poised-journey-academy',
       title: 'The Poised Journey Academy',
       industry: 'Educational',
-      category: 'Educational · Learning platform',
+      category: 'Learning platform',
       media: 'ink',
       bannerTitle: 'Homeschool journeys, one place',
       summary:
@@ -190,7 +190,7 @@ export const workPageContent = {
       slug: 'traino-ai',
       title: 'Traino.ai',
       industry: 'Educational',
-      category: 'Educational · AI LMS',
+      category: 'AI learning management',
       media: 'ink',
       bannerTitle: 'AI-powered training retention',
       summary:
@@ -211,7 +211,7 @@ export const workPageContent = {
       slug: 'bank-alfalah',
       title: 'Bank Alfalah',
       industry: 'Fintech',
-      category: 'Fintech · Bank Alfalah',
+      category: 'Web and tablet banking',
       media: 'ink',
       bannerTitle: 'Banking across web and tablet',
       summary: 'Bank Alfalah product screens across web and tablet.',
@@ -227,7 +227,7 @@ export const workPageContent = {
       slug: 'drug-testing',
       title: 'Drug Testing',
       industry: 'Healthcare',
-      category: 'Healthcare · Drug Testing',
+      category: 'Drug testing app',
       media: 'ink',
       summary: 'Drug testing app screens for the mobile experience.',
       description: 'Product visuals for the drug testing app.',
@@ -240,7 +240,7 @@ export const workPageContent = {
       slug: 'family-tree',
       title: 'Family Tree',
       industry: 'Family Tree',
-      category: 'Product · Family Tree',
+      category: 'Family platform',
       media: 'ink',
       bannerTitle: 'Family history, shared clearly',
       summary:
@@ -262,14 +262,14 @@ export const workPageContent = {
       slug: 'ecommerce',
       title: 'eCommerce',
       industry: 'eCommerce',
-      category: 'eCommerce',
+      category: 'Online storefronts',
       media: 'ink',
       summary: 'Storefront and product journeys designed to convert without friction.',
       description:
         'eCommerce websites and product experiences crafted to captivate audiences and strengthen digital presence.',
       services: ['Web Development', 'UI/UX', 'Product Design'],
       bannerTitle: 'Commerce without friction',
-      image: mockups.foodScreens,
+      image: mockups.foodPresentation,
       gallery: [
         { src: mockups.foodPhones, alt: 'Food ordering phones' },
         { src: mockups.foodPresentation, alt: 'Food ordering app presentation' },
@@ -279,14 +279,14 @@ export const workPageContent = {
       slug: 'fitness',
       title: 'Fitness',
       industry: 'Fitness',
-      category: 'Fitness',
+      category: 'Mobile and web',
       media: 'ink',
       bannerTitle: 'Motivation, progress, daily use',
       summary: 'Mobile and web experiences built around motivation, progress, and daily use.',
       description:
         'Mobile and web experiences built around motivation, progress, and daily use.',
       services: ['Product Design', 'Web Development'],
-      image: mockups.fitnessBoards,
+      image: null,
     },
   ] satisfies CaseStudy[],
 } as const

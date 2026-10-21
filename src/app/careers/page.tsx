@@ -1,340 +1,89 @@
-import {
-  LazyMotion,
-  animate,
-  domAnimation,
-  m,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from 'framer-motion'
-import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router'
-import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react'
+import { LazyMotion, domAnimation, m, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { useParams } from 'react-router'
+import { SectionHeader } from '@/components/common/SectionHeader.tsx'
 import { Container } from '@/components/layout/Container.tsx'
+import { PageHero } from '@/components/layout/PageHero.tsx'
 import { Button } from '@/components/ui/Button.tsx'
-import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
-import { TriadBand } from '@/components/ui/TriadBand.tsx'
-import { careersCopy, cultureThemes, jobPostings } from '@/content/careers.ts'
-import { homeContent } from '@/content/home.ts'
+import { HexMark } from '@/components/ui/HexMark.tsx'
+import { careersCopy, cultureThemes, jobPostings, workStages } from '@/content/careers.ts'
 import { cn } from '@/lib/cn.ts'
+import { JobDetailPage } from '@/pages/JobDetailPage.tsx'
 import { CareerBoard } from '@/sections/careers/CareerBoard.tsx'
+import {
+  ALL_TEAMS,
+  careerTeams,
+  openRoleCount,
+  roleCount,
+  rolesForTeam,
+} from '@/sections/careers/careerData.ts'
 
-const houseSpring = { type: 'spring' as const, stiffness: 140, damping: 20, mass: 0.8 }
-const hoverSpring = { type: 'spring' as const, stiffness: 260, damping: 22, mass: 0.6 }
-const ease = [0.2, 0, 0, 1] as const
+const ease = [0.22, 1, 0.36, 1] as const
 
-function CareerHero({ reduced }: { reduced: boolean }) {
-  const preview = jobPostings.slice(0, 4)
+/**
+ * Hero aside: a directory sign. Each team is a station; choosing one
+ * filters the board below and takes you there.
+ */
+function TeamDirectory({ onPick }: { onPick: (team: string) => void }) {
+  const rows = [...careerTeams, ALL_TEAMS]
 
   return (
-    <section
-      className="atmosphere-hero -mt-(--header-clearance) pt-[calc(var(--header-clearance)+2.5rem)] pb-16 md:pt-[calc(var(--header-clearance)+3.5rem)] md:pb-24"
-      aria-labelledby="careers-hero-title"
+    <nav
+      aria-label={careersCopy.hero.directoryTitle}
+      className="rounded-xl border border-border bg-surface/90 p-6 backdrop-blur-sm sm:p-7"
     >
-      <Container variant="page" className="relative w-full">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14">
-          <div>
-            <m.div
-              initial={reduced ? false : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.45, ease }}
-              className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand-soft/70 px-3.5 py-1 text-xs font-semibold text-brand backdrop-blur-xs"
-            >
-              <span className="size-2 rounded-full bg-brand animate-pulse" />
-              <span>Careers at Bizaffix</span>
-              <span className="text-brand/40">·</span>
-              <span className="text-text-secondary font-normal">Remote Worldwide</span>
-            </m.div>
-
-            <m.h1
-              id="careers-hero-title"
-              className="mt-5 max-w-[12ch] text-4xl font-medium tracking-tight text-text sm:text-5xl lg:text-6xl"
-              initial={reduced ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.08, ease }}
-            >
-              A good place to <span className="text-brand">work.</span>
-            </m.h1>
-
-            <m.p
-              className="mt-6 max-w-[34rem] text-body-large text-text-secondary leading-relaxed"
-              initial={reduced ? false : { opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.16, ease }}
-            >
-              {careersCopy.hero.body}
-            </m.p>
-
-            <m.div
-              className="mt-8 flex flex-wrap gap-3"
-              initial={reduced ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : 0.24, ease }}
-            >
-              <Button href="#open-positions" size="lg" variant="brand" className="inline-flex items-center gap-2">
-                <span>{careersCopy.hero.primaryCta}</span>
-                <ArrowDown className="size-4" />
-              </Button>
-              <Button href="#how-we-work" size="lg" variant="secondary">
-                {careersCopy.process.headline}
-              </Button>
-            </m.div>
-
-            <m.div
-              className="mt-10 grid max-w-lg grid-cols-3 gap-3 border-t border-border-subtle pt-6"
-              initial={reduced ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: reduced ? 0 : 0.5, delay: reduced ? 0 : 0.3, ease }}
-            >
-              <div className="rounded-xl border border-border-subtle bg-white/60 p-3.5 backdrop-blur-xs">
-                <p className="text-caption text-text-muted">Open Roles</p>
-                <p className="mt-1 text-2xl font-medium text-text">{jobPostings.length}</p>
-                <p className="mt-0.5 text-[11px] text-brand font-medium">Actively hiring</p>
-              </div>
-              <div className="rounded-xl border border-border-subtle bg-white/60 p-3.5 backdrop-blur-xs">
-                <p className="text-caption text-text-muted">Workplace</p>
-                <p className="mt-1 text-2xl font-medium text-text">Remote</p>
-                <p className="mt-0.5 text-[11px] text-text-muted">Worldwide</p>
-              </div>
-              <div className="rounded-xl border border-border-subtle bg-white/60 p-3.5 backdrop-blur-xs">
-                <p className="text-caption text-text-muted">Schedule</p>
-                <p className="mt-1 text-2xl font-medium text-text">Flexible</p>
-                <p className="mt-0.5 text-[11px] text-text-muted">Async-friendly</p>
-              </div>
-            </m.div>
-          </div>
-
-          <m.div
-            className="relative"
-            initial={reduced ? false : { opacity: 0, y: 20, clipPath: 'inset(8% 0 0 0)' }}
-            animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)' }}
-            transition={reduced ? { duration: 0 } : { ...houseSpring, delay: 0.12 }}
-          >
-            {/* Yellowish Gradient Card */}
-            <div
-              className="relative overflow-hidden rounded-[2rem] p-7 md:p-8 shadow-[0_24px_55px_rgb(224_176_48/0.28)] ring-1 ring-[#e0b030]/40 border border-white/60"
-              style={{
-                background:
-                  'linear-gradient(150deg, #fef8e2 0%, #f9dc72 32%, #f5c84c 68%, #e0b030 100%)',
-              }}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between gap-4 border-b border-[#0d121f]/15 pb-5">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0d121f] px-3 py-1 text-xs font-semibold text-[#f8d35a] shadow-xs">
-                    <span className="size-1.5 rounded-full bg-[#f8d35a] animate-pulse" />
-                    <span>Open now</span>
-                  </div>
-                  <p className="mt-3 text-3xl font-medium tracking-tight text-[#0d121f] sm:text-4xl">
-                    {jobPostings.length} roles
-                  </p>
-                </div>
-                <div className="text-right">
-                  <span className="inline-block rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-[#0d121f] backdrop-blur-xs border border-white/40 shadow-xs">
-                    Healthcare focus
-                  </span>
-                </div>
-              </div>
-
-              {/* Roles list */}
-              <ul className="mt-3 divide-y divide-[#0d121f]/10">
-                {preview.map((job, index) => (
-                  <li key={job.id}>
-                    <Link
-                      to={`/careers/${job.slug}`}
-                      className="group flex items-center justify-between gap-4 py-3.5 text-[#0d121f] no-underline transition-all hover:translate-x-1"
-                    >
-                      <span className="flex items-baseline gap-3 min-w-0">
-                        <span className="font-mono text-xs font-bold text-[#0d121f]/50">
-                          0{index + 1}
-                        </span>
-                        <span className="text-lg font-medium text-[#0d121f] group-hover:text-black transition-colors truncate">
-                          {job.title}
-                        </span>
-                      </span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="rounded-full bg-white/65 px-2.5 py-0.5 text-xs font-medium text-[#0d121f]/85 backdrop-blur-xs shadow-2xs">
-                          {job.department}
-                        </span>
-                        <ArrowUpRight className="size-4 text-[#0d121f]/50 transition-all group-hover:text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Footer action */}
-              <div className="mt-6 pt-4 border-t border-[#0d121f]/15 flex items-center justify-between gap-3">
-                <a
-                  href="#open-positions"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#0d121f] px-5 py-2.5 text-body-small font-medium text-white shadow-md hover:bg-black transition-all group"
-                >
-                  <span>See all openings</span>
-                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-                </a>
-                <span className="text-xs text-[#0d121f]/75 font-medium hidden sm:inline">
-                  Remote · Flexible
+      <p className="text-eyebrow text-text-muted">{careersCopy.hero.directoryTitle}</p>
+      <ul className="mt-4 border-t border-border">
+        {rows.map((team) => {
+          const all = team === ALL_TEAMS
+          return (
+            <li key={team} className="border-b border-border">
+              <a
+                href="#open-positions"
+                onClick={() => onPick(team)}
+                className="group flex items-center gap-4 py-4 text-text no-underline hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              >
+                <HexMark
+                  variant={all ? 'solid' : 'station'}
+                  size={18}
+                  className="transition-transform duration-300 ease-standard group-hover:rotate-90 [&_polygon]:transition-colors group-hover:[&_polygon]:fill-accent"
+                />
+                <span className={cn('flex-1', all ? 'text-body font-semibold' : 'text-card-title')}>
+                  {all ? careersCopy.hero.primaryCta : team}
                 </span>
-              </div>
-            </div>
-
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -right-4 -bottom-4 -z-10 size-40 rounded-full bg-accent/40 blur-3xl md:size-52"
-            />
-          </m.div>
-        </div>
-      </Container>
-    </section>
+                <span className="text-body-small tabular-nums text-text-secondary">
+                  {roleCount(rolesForTeam(team).length)}
+                </span>
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </nav>
   )
 }
 
-function CareerProcess({ reduced }: { reduced: boolean }) {
-  const stages = homeContent.process.stages
-  const [active, setActive] = useState(0)
-  const stage = stages[active]
-  const progress = useSpring(0, { stiffness: 140, damping: 22, mass: 0.8 })
-
-  useEffect(() => {
-    progress.set(((active + 1) / stages.length) * 100)
-  }, [active, progress, stages.length])
-
-  const width = useTransform(progress, (value) => `${value}%`)
+/** Remote. Flexible. Impact. Three signs, all readable at once. */
+function Pillars() {
+  const copy = careersCopy.pillars
 
   return (
-    <section
-      id="how-we-work"
-      className="scroll-mt-28 relative overflow-hidden bg-page-dark text-text-inverse"
-      aria-labelledby="how-we-work-title"
-    >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-80"
-        style={{
-          background:
-            'radial-gradient(ellipse 55% 50% at 88% 12%, rgb(47 91 234 / 0.35), transparent 58%), radial-gradient(ellipse 40% 40% at 8% 90%, rgb(245 200 76 / 0.12), transparent 55%)',
-        }}
-      />
-
-      <Container variant="wide" className="relative w-full py-20 md:py-28">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-5">
-            <Eyebrow inverse>{careersCopy.process.eyebrow}</Eyebrow>
-            <h2 id="how-we-work-title" className="mt-4 text-section-title text-text-inverse">
-              {homeContent.process.title}
-            </h2>
-            <p className="mt-5 max-w-[36rem] text-body-large text-text-inverse-muted">
-              {homeContent.process.body}
-            </p>
-
-            <m.p
-              key={stage.number}
-              className="mt-14 text-[clamp(5rem,12vw,9rem)] leading-none font-medium tracking-[-0.06em] text-brand"
-              initial={reduced ? false : { opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={houseSpring}
-            >
-              {stage.number}
-            </m.p>
-          </div>
-
-          <div className="lg:col-span-7 lg:pt-16">
-            <div className="mb-8 h-px w-full bg-white/10">
-              <m.div className="h-px bg-accent" style={{ width }} />
-            </div>
-
-            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Project stages">
-              {stages.map((item, index) => {
-                const on = index === active
-                return (
-                  <button
-                    key={item.number}
-                    type="button"
-                    role="tab"
-                    aria-selected={on}
-                    onClick={() => setActive(index)}
-                    className={cn(
-                      'rounded-full px-4 py-2 text-body-small focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-                      on ? 'bg-accent text-text' : 'bg-white/5 text-text-inverse-muted hover:bg-white/10',
-                    )}
-                  >
-                    {item.title}
-                  </button>
-                )
-              })}
-            </div>
-
-            <m.div
-              key={stage.number + '-copy'}
-              className="mt-10"
-              initial={reduced ? false : { opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={houseSpring}
-            >
-              <h3 className="text-3xl font-medium text-text-inverse md:text-4xl">{stage.title}</h3>
-              <p className="mt-4 max-w-[38rem] text-body-large text-text-inverse-muted">{stage.body}</p>
-              <ul className="mt-8 flex flex-wrap gap-2">
-                {stage.tags.map((tag) => (
-                  <li
-                    key={tag}
-                    className="rounded-full border border-white/15 px-3 py-1 text-body-small text-text-inverse-muted"
-                  >
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-            </m.div>
-          </div>
-        </div>
-      </Container>
-    </section>
-  )
-}
-
-function CareerCulture({ reduced }: { reduced: boolean }) {
-  const spans = [
-    'md:col-span-7',
-    'md:col-span-5',
-    'md:col-span-5',
-    'md:col-span-7',
-    'md:col-span-4',
-    'md:col-span-8',
-  ]
-
-  return (
-    <section className="bg-page-white py-20 md:py-28" aria-labelledby="careers-culture-title">
-      <Container variant="page" className="w-full">
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-7">
-            <Eyebrow>{careersCopy.culture.eyebrow}</Eyebrow>
-            <h2 id="careers-culture-title" className="mt-4 text-section-title text-text">
-              {careersCopy.culture.headline}
-            </h2>
-            <p className="mt-5 max-w-[34rem] text-title text-text">{careersCopy.why.headline}</p>
-          </div>
-          <p className="max-w-[28rem] text-body text-text-secondary lg:col-span-5">
-            {careersCopy.life.body}
-          </p>
-        </div>
-
-        <ul className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-12 md:gap-4">
-          {cultureThemes.map((theme, index) => (
-            <m.li
-              key={theme.id}
+    <section className="section-y bg-page-white" aria-labelledby="career-pillars-title">
+      <Container variant="wide" className="w-full">
+        <SectionHeader title={copy.title} titleId="career-pillars-title" />
+        <ul className="mt-12 grid gap-10 md:mt-16 md:grid-cols-3 md:gap-0">
+          {copy.items.map((item, index) => (
+            <li
+              key={item.id}
               className={cn(
-                'rounded-[1.5rem] border border-border-subtle bg-surface p-6 md:min-h-48 md:p-8',
-                spans[index],
+                'border-t border-border pt-6 md:pt-8',
+                index > 0 && 'md:border-l md:pl-8',
+                index < copy.items.length - 1 && 'md:pr-8',
               )}
-              initial={reduced ? false : { opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ ...houseSpring, delay: reduced ? 0 : index * 0.04 }}
-              whileHover={reduced ? undefined : { y: -4, transition: hoverSpring }}
             >
-              <p className="text-caption text-brand">0{index + 1}</p>
-              <p className="mt-6 text-2xl font-medium text-text">{theme.label}</p>
-              <p className="mt-3 max-w-[36ch] text-body text-text-secondary">{theme.detail}</p>
-            </m.li>
+              <h3 className="text-section-title text-text">{item.label}</h3>
+              <p className="mt-4 max-w-[30ch] text-body text-text-secondary">{item.body}</p>
+            </li>
           ))}
         </ul>
       </Container>
@@ -342,93 +91,222 @@ function CareerCulture({ reduced }: { reduced: boolean }) {
   )
 }
 
-function CareerWhyBand({ reduced }: { reduced: boolean }) {
-  const [shown, setShown] = useState(0)
-
-  useEffect(() => {
-    if (reduced) {
-      setShown(jobPostings.length)
-      return
-    }
-    const controls = animate(0, jobPostings.length, {
-      ...houseSpring,
-      onUpdate: (latest) => setShown(Math.round(latest)),
-    })
-    return () => controls.stop()
-  }, [reduced])
-
+/** How we show up: the studio's own line, then the six habits as a directory. */
+function Culture() {
   return (
-    <section className="bg-page-white py-16 md:py-20" aria-label="Why join">
+    <section className="section-y bg-bg-subtle" aria-labelledby="careers-culture-title">
       <Container variant="wide" className="w-full">
-        <div className="grid items-center gap-10 rounded-[2rem] bg-brand px-7 py-10 text-text-inverse md:grid-cols-[1fr_auto] md:px-12 md:py-14">
-          <div>
-            <p className="text-eyebrow text-accent">{careersCopy.why.eyebrow}</p>
-            <p className="mt-4 max-w-[28rem] text-section-title text-text-inverse">
-              {careersCopy.why.body}
+        <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-5">
+            <h2 id="careers-culture-title" className="max-w-[12ch] text-section-title text-text">
+              {careersCopy.culture.headline}
+            </h2>
+            <p className="mt-6 max-w-[34rem] text-body-large text-text-secondary">{careersCopy.why.body}</p>
+            <p className="mt-10 max-w-[30rem] border-l-[3px] border-accent pl-5 text-title text-text">
+              {careersCopy.culture.quote}
             </p>
           </div>
-          <div className="md:text-right">
-            <p className="text-[clamp(4rem,10vw,7rem)] leading-none font-medium tracking-[-0.05em] text-accent">
-              {shown}
-            </p>
-            <p className="mt-2 text-body text-text-inverse-muted">open roles waiting</p>
-            <m.a
-              href="#open-positions"
-              className="mt-6 inline-flex items-center border-b border-accent pb-1 text-body text-text-inverse no-underline"
-              whileHover={reduced ? undefined : { x: 6 }}
-              transition={hoverSpring}
-            >
-              {careersCopy.hero.primaryCta}
-            </m.a>
-          </div>
+
+          <dl className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
+            {cultureThemes.map((theme) => (
+              <div key={theme.id} className="border-t border-border-strong pt-5">
+                <dt className="text-card-title text-text">{theme.label}</dt>
+                <dd className="mt-2 text-body text-text-secondary">{theme.detail}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </Container>
     </section>
   )
 }
 
-export function CareersPage() {
-  const { slug } = useParams()
+/**
+ * The five legacy steps as a route: stations you can select, the line filled
+ * up to the one you are on, and that step's detail underneath.
+ */
+function CareerProcess() {
   const reduced = useReducedMotion() === true
+  const [active, setActive] = useState(0)
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const last = workStages.length - 1
+  const stage = workStages[active] ?? workStages[0]
+
+  function select(index: number, moveFocus = false) {
+    const next = Math.min(last, Math.max(0, index))
+    setActive(next)
+    if (moveFocus) tabRefs.current[next]?.focus()
+  }
+
+  function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const targets: Partial<Record<string, number>> = {
+      ArrowRight: index + 1,
+      ArrowDown: index + 1,
+      ArrowLeft: index - 1,
+      ArrowUp: index - 1,
+      Home: 0,
+      End: last,
+    }
+    const next = targets[event.key]
+    if (next === undefined) return
+    event.preventDefault()
+    select(next, true)
+  }
+
+  if (!stage) return null
+
+  return (
+    <section id="how-we-work" className="scroll-mt-28 section-y bg-page-white" aria-labelledby="how-we-work-title">
+      <Container variant="wide" className="w-full">
+        <SectionHeader
+          eyebrow={careersCopy.process.headline}
+          meta={`${workStages.length} steps`}
+          title={careersCopy.process.title}
+          titleId="how-we-work-title"
+          description={careersCopy.process.body}
+        />
+
+        <div role="tablist" aria-label="Project steps" className="mt-14 grid md:mt-20 md:grid-cols-5">
+          {workStages.map((item, index) => {
+            const on = index === active
+            const passed = index < active
+            return (
+              <div key={item.id} role="presentation" className="relative">
+                {index < last ? (
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'absolute top-[2.375rem] bottom-[-0.625rem] left-2.5 w-1 rounded-full transition-colors duration-500 ease-standard',
+                      'md:top-2.5 md:bottom-auto md:left-[calc(50%+1.125rem)] md:h-1 md:w-[calc(100%-2.25rem)]',
+                      passed ? 'bg-brand' : 'bg-border',
+                    )}
+                  />
+                ) : null}
+                <button
+                  ref={(node) => {
+                    tabRefs.current[index] = node
+                  }}
+                  type="button"
+                  role="tab"
+                  id={`step-tab-${item.id}`}
+                  aria-selected={on}
+                  aria-controls="step-panel"
+                  tabIndex={on ? 0 : -1}
+                  onClick={() => select(index)}
+                  onKeyDown={(event) => onKeyDown(event, index)}
+                  className="group flex w-full items-start gap-4 py-3 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:flex-col md:items-center md:gap-4 md:py-0 md:text-center"
+                >
+                  <HexMark
+                    variant={on ? 'active' : passed ? 'solid' : 'station'}
+                    size={24}
+                    className="relative transition-transform duration-300 ease-standard group-hover:scale-110"
+                  />
+                  <span>
+                    <span className="block text-caption tabular-nums text-text-muted">{item.number}</span>
+                    <span
+                      className={cn(
+                        'mt-0.5 block text-card-title transition-colors',
+                        on ? 'text-text' : 'text-text-secondary group-hover:text-text',
+                      )}
+                    >
+                      {item.title}
+                    </span>
+                  </span>
+                </button>
+              </div>
+            )
+          })}
+        </div>
+
+        <div
+          id="step-panel"
+          role="tabpanel"
+          aria-labelledby={`step-tab-${stage.id}`}
+          className="mt-10 rounded-xl bg-bg-subtle p-6 md:mt-14 md:p-10"
+        >
+          <m.div
+            key={stage.id}
+            initial={reduced ? false : { opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease }}
+            className="grid gap-4 md:grid-cols-12 md:gap-8"
+          >
+            <div className="md:col-span-5">
+              <p className="text-caption tabular-nums text-text-muted">
+                Step {active + 1} of {workStages.length}
+              </p>
+              <h3 className="mt-2 text-title text-text">{stage.title}</h3>
+            </div>
+            <p className="max-w-[38rem] text-body-large text-text-secondary md:col-span-6 md:col-start-7">
+              {stage.body}
+            </p>
+          </m.div>
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+function CareersIndex() {
+  const [team, setTeam] = useState<string>(ALL_TEAMS)
 
   useEffect(() => {
     const previousTitle = document.title
-    document.title = 'Careers · Bizaffix'
+    document.title = 'Careers | Bizaffix'
     return () => {
       document.title = previousTitle
     }
   }, [])
 
+  /*
+   * Arriving from another page at /careers#open-positions: the layout scrolls to
+   * the top on route change, so wait for that, then go to the anchor.
+   * Same-page hash links are handled by the smooth scroller.
+   */
+  useEffect(() => {
+    const id = window.location.hash.slice(1)
+    if (!id) return
+    const timer = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ block: 'start' })
+    }, 120)
+    return () => window.clearTimeout(timer)
+  }, [])
+
   return (
     <LazyMotion features={domAnimation}>
       <main className="studio-page bg-page-white text-text">
-        <CareerHero reduced={reduced} />
-        <TriadBand
-          id="career-pillars"
-          title={careersCopy.pillars.title}
-          listLabel={careersCopy.pillars.title}
-          items={careersCopy.pillars.items}
+        <PageHero
+          zone={careersCopy.hero.eyebrow}
+          meta={openRoleCount(jobPostings.length)}
+          title={careersCopy.hero.headline}
+          titleId="careers-title"
+          intro={careersCopy.hero.body}
+          actions={
+            <>
+              <Button href="#open-positions" variant="primary" size="lg">
+                {careersCopy.hero.primaryCta}
+              </Button>
+              <Button href="#how-we-work" variant="secondary" size="lg">
+                {careersCopy.process.headline}
+              </Button>
+            </>
+          }
+          aside={<TeamDirectory onPick={setTeam} />}
         />
-        <CareerProcess reduced={reduced} />
-        <CareerCulture reduced={reduced} />
-        <CareerWhyBand reduced={reduced} />
-        <section className="border-t border-border-subtle bg-page-white pt-16 md:pt-24" aria-labelledby="open-roles-title">
-          <Container variant="page" className="w-full">
-            <div className="grid gap-6 lg:grid-cols-12">
-              <div className="lg:col-span-7">
-                <Eyebrow>{careersCopy.jobs.eyebrow}</Eyebrow>
-                <h2 id="open-roles-title" className="mt-4 text-section-title text-text">
-                  {careersCopy.jobs.headline}
-                </h2>
-              </div>
-              <p className="text-body-large text-text-secondary lg:col-span-5 lg:pt-10">{careersCopy.jobs.body}</p>
-            </div>
-          </Container>
-        </section>
-        <CareerBoard activeSlug={slug} />
+        <Pillars />
+        <Culture />
+        <CareerProcess />
+        <CareerBoard team={team} onTeamChange={setTeam} />
       </main>
     </LazyMotion>
   )
+}
+
+/** /careers is the index; /careers/:slug is one role. */
+export function CareersPage() {
+  const { slug } = useParams()
+  if (slug) return <JobDetailPage />
+  return <CareersIndex />
 }
 
 export default CareersPage

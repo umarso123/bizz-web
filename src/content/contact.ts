@@ -21,14 +21,13 @@ export const studioSocial = [
 ] as const
 
 export const contactIntro = {
-  titleLead: "Let's build",
-  titleRest: "what's next.",
+  title: 'Let’s connect.',
   dek: 'From idea to reality. Share the work you want to make, and the conversation starts there.',
 } as const
 
 export const contactClose = {
-  titleLead: 'Have an idea',
-  titleRest: 'worth building?',
+  title: 'Have an idea worth building?',
+  body: 'Want to collaborate? Reach out to us. Pick a time to talk it through, or look at the work first.',
   cta: 'Book a call',
   secondary: 'See the work',
   secondaryTo: '/work',
@@ -38,30 +37,20 @@ export const contactIntents = [
   {
     id: 'project',
     label: 'Start a project',
-    note: 'A product, a site, or a system',
+    note: 'A product, a site, or a system.',
     formTitle: 'Start a project',
-    submit: 'Start the project',
   },
   {
     id: 'call',
     label: 'Book a call',
-    note: 'Talk it through',
+    note: 'Talk it through before anything is written down.',
     formTitle: 'Book a call',
-    submit: 'Request the call',
-  },
-  {
-    id: 'write',
-    label: 'Write',
-    note: 'Compose a note',
-    formTitle: 'Write to the studio',
-    submit: 'Send the note',
   },
   {
     id: 'enquiry',
     label: 'General enquiry',
-    note: 'A question, or a collaboration',
+    note: 'A question, or a collaboration.',
     formTitle: 'A general enquiry',
-    submit: 'Send the enquiry',
   },
 ] as const
 
@@ -87,8 +76,35 @@ export const timingOptions = [
 
 export type TimingId = (typeof timingOptions)[number]['id']
 
-export const defaultFormTitle = 'Tell us the work'
-export const defaultSubmit = 'Send the note'
+/**
+ * Form wording. Submitting prepares the note; nothing is sent until the
+ * visitor opens it in their mail app or copies it. The words say exactly that.
+ */
+export const contactForm = {
+  zone: 'Write to us',
+  title: 'Tell us the work',
+  intro: 'Name, email, the kind of work, and a short description are required. Everything else is optional.',
+  submit: 'Prepare your note',
+  submitHint: 'Nothing is sent yet. Next, open the note in your mail app or copy it.',
+  previewTitle: 'Your note',
+  previewDraft: 'Updates as you type',
+  previewReady: 'Ready to send',
+  readyTitle: 'Your note is ready.',
+  readyBody: 'Open it in your mail app to send it, or copy it into the email you already use.',
+  openMail: 'Open in your mail app',
+  copy: 'Copy the note',
+  copied: 'Copied',
+  copiedStatus: 'The note is copied. Paste it into an email to the studio.',
+  copyFailed: 'Copying didn’t work in this browser. Select the text below and copy it.',
+  edit: 'Edit the note',
+  bookingHint: 'Prefer to pick a time yourself?',
+  bookingLink: 'Open the booking calendar',
+} as const
+
+export const noteSubject = 'A project for Bizaffix'
+
+export const defaultFormTitle = contactForm.title
+export const defaultSubmit = contactForm.submit
 
 export type NoteInput = {
   intent: ContactIntent | null
@@ -126,7 +142,7 @@ export function composeNote(input: NoteInput) {
 export function mailHref(email: string, note: string) {
   const body = note.length > 1800 ? `${note.slice(0, 1800)}…` : note
   const params = new URLSearchParams({
-    subject: 'A project for Bizaffix',
+    subject: noteSubject,
     body,
   })
   return `mailto:${email}?${params.toString()}`

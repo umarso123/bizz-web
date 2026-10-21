@@ -1,123 +1,110 @@
+import type { ReactNode } from 'react'
 import { Link } from 'react-router'
+import { footerNavigation } from '@/app/navigation.ts'
+import { BrandLogo } from '@/components/brand/BrandLogo.tsx'
 import { Container } from '@/components/layout/Container.tsx'
+import { Reveal } from '@/components/motion/Reveal.tsx'
 import { BookCallLink } from '@/components/ui/BookCallLink.tsx'
+import { HexMark } from '@/components/ui/HexMark.tsx'
 import { studioAddress, studioEmail, studioPhone, studioSocial } from '@/content/contact.ts'
-
-const explore = [
-  { label: 'Home', to: '/' },
-  { label: 'Services', to: '/#services' },
-  { label: 'Work', to: '/work' },
-  { label: 'Approach', to: '/#how-we-work' },
-] as const
-
-const company = [
-  { label: 'Digital Health', to: '/#digital-health' },
-  { label: 'Careers', to: '/careers' },
-  { label: 'Contact', to: '/contact' },
-] as const
+import { homeContent } from '@/content/home.ts'
 
 const linkClass =
-  'text-body-small text-text no-underline transition-colors duration-200 hover:text-brand'
+  'text-body-small text-white/85 no-underline decoration-accent underline-offset-[0.3em] transition-colors duration-200 hover:text-white hover:underline'
 
-function TalkArrow() {
+function Group({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <span className="inline-flex size-[0.68em] shrink-0 items-center justify-center rounded-full bg-current">
-      <svg viewBox="0 0 24 24" className="size-[0.4em] text-text-inverse" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M3.8 10.85h9.15l-3.2-3.2 1.9-1.9L18.2 12l-6.55 6.25-1.9-1.9 3.2-3.2H3.8v-2.3Z"
-        />
-      </svg>
-    </span>
-  )
-}
-
-function TalkUnit({ clone = false }: { clone?: boolean }) {
-  return (
-    <div
-      className="footer-talk-unit flex min-w-screen shrink-0 items-center justify-center"
-      data-clone={clone ? '' : undefined}
-      aria-hidden="true"
-    >
-      <span className="inline-flex items-center gap-[0.32em] text-[clamp(2.15rem,5.5vw,4.75rem)] leading-none font-semibold tracking-[-0.045em] whitespace-nowrap">
-        <TalkArrow />
-        Let’s Talk
-        <TalkArrow />
-      </span>
+    <div>
+      <p className="text-eyebrow text-white/45">{title}</p>
+      <ul className="mt-4 grid gap-2.5">{children}</ul>
     </div>
   )
 }
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-page-white text-text">
-      <Container variant="page" className="relative pt-16 pb-8 md:pt-24 md:pb-12">
-        <nav aria-label="Footer" className="flex flex-wrap items-start justify-between gap-x-10 gap-y-10">
-          <div className="flex flex-wrap gap-x-16 gap-y-10 sm:gap-x-28">
-            <ul className="grid gap-3">
-              {explore.map((item) => (
-                <li key={item.to}>
-                  <Link to={item.to} className={linkClass}>
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <ul className="grid gap-3">
-              {company.map((item) => (
-                <li key={item.to}>
-                  <Link to={item.to} className={linkClass}>
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+    <footer className="relative mt-3 overflow-hidden bg-[#0D121F] text-white">
+      <Reveal variant="fade">
+      <Container variant="wide" className="relative pt-16 md:pt-24">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-4">
+            <BrandLogo imgClassName="h-7 w-auto brightness-0 invert" />
+            <p className="mt-6 max-w-[22rem] text-body text-white/65">{homeContent.footer.tagline}</p>
           </div>
-          <ul className="grid gap-3">
-            <li className="text-body-small text-text">{studioAddress}</li>
-            <li>
-              <a href={`mailto:${studioEmail}`} className={linkClass}>
-                {studioEmail}
-              </a>
-            </li>
-            <li>
-              <a href={studioPhone.href} className={linkClass}>
-                {studioPhone.label}
-              </a>
-            </li>
-            {studioSocial.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={item.href}
-                  className={linkClass}
-                  rel="noreferrer noopener"
-                  target="_blank"
-                >
-                  {item.label}
+
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-8 lg:grid-cols-4">
+            <Group title="Explore">
+              {footerNavigation.explore.map((item) => (
+                <li key={item.to}>
+                  <Link to={item.to} className={linkClass}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </Group>
+            <Group title="Company">
+              {footerNavigation.company.map((item) => (
+                <li key={item.to}>
+                  <Link to={item.to} className={linkClass}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </Group>
+            <Group title="Industries">
+              {homeContent.industries.map((industry) => (
+                <li key={industry} className="text-body-small text-white/65">
+                  {industry}
+                </li>
+              ))}
+            </Group>
+            <Group title="Contact">
+              <li className="text-body-small text-white/65">{studioAddress}</li>
+              <li>
+                <a href={`mailto:${studioEmail}`} className={linkClass}>
+                  {studioEmail}
                 </a>
               </li>
-            ))}
-          </ul>
-        </nav>
-      </Container>
-
-      <BookCallLink
-        aria-label="Let’s Talk"
-        className="footer-talk group relative block cursor-pointer overflow-hidden py-6 text-brand no-underline transition-colors duration-300 hover:text-brand-hover focus-visible:text-brand-hover md:py-8"
-      >
-        <div className="footer-talk-track">
-          <TalkUnit />
-          <TalkUnit clone />
+              <li>
+                <a href={studioPhone.href} className={linkClass}>
+                  {studioPhone.label}
+                </a>
+              </li>
+              {studioSocial.map((item) => (
+                <li key={item.label}>
+                  <a href={item.href} className={linkClass} rel="noreferrer noopener" target="_blank">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </Group>
+          </nav>
         </div>
-      </BookCallLink>
 
-      <Container variant="page" className="relative pt-6 pb-8 md:pt-8 md:pb-10">
-        <div className="flex flex-col gap-3 text-caption text-text sm:flex-row sm:items-center sm:justify-between">
-          <p>All Rights Reserved</p>
-          <p>Bizaffix LLC © 2023</p>
-          <p>From idea to reality</p>
+        {/* The last sign on the route */}
+        <BookCallLink
+          aria-label="Let's connect: book a call"
+          className="group mt-16 flex items-end justify-between gap-6 border-t border-white/10 pt-8 text-white no-underline hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:mt-24 md:pt-10"
+        >
+          <span className="text-[clamp(3.25rem,11vw,10.5rem)] leading-[0.86] font-semibold tracking-[-0.045em] [font-stretch:75%] transition-colors duration-300 group-hover:text-accent">
+            Let’s connect
+          </span>
+          <span className="mb-[0.6em] hidden shrink-0 items-center gap-3 text-body-small font-semibold sm:inline-flex">
+            Book a call
+            <HexMark
+              variant="station"
+              size={22}
+              className="transition-transform duration-500 ease-standard group-hover:rotate-90 [&_polygon]:transition-colors group-hover:[&_polygon]:fill-accent"
+            />
+          </span>
+        </BookCallLink>
+
+        <div className="flex flex-col gap-2 py-8 text-caption text-white/45 sm:flex-row sm:items-center sm:justify-between md:py-10">
+          <p className="text-caption">Bizaffix LLC © {new Date().getFullYear()}. All rights reserved.</p>
+          <p className="text-caption">From idea to reality</p>
         </div>
       </Container>
+      </Reveal>
     </footer>
   )
 }

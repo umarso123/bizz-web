@@ -8,8 +8,9 @@ import { cn } from '@/lib/cn.ts'
 const menuId = 'site-menu'
 const desktopNavQuery = '(min-width: 960px)'
 
-const bar =
-  'border border-white/80 bg-white/70 shadow-[0_1px_0_rgb(255_255_255/0.9)_inset,0_12px_40px_rgb(13_18_31/0.08)] backdrop-blur-2xl backdrop-saturate-150'
+/** Frame shared by the bar and the mobile menu; the surface (fill and blur) is set per state. */
+const barFrame = 'border border-white/80 shadow-[0_1px_0_rgb(255_255_255/0.9)_inset,0_12px_40px_rgb(13_18_31/0.08)] backdrop-saturate-150'
+const bar = `${barFrame} bg-white/70 backdrop-blur-2xl`
 
 function MenuIcon() {
   return (
@@ -38,7 +39,7 @@ function navClass(active: boolean, layout: string) {
 
 function linkIsActive(to: string, pathname: string, hash: string) {
   const hashIndex = to.indexOf('#')
-  if (hashIndex === -1) return pathname === to
+  if (hashIndex === -1) return pathname === to || pathname.startsWith(`${to}/`)
   const path = to.slice(0, hashIndex) || '/'
   return pathname === path && hash === to.slice(hashIndex)
 }
@@ -77,13 +78,45 @@ export function Header() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [menuOpen])
 
+  // Tuck the bar away while reading down; bring it back on any scroll up.
+  const [tucked, setTucked] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    let last = window.scrollY
+    let frame = 0
+    const onScroll = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        const y = window.scrollY
+        setScrolled(y > 24)
+        if (y < 120) setTucked(false)
+        else if (y > last + 6) setTucked(true)
+        else if (y < last - 6) setTucked(false)
+        last = y
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
+
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+    <header
+      className={cn(
+        'pointer-events-none fixed inset-x-0 top-0 z-50 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none',
+        tucked && !menuOpen && '-translate-y-[140%]',
+      )}
+      onFocus={() => setTucked(false)}
+    >
       <div className="flex flex-col items-center px-3 pt-3 sm:px-4 md:px-5 md:pt-3.5">
         <div
           className={cn(
-            'pointer-events-auto relative flex h-12 w-full max-w-[72rem] items-center justify-between gap-2 rounded-full ps-3 pe-1.5 sm:gap-3 sm:ps-4 sm:pe-2 md:h-14 md:ps-5 md:pe-2',
-            bar,
+            'pointer-events-auto relative flex h-12 w-full items-center justify-between gap-2 rounded-full ps-3 pe-1.5 transition-[height,background-color,box-shadow,max-width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:gap-3 sm:ps-4 sm:pe-2 md:ps-5 md:pe-2',
+            barFrame,
+            // Shrinks a little and frosts more once the page has scrolled
+            scrolled ? 'max-w-[64rem] bg-white/85 backdrop-blur-3xl md:h-12' : 'max-w-[72rem] bg-white/70 backdrop-blur-2xl md:h-14',
           )}
         >
           <BrandLogo imgClassName="h-5 w-auto max-w-[6.5rem] sm:h-6 sm:max-w-none md:h-7" />
@@ -97,10 +130,17 @@ export function Header() {
                     aria-current={linkIsActive(item.to, pathname, hash) ? 'page' : undefined}
                     className={navClass(
                       linkIsActive(item.to, pathname, hash),
-                      'inline-flex px-3 py-2 text-[0.9375rem]',
+                      'relative inline-flex px-3 py-2 text-[0.9375rem]',
                     )}
                   >
                     {item.label}
+                    {/* You are here: the gold station under the current zone */}
+                    {linkIsActive(item.to, pathname, hash) ? (
+                      <span
+                        aria-hidden="true"
+                        className="absolute bottom-0 left-1/2 size-1.5 -translate-x-1/2 rotate-45 rounded-[1px] bg-accent"
+                      />
+                    ) : null}
                   </Link>
                 </li>
               ))}

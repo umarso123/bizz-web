@@ -23,8 +23,9 @@ export function Eyebrow({
 }: EyebrowProps) {
   void _tone
   const Tag = as
+  // Sentence-case label. For a section's zone marker use Wayfinder instead.
   return (
-    <Tag className={cn('text-eyebrow', inverse ? 'text-text-inverse' : 'text-brand', className)} {...props}>
+    <Tag className={cn('text-eyebrow', inverse ? 'text-text-inverse-muted' : 'text-brand-hover', className)} {...props}>
       {children}
     </Tag>
   )

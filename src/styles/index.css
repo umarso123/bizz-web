@@ -5,9 +5,9 @@
 @import './home.css';
 
 :root {
-  --background: #fbf7f2;
+  --background: #ffffff;
   --foreground: #0d121f;
-  --border: #e4ddd4;
+  --border: #dde3ec;
   --ns-muted: #5a6472;
   --ns-accent: #2f5bea;
 }

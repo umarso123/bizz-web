@@ -1,7 +1,6 @@
 /*
- * Bizaffix design system — premium HealthTech studio.
- * Palette and radii from the provided design-system reference.
- * One serif across the site: Georgia, the face used for service titles.
+ * Bizaffix design system: Care wayfinding. See docs/design-system.md.
+ * One family (Instrument Sans), cool clinical neutrals, route blue, signal gold.
  */
 @theme static {
   --color-*: initial;
@@ -12,8 +11,7 @@
   --tracking-tight: -0.02em;
 
   /*
-   * Numeric scale for Georgia.
-   * Tracking tightens as size grows. Body stays open so serif text stays readable.
+   * Numeric scale. Tracking tightens as size grows.
    * Weights stay on font-medium / font-semibold so those utilities are not fighting the size.
    */
   --text-xs: 0.75rem;
@@ -56,13 +54,16 @@
   --text-6xl--line-height: 1.02;
   --text-6xl--letter-spacing: -0.042em;
 
-  --font-sans: Georgia, 'Palatino Linotype', Palatino, serif;
+  /* Dazzed is the brand face (licensed): add its woff2 files to load it; Instrument Sans stands in. */
+  --font-sans: 'Dazzed', 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* No monospace in this system: anything still asking for it gets the house face. */
+  --font-mono: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --color-white: #ffffff;
 
   /* Surfaces */
-  --color-bg: #fbf7f2;
-  --color-bg-subtle: #f7f1ea;
-  --color-bg-muted: #efe8df;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f5f7fb;
+  --color-bg-muted: #edf1f7;
   --color-surface: #ffffff;
   --color-surface-warm: #fff9f2;
 
@@ -76,33 +77,59 @@
   --color-text-inverse-muted: #d7deea;
 
   /* Borders */
-  --color-border-subtle: #efe8df;
-  --color-border: #e4ddd4;
-  --color-border-strong: #cfc6bb;
+  --color-border-subtle: #ebeff5;
+  --color-border: #dde3ec;
+  --color-border-strong: #c3ccd9;
 
   /* Brand — royal blue (replaces old #0A8FD8) */
-  --color-brand: #2f5bea;
-  --color-brand-hover: #2549c9;
-  --color-brand-active: #1e3db0;
-  --color-brand-soft: #e8eefc;
-  --color-brand-subtle: #d9e3fb;
-  --color-focus: #2f5bea;
+  --color-brand: #234ed1;
+  --color-brand-hover: #1c41b5;
+  --color-brand-active: #17379b;
+  --color-brand-soft: #e7edfc;
+  --color-brand-subtle: #d3defa;
+  --color-focus: #234ed1;
 
   /* Accent — golden yellow (replaces old orange #F66C2A) */
-  --color-accent: #f5c84c;
-  --color-accent-soft: #fef6d8;
-  --color-accent-deep: #e0b030;
+  --color-accent: #fde36e;
+  --color-accent-soft: #fff6cf;
+  --color-accent-deep: #e8c43c;
+
+  /* Brand sheet: logo cyan, periwinkle, cream, and the blue blur */
+  --color-cyan: #009bdf;
+  --color-periwinkle: #b3c5fa;
+  --color-cream: #fffcf0;
+  --color-blur-light: #c4daf3;
+  --color-blur-mid: #a7bced;
+  --color-blur-deep: #4b71e9;
+  --color-gradient-from: #708ada;
+  --color-gradient-to: #3f64d4;
+
+  /* Earlier backdrop tints, kept for compatibility */
+  --color-blush: #fdeef1;
+  --color-peach: #f9cdb7;
+  --color-sky: #dcebfb;
+  --color-mint: #bfe5d8;
+
+  /* Step card tints from the brand sheet */
+  --color-card-periwinkle: #b3c5fa;
+  --color-card-yellow: #fde36e;
+  --color-card-cream: #fffcf0;
+  --color-card-sky: #c4daf3;
+  --color-card-mist: #dfe7fc;
 
   /* Soft atmosphere blues from the reference sheet */
-  --color-mist: #c9d7f8;
+  --color-mist: #c4daf3;
   --color-mist-soft: #eef2fc;
 
   /* Flat dark fills */
   --color-surface-dark: #0d121f;
-  --color-surface-brand-deep: #1a2f8a;
+  /* Night route: the healthcare zone and the closing panel */
+  --color-surface-brand-deep: #14245f;
+  --color-surface-brand-night: #0f1b4a;
+  --color-border-inverse: rgb(255 255 255 / 0.14);
 
   /* Page backgrounds */
-  --color-page-white: #fbf7f2;
+  --color-page-white: #ffffff;
   --color-page-brand: #eef2fc;
   --color-page-dark: #0d121f;
 
@@ -113,49 +140,52 @@
   --color-warning-soft: #fff6e8;
   --color-error: #c73a42;
   --color-error-soft: #fff0f1;
-  --color-info: #2f5bea;
+  --color-info: #234ed1;
   --color-info-soft: #e8eefc;
 
   /* Buttons — dark navy primary CTA from mockups; blue for discovery CTA */
   --color-button-primary: #0d121f;
   --color-button-primary-hover: #1a2233;
   --color-button-primary-active: #0a0e16;
-  --color-button-brand: #2f5bea;
-  --color-button-brand-hover: #2549c9;
+  --color-button-brand: #234ed1;
+  --color-button-brand-hover: #1c41b5;
 
-  /* Type scale */
-  --text-display: clamp(2.85rem, 1.5rem + 4.2vw, 5.75rem);
-  --text-display--line-height: 1.02;
-  --text-display--font-weight: 500;
-  --text-display--letter-spacing: -0.04em;
+  /*
+   * Type scale: one scale for every page. Headings also get a signage width
+   * (font-stretch) in base.css; see docs/design-system.md.
+   */
+  --text-display: clamp(3rem, 1.35rem + 5.2vw, 6.25rem);
+  --text-display--line-height: 0.94;
+  --text-display--font-weight: 600;
+  --text-display--letter-spacing: -0.035em;
 
-  --text-page-title: clamp(2.35rem, 1.35rem + 3.2vw, 4.25rem);
-  --text-page-title--line-height: 1.05;
-  --text-page-title--font-weight: 500;
-  --text-page-title--letter-spacing: -0.035em;
+  --text-page-title: clamp(2.75rem, 1.45rem + 4vw, 5rem);
+  --text-page-title--line-height: 0.98;
+  --text-page-title--font-weight: 600;
+  --text-page-title--letter-spacing: -0.032em;
 
-  --text-section-title: clamp(2.1rem, 1.25rem + 2.6vw, 3.75rem);
-  --text-section-title--line-height: 1.06;
-  --text-section-title--font-weight: 500;
-  --text-section-title--letter-spacing: -0.035em;
+  --text-section-title: clamp(2.125rem, 1.3rem + 2.5vw, 3.75rem);
+  --text-section-title--line-height: 1.02;
+  --text-section-title--font-weight: 600;
+  --text-section-title--letter-spacing: -0.028em;
 
-  --text-title: clamp(1.5rem, 1.34rem + 0.67vw, 1.875rem);
-  --text-title--line-height: 1.2;
-  --text-title--font-weight: 500;
-  --text-title--letter-spacing: -0.02em;
+  --text-title: clamp(1.375rem, 1.2rem + 0.55vw, 1.75rem);
+  --text-title--line-height: 1.16;
+  --text-title--font-weight: 600;
+  --text-title--letter-spacing: -0.018em;
 
-  --text-card-title: clamp(1.25rem, 1.15rem + 0.28vw, 1.5rem);
+  --text-card-title: clamp(1.1875rem, 1.1rem + 0.3vw, 1.375rem);
   --text-card-title--line-height: 1.25;
-  --text-card-title--font-weight: 500;
-  --text-card-title--letter-spacing: -0.02em;
+  --text-card-title--font-weight: 600;
+  --text-card-title--letter-spacing: -0.012em;
 
-  --text-body-large: clamp(1.125rem, 1.05rem + 0.28vw, 1.25rem);
-  --text-body-large--line-height: 1.6;
+  --text-body-large: clamp(1.125rem, 1.06rem + 0.25vw, 1.25rem);
+  --text-body-large--line-height: 1.55;
   --text-body-large--font-weight: 400;
-  --text-body-large--letter-spacing: 0em;
+  --text-body-large--letter-spacing: -0.003em;
 
   --text-body: 1.0625rem;
-  --text-body--line-height: 1.65;
+  --text-body--line-height: 1.6;
   --text-body--font-weight: 400;
   --text-body--letter-spacing: 0em;
 
@@ -164,22 +194,26 @@
   --text-body-small--font-weight: 400;
   --text-body-small--letter-spacing: 0em;
 
-  --text-eyebrow: 0.75rem;
+  /* "Eyebrow" is the sentence-case label role. No caps, no tracking. */
+  --text-eyebrow: 0.875rem;
   --text-eyebrow--line-height: 1.4;
   --text-eyebrow--font-weight: 500;
-  --text-eyebrow--letter-spacing: 0.08em;
+  --text-eyebrow--letter-spacing: 0em;
 
   --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.5;
+  --text-caption--line-height: 1.45;
   --text-caption--font-weight: 400;
-  --text-caption--letter-spacing: 0em;
+  --text-caption--letter-spacing: 0.002em;
 
   /* Layout */
   --container-page: 80rem;
   --container-wide: 90rem;
   --container-reading: 47.5rem;
 
-  /* Radius — soft premium rounded language from mockups */
+  /*
+   * Radius follows hierarchy: feature panels 2xl, cards and media xl,
+   * small surfaces lg, controls pill.
+   */
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
   --radius-lg: 1.25rem;
@@ -188,11 +222,12 @@
   --radius-pill: 999px;
   --radius-button: 999px;
 
-  /* Shadows */
+  /* Shadows are for things that float: header, menus, the active map detail. */
   --shadow-xs: 0 1px 1px rgb(13 18 31 / 0.04);
   --shadow-sm: 0 1px 2px rgb(13 18 31 / 0.04), 0 4px 12px rgb(13 18 31 / 0.04);
   --shadow-md: 0 2px 4px rgb(13 18 31 / 0.04), 0 14px 32px rgb(13 18 31 / 0.08);
-  --shadow-lg: 0 8px 24px rgb(13 18 31 / 0.08), 0 28px 56px rgb(47 91 234 / 0.12);
+  --shadow-lg: 0 8px 24px rgb(13 18 31 / 0.08), 0 28px 56px rgb(20 36 95 / 0.14);
+  --shadow-float: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 18px 48px rgb(20 36 95 / 0.16);
   --shadow-card: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 10px 32px rgb(13 18 31 / 0.06);
   --shadow-card-hover: 0 1px 0 rgb(255 255 255 / 0.85) inset, 0 18px 44px rgb(47 91 234 / 0.14);
 
@@ -206,10 +241,10 @@
   --duration-standard: 220ms;
   --duration-slow: 350ms;
   --button-height: 2.85rem;
-  --button-height-desktop: 3.15rem;
+  --button-height-desktop: 3.375rem;
   --button-padding-inline: 1.4rem;
   --page-gutter: clamp(1.25rem, 0.55rem + 1.9vw, 2rem);
-  --section-space: clamp(4.5rem, 2.8rem + 5.5vw, 8.5rem);
+  --section-space: clamp(4.5rem, 2.25rem + 6vw, 9.5rem);
   --header-clearance: 5.75rem;
   --measure: 68ch;
 }
@@ -269,17 +304,59 @@
   background-color: var(--color-page-dark);
 }
 
+/*
+ * Page-top field: clinic white with a faint floor-plan grid that fades out.
+ * Kept quiet on purpose; the route line and type carry the page.
+ */
 @utility atmosphere-hero {
   background-color: var(--color-page-white);
   background-image:
-    radial-gradient(ellipse 78% 68% at 94% 0%, rgb(168 196 255 / 0.82), transparent 56%),
-    radial-gradient(ellipse 52% 48% at 76% 24%, rgb(196 186 255 / 0.4), transparent 60%),
-    radial-gradient(ellipse 38% 34% at 8% 92%, rgb(255 249 242 / 0.7), transparent 55%);
+    radial-gradient(ellipse 60% 70% at 100% 0%, rgb(47 91 234 / 0.07), transparent 62%),
+    linear-gradient(to right, rgb(13 18 31 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(13 18 31 / 0.035) 1px, transparent 1px);
+  background-size:
+    auto,
+    4rem 4rem,
+    4rem 4rem;
 }
 
 @utility atmosphere-soft {
   background-color: var(--color-page-white);
+  background-image: radial-gradient(ellipse 48% 42% at 100% 0%, rgb(47 91 234 / 0.05), transparent 58%);
+}
+
+/*
+ * The floor-plan grid on its own. Put it on an empty, absolutely positioned
+ * layer: the fade mask would also hide any children.
+ */
+@utility floor-grid {
   background-image:
-    radial-gradient(ellipse 48% 42% at 100% 0%, rgb(186 206 255 / 0.38), transparent 58%),
-    radial-gradient(ellipse 36% 32% at 0% 100%, rgb(255 249 242 / 0.75), transparent 55%);
+    linear-gradient(to right, rgb(13 18 31 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(13 18 31 / 0.035) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+}
+
+/* The rebrand backdrop: blush from the top left, sky from the right, white between. */
+/* Brand backdrop: the sheet's blue blur drifting in from the right, cream underfoot. */
+@utility atmosphere-brand {
+  background-color: var(--color-page-white);
+  background-image:
+    radial-gradient(ellipse 50% 60% at 100% 10%, rgb(196 218 243 / 0.95), transparent 70%),
+    radial-gradient(ellipse 35% 40% at 92% 30%, rgb(75 113 233 / 0.16), transparent 70%),
+    radial-gradient(ellipse 45% 50% at 0% 35%, rgb(179 197 250 / 0.35), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 100%, var(--color-cream), transparent 75%);
+}
+
+/* The gradient tile from the brand sheet */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, var(--color-gradient-from), var(--color-gradient-to));
+}
+
+@utility bg-night-route {
+  background-color: var(--color-surface-brand-deep);
+  background-image:
+    radial-gradient(ellipse 70% 60% at 85% 0%, rgb(75 113 233 / 0.5), transparent 65%),
+    radial-gradient(ellipse 40% 40% at 10% 0%, rgb(0 155 223 / 0.18), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 0% 100%, rgb(15 27 74 / 0.9), transparent 70%);
 }

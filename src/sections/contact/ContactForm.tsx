@@ -1,21 +1,25 @@
-import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from 'react'
+import { getBookCallTarget } from '@/app/navigation.ts'
+import { SectionHeader } from '@/components/common/SectionHeader.tsx'
+import { Container } from '@/components/layout/Container.tsx'
+import { Button } from '@/components/ui/Button.tsx'
+import { HexMark } from '@/components/ui/HexMark.tsx'
+import { TextLink } from '@/components/ui/TextLink.tsx'
 import {
   buildOptions,
   composeNote,
+  contactForm,
   contactIntents,
-  defaultFormTitle,
-  defaultSubmit,
   intentCopy,
   mailHref,
+  noteSubject,
   studioEmail,
   timingOptions,
   type BuildId,
   type ContactIntent,
   type TimingId,
 } from '@/content/contact.ts'
-import { contactFrame } from '@/sections/contact/contactLayout.ts'
 import { useContactScroll } from '@/sections/contact/useContactScroll.ts'
-import { useMagnetic } from '@/sections/contact/useMagnetic.ts'
 import { cn } from '@/lib/cn.ts'
 
 type Errors = Partial<Record<'name' | 'email' | 'build' | 'message', string>>
@@ -25,51 +29,132 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 function validate(values: { name: string; email: string; build: BuildId | null; message: string }): Errors {
   const errors: Errors = {}
   if (values.name.trim().length < 2) errors.name = 'Enter your name.'
-  if (!emailPattern.test(values.email.trim())) errors.email = 'Enter a valid email.'
+  if (!emailPattern.test(values.email.trim())) errors.email = 'Enter a valid email, like name@company.com.'
   if (!values.build) errors.build = 'Choose what you want to build.'
-  if (values.message.trim().length < 12) errors.message = 'Tell us a little about the project.'
+  if (values.message.trim().length < 12) errors.message = 'Tell us a little about the project, in a sentence or two.'
   return errors
 }
 
-function Arrow() {
+const inputBase =
+  'mt-2 block w-full rounded-lg border bg-surface px-4 py-3 text-body text-text caret-brand transition-colors duration-(--duration-standard) ease-standard placeholder:text-text-muted focus:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand'
+
+function inputClass(invalid: boolean) {
+  return cn(inputBase, invalid ? 'border-error' : 'border-border hover:border-border-strong')
+}
+
+/** "Required" is spelled out on screen; assistive tech hears it from aria-required. */
+function Need({ required }: { required: boolean }) {
   return (
-    <svg viewBox="0 0 16 16" className="ms-2 size-3.5 transition-transform duration-300 group-hover:translate-x-1 group-focus-visible:translate-x-1" aria-hidden="true">
-      <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <span className="shrink-0 text-caption font-normal text-text-muted" aria-hidden={required || undefined}>
+      {required ? 'Required' : 'Optional'}
+    </span>
   )
 }
 
-function Choices<T extends string>({
+function ErrorText({ id, children }: { id: string; children: ReactNode }) {
+  return (
+    <p id={id} className="mt-2 text-body-small text-error">
+      {children}
+    </p>
+  )
+}
+
+function Field({
+  id,
   label,
+  required = false,
+  type = 'text',
+  autoComplete,
+  inputMode,
+  value,
+  error,
+  onChange,
+}: {
+  id: string
+  label: string
+  required?: boolean
+  type?: string
+  autoComplete?: string
+  inputMode?: 'email' | 'text' | 'tel'
+  value: string
+  error?: string
+  onChange: (value: string) => void
+}) {
+  const errorId = `${id}-error`
+  return (
+    <div>
+      <label htmlFor={id} className="flex items-baseline justify-between gap-3 text-body-small font-medium text-text">
+        {label}
+        <Need required={required} />
+      </label>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
+        aria-required={required || undefined}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        className={inputClass(Boolean(error))}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      {error ? <ErrorText id={errorId}>{error}</ErrorText> : null}
+    </div>
+  )
+}
+
+/** A labelled group of pill radio chips. Arrow keys move the choice, as with native radios. */
+function Choices<T extends string>({
+  id,
+  label,
+  required = false,
   value,
   options,
   onChange,
-  describedBy,
-  invalid,
+  error,
+  children,
 }: {
+  id: string
   label: string
+  required?: boolean
   value: T | null
   options: readonly { id: T; label: string }[]
   onChange: (id: T) => void
-  describedBy?: string
-  invalid?: boolean
+  error?: string
+  children?: ReactNode
 }) {
   const refs = useRef<Array<HTMLButtonElement | null>>([])
+  const labelId = `${id}-label`
+  const errorId = `${id}-error`
 
   function onKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     const nextKey = event.key === 'ArrowRight' || event.key === 'ArrowDown'
     const prevKey = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
     if (!nextKey && !prevKey) return
     event.preventDefault()
-    const delta = nextKey ? 1 : -1
-    const next = (index + delta + options.length) % options.length
-    onChange(options[next].id)
+    const next = (index + (nextKey ? 1 : -1) + options.length) % options.length
+    const option = options[next]
+    if (!option) return
+    onChange(option.id)
     refs.current[next]?.focus()
   }
 
   return (
-    <div role="radiogroup" aria-label={label} aria-invalid={invalid || undefined} aria-describedby={describedBy}>
-      <div className="flex flex-wrap gap-2">
+    <div>
+      <p id={labelId} className="flex items-baseline justify-between gap-3 text-body-small font-medium text-text">
+        {label}
+        <Need required={required} />
+      </p>
+      <div
+        id={id}
+        role="radiogroup"
+        aria-labelledby={labelId}
+        aria-required={required || undefined}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        className="mt-3 flex flex-wrap gap-2"
+      >
         {options.map((option, index) => {
           const selected = value === option.id
           const tab = selected || (value === null && index === 0) ? 0 : -1
@@ -84,10 +169,13 @@ function Choices<T extends string>({
               aria-checked={selected}
               tabIndex={tab}
               className={cn(
-                'min-h-11 cursor-pointer rounded-full border px-4 text-left text-sm font-medium transition-colors',
+                'inline-flex min-h-11 cursor-pointer items-center rounded-pill border px-4 text-body-small font-medium transition-colors duration-(--duration-standard) ease-standard focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
                 selected
                   ? 'border-text bg-text text-text-inverse'
-                  : 'border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text',
+                  : cn(
+                      'bg-surface text-text hover:border-border-strong hover:bg-bg-subtle',
+                      error ? 'border-error' : 'border-border',
+                    ),
               )}
               onClick={() => onChange(option.id)}
               onKeyDown={(event) => onKeyDown(event, index)}
@@ -96,6 +184,59 @@ function Choices<T extends string>({
             </button>
           )
         })}
+      </div>
+      {error ? <ErrorText id={errorId}>{error}</ErrorText> : null}
+      {children}
+    </div>
+  )
+}
+
+type PreviewRow = { label: string; value: string; placeholder?: string }
+
+/**
+ * The note exactly as the studio will receive it, built from the same fields
+ * composeNote uses. Required lines show what is still missing.
+ */
+function NoteSheet({ rows, message, ready }: { rows: PreviewRow[]; message: string; ready: boolean }) {
+  const shown = rows.filter((row) => row.value || row.placeholder)
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="flex items-center justify-between gap-4 border-b border-border-subtle px-5 py-4 sm:px-6">
+        <p className="text-body-small font-semibold text-text">{contactForm.previewTitle}</p>
+        <p className="inline-flex items-center gap-2 text-caption text-text-secondary">
+          <HexMark variant={ready ? 'active' : 'station'} size={12} />
+          {ready ? contactForm.previewReady : contactForm.previewDraft}
+        </p>
+      </div>
+      <dl className="grid gap-1.5 border-b border-border-subtle px-5 py-4 text-body-small sm:px-6">
+        <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3">
+          <dt className="text-text-muted">To</dt>
+          <dd className="break-words text-text">{studioEmail}</dd>
+        </div>
+        <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3">
+          <dt className="text-text-muted">Subject</dt>
+          <dd className="text-text">{noteSubject}</dd>
+        </div>
+      </dl>
+      <div className="px-5 py-5 sm:px-6">
+        <dl className="grid gap-1.5 text-body-small">
+          {shown.map((row) => (
+            <div key={row.label} className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3">
+              <dt className="text-text-muted">{row.label}</dt>
+              <dd className={cn('break-words', row.value ? 'text-text' : 'text-text-subtle')}>
+                {row.value || row.placeholder}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <p
+          className={cn(
+            'mt-4 border-t border-dashed border-border pt-4 text-body-small whitespace-pre-wrap break-words',
+            message.trim() ? 'text-text' : 'text-text-subtle',
+          )}
+        >
+          {message.trim() || 'A short description of the project.'}
+        </p>
       </div>
     </div>
   )
@@ -109,8 +250,7 @@ export function ContactForm({
   onIntent: (intent: ContactIntent) => void
 }) {
   const scroll = useContactScroll()
-  const scrollToNote = useRef(scroll)
-  const magnetic = useMagnetic<HTMLButtonElement>()
+  const scrollRef = useRef(scroll)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [organization, setOrganization] = useState('')
@@ -118,38 +258,40 @@ export function ContactForm({
   const [message, setMessage] = useState('')
   const [timing, setTiming] = useState<TimingId | null>(null)
   const [when, setWhen] = useState('')
-  const [active, setActive] = useState<string | null>(null)
   const [attempted, setAttempted] = useState(false)
   const [ready, setReady] = useState(false)
   const [copied, setCopied] = useState(false)
   const [copyFailed, setCopyFailed] = useState(false)
-  const messageRef = useRef<HTMLTextAreaElement>(null)
-  const errorTitleId = useId()
 
   const errors = attempted ? validate({ name, email, build, message }) : {}
   const intentMeta = intentCopy(intent)
-  const note = composeNote({ intent, name, email, organization, build, message, timing, when })
+  // "Roughly when" only counts while "A date in mind" is the chosen timing.
+  const whenValue = timing === 'dated' ? when : ''
+  const note = composeNote({ intent, name, email, organization, build, message, timing, when: whenValue })
+  const booking = getBookCallTarget()
+
+  const previewRows: PreviewRow[] = [
+    { label: 'About', value: intentMeta?.label ?? '' },
+    { label: 'Name', value: name.trim(), placeholder: 'Your name' },
+    { label: 'Email', value: email.trim(), placeholder: 'Your email' },
+    { label: 'Organization', value: organization.trim() },
+    { label: 'Build', value: buildOptions.find((item) => item.id === build)?.label ?? '', placeholder: 'What you want to build' },
+    { label: 'Timing', value: timingOptions.find((item) => item.id === timing)?.label ?? '' },
+    { label: 'When', value: whenValue.trim() },
+  ]
 
   useEffect(() => {
-    scrollToNote.current = scroll
+    scrollRef.current = scroll
   }, [scroll])
 
   useEffect(() => {
     if (!ready) return
     const timer = window.setTimeout(() => {
       document.getElementById('contact-note-ready')?.focus({ preventScroll: true })
-      scrollToNote.current('contact-note-ready', -168, true)
+      scrollRef.current('project-note-card', -128, true)
     }, 40)
     return () => window.clearTimeout(timer)
   }, [ready])
-
-  function focusField(id: string) {
-    setActive(id)
-  }
-
-  function blurField(id: string) {
-    setActive((current) => (current === id ? null : current))
-  }
 
   function growMessage(node: HTMLTextAreaElement) {
     node.style.height = 'auto'
@@ -163,7 +305,7 @@ export function ContactForm({
     if (Object.keys(nextErrors).length > 0) {
       if (nextErrors.name) document.getElementById('contact-name')?.focus()
       else if (nextErrors.email) document.getElementById('contact-email')?.focus()
-      else if (nextErrors.build) document.querySelector<HTMLButtonElement>('#contact-build-choices button')?.focus()
+      else if (nextErrors.build) document.querySelector<HTMLButtonElement>('#contact-build button')?.focus()
       else document.getElementById('contact-message')?.focus()
       return
     }
@@ -183,7 +325,7 @@ export function ContactForm({
     }
   }
 
-  function writeAnother() {
+  function editNote() {
     setReady(false)
     window.setTimeout(() => {
       document.getElementById('contact-name')?.focus()
@@ -191,313 +333,204 @@ export function ContactForm({
   }
 
   return (
-    <section data-scene="form" className="bg-page-brand pb-[clamp(4rem,10vh,7rem)]">
-      <div className={contactFrame}>
-        <div id="project-note" className="scroll-mt-28 max-w-[52rem] rounded-[1.75rem] bg-surface px-6 py-8 shadow-card sm:px-10 sm:py-12">
-          {ready ? (
-            <div>
-              <h2 id="contact-note-ready" tabIndex={-1} className="text-3xl font-medium sm:text-4xl text-text outline-none">
-                Your note is ready.
-              </h2>
-              <p className="mt-5 max-w-[36rem] text-body-large text-text-secondary">
-                {studioEmail
-                  ? 'Open it in your mail app, or copy it.'
-                  : 'This site does not list a public studio address. Copy the note and send it to the address you already have.'}
-              </p>
-              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-                {studioEmail ? (
-                  <a
-                    href={mailHref(studioEmail, note)}
-                    className="inline-flex min-h-(--button-height-desktop) items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse no-underline hover:bg-button-primary-hover"
-                  >
-                    Open in your mail
-                  </a>
-                ) : null}
-                <button
-                  type="button"
-                  className="inline-flex min-h-(--button-height-desktop) cursor-pointer items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse hover:bg-button-primary-hover"
-                  onClick={() => void copyNote()}
-                >
-                  {copied ? 'Copied' : 'Copy the note'}
-                </button>
-                <button type="button" className="cursor-pointer bg-transparent text-body text-text-secondary underline decoration-border underline-offset-4 hover:text-text" onClick={writeAnother}>
-                  Write another note
-                </button>
-              </div>
-              {copyFailed ? (
-                <textarea readOnly value={note} className="mt-8 w-full resize-none rounded-2xl border border-border bg-bg p-4 text-body-small text-text" rows={8} aria-label="Your note" />
-              ) : null}
-            </div>
-          ) : (
-            <form noValidate aria-labelledby="project-note-title" onSubmit={onSubmit}>
-              <h2 id="project-note-title" className="text-3xl font-medium sm:text-4xl text-text">
-                {intentMeta?.formTitle ?? defaultFormTitle}
-              </h2>
-              <p className="mt-4 max-w-[34rem] text-body text-text-secondary">
-                Name, email, the kind of work, and a short description are required.
-              </p>
+    <section
+      id="project-note"
+      className="border-t border-border-subtle bg-bg-subtle section-y"
+      aria-labelledby="project-note-title"
+    >
+      <Container variant="wide" className="w-full">
+        <SectionHeader
+          eyebrow={contactForm.zone}
+          titleId="project-note-title"
+          title={intentMeta?.formTitle ?? contactForm.title}
+          description={contactForm.intro}
+        />
 
-              <div className="mt-10">
-                <p id={errorTitleId} className="text-body-small text-text-secondary">
-                  This note is about
+        <div className="mt-12 grid gap-8 md:mt-16 lg:grid-cols-12 lg:items-start lg:gap-8">
+          <div
+            id="project-note-card"
+            className="rounded-xl border border-border bg-surface px-5 py-8 sm:px-8 sm:py-10 md:px-10 lg:col-span-7"
+          >
+            {ready ? (
+              <div>
+                <p className="inline-flex items-center gap-2 text-eyebrow text-text-secondary">
+                  <HexMark variant="active" size={14} />
+                  {contactForm.previewReady}
                 </p>
-                <div className="mt-3">
-                  <Choices
-                    label="This note is about"
-                    value={intent}
-                    options={contactIntents}
-                    onChange={onIntent}
-                  />
+                <h3 id="contact-note-ready" tabIndex={-1} className="mt-4 text-title text-text outline-none">
+                  {contactForm.readyTitle}
+                </h3>
+                <p className="mt-3 max-w-[34rem] text-body text-text-secondary">{contactForm.readyBody}</p>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <Button href={mailHref(studioEmail, note)} size="lg">
+                    {contactForm.openMail}
+                  </Button>
+                  <Button variant="secondary" size="lg" onClick={() => void copyNote()}>
+                    {copied ? contactForm.copied : contactForm.copy}
+                  </Button>
+                  <Button variant="ghost" size="lg" onClick={editNote}>
+                    {contactForm.edit}
+                  </Button>
+                </div>
+                <p className="mt-4 text-body-small text-text-secondary" aria-live="polite">
+                  {copied ? contactForm.copiedStatus : ''}
+                </p>
+                {copyFailed ? (
+                  <div className="mt-4">
+                    <p className="text-body-small text-error" role="alert">
+                      {contactForm.copyFailed}
+                    </p>
+                    <textarea
+                      readOnly
+                      value={note}
+                      rows={9}
+                      aria-label="Your note"
+                      className="mt-3 block w-full resize-y rounded-lg border border-border bg-bg-subtle p-4 text-body-small text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                      onFocus={(event) => event.currentTarget.select()}
+                    />
+                  </div>
+                ) : null}
+                {/* The preview column is hidden on small screens; show the note here instead. */}
+                <div className="mt-8 lg:hidden">
+                  <NoteSheet rows={previewRows} message={message} ready />
                 </div>
               </div>
+            ) : (
+              <form noValidate aria-labelledby="project-note-title" onSubmit={onSubmit} className="grid gap-9">
+                <Choices
+                  id="contact-intent"
+                  label="This note is about"
+                  value={intent}
+                  options={contactIntents}
+                  onChange={onIntent}
+                >
+                  {intentMeta ? (
+                    <p className="mt-3 text-body-small text-text-secondary">{intentMeta.note}</p>
+                  ) : null}
+                  {intent === 'call' && booking.kind === 'external' ? (
+                    <p className="mt-1 flex flex-wrap items-center gap-x-2 text-body-small text-text-secondary">
+                      {contactForm.bookingHint}
+                      <TextLink href={booking.href} target="_blank" tone="brand">
+                        {contactForm.bookingLink}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </TextLink>
+                    </p>
+                  ) : null}
+                </Choices>
 
-              <div className="mt-12 grid gap-10">
+                <div className="grid gap-9 sm:grid-cols-2 sm:gap-6">
+                  <Field
+                    id="contact-name"
+                    label="Your name"
+                    required
+                    autoComplete="name"
+                    value={name}
+                    error={errors.name}
+                    onChange={setName}
+                  />
+                  <Field
+                    id="contact-email"
+                    label="Email"
+                    required
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    value={email}
+                    error={errors.email}
+                    onChange={setEmail}
+                  />
+                </div>
+
                 <Field
-                  index="01"
-                  id="contact-name"
-                  label="Your name"
-                  autoComplete="name"
-                  value={name}
-                  active={active === 'name'}
-                  error={errors.name}
-                  onFocus={() => focusField('name')}
-                  onBlur={() => blurField('name')}
-                  onChange={setName}
-                />
-                <Field
-                  index="02"
-                  id="contact-email"
-                  label="Email"
-                  type="email"
-                  autoComplete="email"
-                  inputMode="email"
-                  value={email}
-                  active={active === 'email'}
-                  error={errors.email}
-                  onFocus={() => focusField('email')}
-                  onBlur={() => blurField('email')}
-                  onChange={setEmail}
-                />
-                <Field
-                  index="03"
                   id="contact-organization"
                   label="Organization"
-                  hint="Optional"
                   autoComplete="organization"
                   value={organization}
-                  active={active === 'organization'}
-                  onFocus={() => focusField('organization')}
-                  onBlur={() => blurField('organization')}
                   onChange={setOrganization}
                 />
 
-                <div
-                  className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3"
-                  onFocus={() => focusField('build')}
-                  onBlur={(event) => {
-                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) blurField('build')
-                  }}
-                >
-                  <span className={cn('pt-1 text-body-small tabular-nums', active === 'build' ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
-                    04
-                  </span>
-                  <div>
-                    <p id="contact-build" className={cn('text-body', active === 'build' ? 'text-text' : 'text-text-secondary')}>
-                      What are you looking to build?
-                    </p>
-                    <div id="contact-build-choices" className="mt-4">
-                      <Choices
-                        label="What are you looking to build?"
-                        value={build}
-                        options={buildOptions}
-                        onChange={setBuild}
-                        invalid={Boolean(errors.build)}
-                        describedBy={errors.build ? 'contact-build-error' : undefined}
-                      />
-                    </div>
-                    {errors.build ? (
-                      <p id="contact-build-error" className="mt-2 text-body-small text-error">
-                        {errors.build}
-                      </p>
-                    ) : null}
-                  </div>
+                <Choices
+                  id="contact-build"
+                  label="What are you looking to build?"
+                  required
+                  value={build}
+                  options={buildOptions}
+                  onChange={setBuild}
+                  error={errors.build}
+                />
+
+                <div>
+                  <label
+                    htmlFor="contact-message"
+                    className="flex items-baseline justify-between gap-3 text-body-small font-medium text-text"
+                  >
+                    Tell us about the project
+                    <Need required />
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    rows={4}
+                    value={message}
+                    aria-required
+                    aria-invalid={errors.message ? true : undefined}
+                    aria-describedby={errors.message ? 'contact-message-error' : undefined}
+                    className={cn(inputClass(Boolean(errors.message)), 'min-h-36 resize-none overflow-y-auto')}
+                    onChange={(event) => {
+                      setMessage(event.target.value)
+                      growMessage(event.target)
+                    }}
+                  />
+                  {errors.message ? <ErrorText id="contact-message-error">{errors.message}</ErrorText> : null}
                 </div>
 
-                <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3">
-                  <span className={cn('pt-1 text-body-small tabular-nums', active === 'message' ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
-                    05
-                  </span>
-                  <div>
-                    <label htmlFor="contact-message" className={cn('block text-body', active === 'message' ? 'text-text' : 'text-text-secondary')}>
-                      Tell us about the project
-                    </label>
-                    <textarea
-                      ref={messageRef}
-                      id="contact-message"
-                      rows={4}
-                      value={message}
-                      aria-invalid={errors.message ? true : undefined}
-                      aria-describedby={errors.message ? 'contact-message-error' : undefined}
-                      className={cn(
-                        'mt-4 min-h-36 w-full resize-none overflow-hidden rounded-2xl border bg-bg px-4 py-3 text-base text-text caret-brand outline-none',
-                        errors.message ? 'border-error' : 'border-border focus-visible:border-brand',
-                      )}
-                      onFocus={() => focusField('message')}
-                      onBlur={() => blurField('message')}
-                      onChange={(event) => {
-                        setMessage(event.target.value)
-                        growMessage(event.target)
-                      }}
-                    />
-                    {errors.message ? (
-                      <p id="contact-message-error" className="mt-2 text-body-small text-error">
-                        {errors.message}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div
-                  className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3"
-                  onFocus={() => focusField('timing')}
-                  onBlur={(event) => {
-                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) blurField('timing')
-                  }}
+                <Choices
+                  id="contact-timing"
+                  label="When should it begin?"
+                  value={timing}
+                  options={timingOptions}
+                  onChange={setTiming}
                 >
-                  <span className={cn('pt-1 text-body-small tabular-nums', active === 'timing' ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
-                    06
-                  </span>
-                  <div>
-                    <p className={cn('text-body', active === 'timing' ? 'text-text' : 'text-text-secondary')}>
-                      When should it begin? <span className="text-text-muted">Optional</span>
-                    </p>
-                    <div className="mt-4">
-                      <Choices
-                        label="When should it begin?"
-                        value={timing}
-                        options={timingOptions}
-                        onChange={setTiming}
-                      />
-                    </div>
-                    <div className={cn('grid transition-[grid-template-rows] duration-300', timing === 'dated' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}>
-                      <div className="overflow-hidden" inert={timing === 'dated' ? undefined : true}>
-                        <div className="relative pt-4">
-                          <label htmlFor="contact-when" className="sr-only">
-                            Roughly when
-                          </label>
-                          <input
-                            id="contact-when"
-                            value={when}
-                            autoComplete="off"
-                            placeholder="Roughly when"
-                            className="w-full bg-transparent py-3 text-base text-text caret-brand outline-none placeholder:text-text-muted"
-                            onFocus={() => focusField('timing')}
-                            onChange={(event) => setWhen(event.target.value)}
-                          />
-                          <Line active={active === 'timing' && timing === 'dated'} />
-                        </div>
+                  <div
+                    className={cn(
+                      'grid motion-safe:transition-[grid-template-rows] motion-safe:duration-300',
+                      timing === 'dated' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+                    )}
+                  >
+                    <div className="overflow-hidden" inert={timing === 'dated' ? undefined : true}>
+                      <div className="px-0.5 pt-4 pb-1">
+                        <label htmlFor="contact-when" className="text-body-small font-medium text-text">
+                          Roughly when
+                        </label>
+                        <input
+                          id="contact-when"
+                          value={when}
+                          autoComplete="off"
+                          placeholder="For example, early next quarter"
+                          className={inputClass(false)}
+                          onChange={(event) => setWhen(event.target.value)}
+                        />
                       </div>
                     </div>
                   </div>
+                </Choices>
+
+                <div className="flex flex-col items-start gap-4 border-t border-border-subtle pt-8 sm:flex-row sm:items-center sm:gap-6">
+                  <Button type="submit" size="lg">
+                    {contactForm.submit}
+                  </Button>
+                  <p className="max-w-[24rem] text-body-small text-text-secondary">{contactForm.submitHint}</p>
                 </div>
-              </div>
+              </form>
+            )}
+          </div>
 
-              <div className="mt-12">
-                <button
-                  ref={magnetic}
-                  type="submit"
-                  className="group inline-flex min-h-(--button-height-desktop) cursor-pointer items-center rounded-full bg-text px-7 text-body-small font-semibold text-text-inverse transition-[background-color,transform] duration-200 hover:bg-button-primary-hover"
-                >
-                  {intentMeta?.submit ?? defaultSubmit}
-                  <Arrow />
-                </button>
-              </div>
-            </form>
-          )}
+          <aside aria-label="Preview of your note" className="hidden lg:sticky lg:top-28 lg:col-span-5 lg:block">
+            <div className="rounded-xl shadow-float">
+              <NoteSheet rows={previewRows} message={message} ready={ready} />
+            </div>
+          </aside>
         </div>
-      </div>
+      </Container>
     </section>
-  )
-}
-
-function Line({ active, invalid = false }: { active: boolean; invalid?: boolean }) {
-  return (
-    <>
-      <span aria-hidden="true" className={cn('absolute right-0 bottom-0 left-0 h-px', invalid ? 'bg-error' : 'bg-border')} />
-      <span
-        aria-hidden="true"
-        className={cn(
-          'absolute right-0 bottom-0 left-0 h-0.5 origin-left motion-safe:transition-transform motion-safe:duration-300',
-          invalid ? 'bg-error' : 'bg-brand',
-          active ? 'scale-x-100' : 'scale-x-0',
-        )}
-      />
-    </>
-  )
-}
-
-function Field({
-  index,
-  id,
-  label,
-  hint,
-  type = 'text',
-  autoComplete,
-  inputMode,
-  value,
-  active,
-  error,
-  onFocus,
-  onBlur,
-  onChange,
-}: {
-  index: string
-  id: string
-  label: string
-  hint?: string
-  type?: string
-  autoComplete?: string
-  inputMode?: 'email' | 'text'
-  value: string
-  active: boolean
-  error?: string
-  onFocus: () => void
-  onBlur: () => void
-  onChange: (value: string) => void
-}) {
-  const errorId = `${id}-error`
-  return (
-    <div className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3">
-      <span className={cn('pt-1 text-body-small tabular-nums', active ? 'text-brand' : 'text-text-muted')} aria-hidden="true">
-        {index}
-      </span>
-      <div>
-        <label htmlFor={id} className={cn('block text-body', active ? 'text-text' : 'text-text-secondary')}>
-          {label}
-          {hint ? <span className="ms-2 text-text-muted">{hint}</span> : null}
-        </label>
-        <div className="relative">
-          <input
-            id={id}
-            type={type}
-            value={value}
-            autoComplete={autoComplete}
-            inputMode={inputMode}
-            aria-invalid={error ? true : undefined}
-            aria-describedby={error ? errorId : undefined}
-            className="w-full bg-transparent py-3 text-base text-text caret-brand outline-none"
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onChange={(event) => onChange(event.target.value)}
-          />
-          <Line active={active} invalid={Boolean(error)} />
-        </div>
-        {error ? (
-          <p id={errorId} className="mt-2 text-body-small text-error">
-            {error}
-          </p>
-        ) : null}
-      </div>
-    </div>
   )
 }

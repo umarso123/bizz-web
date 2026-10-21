@@ -12,11 +12,12 @@ import type {
  */
 export const careersCopy = {
   hero: {
-    eyebrow: 'Careers at Bizaffix',
+    eyebrow: 'Careers',
     headline: 'A good place to work.',
     body: 'We focus on remote opportunity and flexible timing. That is what sets us apart.',
     primaryCta: 'View open positions',
     secondaryCta: 'Life at Bizaffix',
+    directoryTitle: 'Teams hiring',
   },
   why: {
     eyebrow: 'Why Bizaffix',
@@ -26,14 +27,17 @@ export const careersCopy = {
   culture: {
     eyebrow: 'Culture',
     headline: 'How we show up.',
+    /** From the legacy "What's Bizaffix" section (content/legacy-site.md). */
+    quote:
+      'With our team of skilled experts, we’re not just about lines of code; we’re about building relationships.',
   },
   pillars: {
-    title: 'What sets us apart',
+    title: 'What sets us apart.',
     items: [
       {
         id: 'remote',
         label: 'Remote.',
-        body: 'We focus on remote opportunity — so you can do ambitious work from where you work best.',
+        body: 'We focus on remote opportunity, so you can do ambitious work from where you work best.',
       },
       {
         id: 'flexible',
@@ -43,18 +47,20 @@ export const careersCopy = {
       {
         id: 'impact',
         label: 'Impact.',
-        body: 'Product, design, engineering, and healthcare expertise share one table — and ship work with real-world impact.',
+        body: 'Product, design, engineering, and healthcare expertise share one table and ship work with real-world impact.',
       },
     ],
   },
   process: {
     eyebrow: 'Process',
     headline: 'How we work',
+    title: 'From idea to reality, in five steps.',
+    body: 'Every Bizaffix project moves through the same five steps, from the first conversation to a tested product.',
   },
   jobs: {
-    eyebrow: 'Roles',
-    headline: 'Open positions',
-    body: 'Find your place on the team.',
+    eyebrow: 'Open positions',
+    headline: 'Find your place on the team.',
+    body: 'Every opening is listed here. Choose a role to read the details and apply.',
     placeholderNote:
       'Example roles below show how openings are presented. Replace this data with live listings when available.',
   },
@@ -120,36 +126,37 @@ export const cultureThemes: CultureTheme[] = [
   },
 ]
 
+/** The legacy process (content/legacy-site.md): Understanding, Research, Analysis, Design, Testing. */
 export const workStages: WorkStage[] = [
   {
-    id: 'understand',
+    id: 'understanding',
     number: '01',
-    title: 'Understand',
-    body: 'We start with the people, the clinical context, and the constraint that makes the product necessary.',
+    title: 'Understanding',
+    body: 'We start with the problem, the people, and the opportunity behind the idea.',
   },
   {
-    id: 'think',
+    id: 'research',
     number: '02',
-    title: 'Think',
-    body: 'Ideas are pressure-tested. We map flows, risks, and the smallest useful version of the product.',
+    title: 'Research',
+    body: 'We study the workflows and constraints the product has to live with, from clinics to classrooms.',
   },
   {
-    id: 'build',
+    id: 'analysis',
     number: '03',
-    title: 'Build',
-    body: 'Design and engineering move together: interfaces, systems, and integrations that hold under real use.',
+    title: 'Analysis',
+    body: 'Findings become a clear product direction and the right mix of mobile, web, and cloud.',
   },
   {
-    id: 'refine',
+    id: 'design',
     number: '04',
-    title: 'Refine',
-    body: 'Feedback from clinicians, users, and the team sharpens what ships next.',
+    title: 'Design',
+    body: 'UI/UX shapes the experience before engineering takes over, so complexity feels simple.',
   },
   {
-    id: 'ship',
+    id: 'testing',
     number: '05',
-    title: 'Ship',
-    body: 'We release with care, measure what matters, and keep improving in the open.',
+    title: 'Testing',
+    body: 'We validate that the product works as intended, so what ships is ready for real use.',
   },
 ]
 

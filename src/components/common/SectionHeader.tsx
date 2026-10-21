@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
+import { Reveal, RevealText } from '@/components/motion/Reveal.tsx'
+import { Wayfinder } from '@/components/ui/Wayfinder.tsx'
 import { cn } from '@/lib/cn.ts'
 
 type SectionHeaderAlign = 'left' | 'center'
@@ -7,8 +8,12 @@ type SectionHeaderWidth = 'full' | 'reading'
 type SectionHeaderTitle = 'h1' | 'h2' | 'h3'
 
 type SectionHeaderProps = {
+  /** Zone name. Rendered as a Wayfinder rule above the title. */
   eyebrow?: ReactNode
+  /** Kept for older call sites; every eyebrow now uses the Wayfinder style. */
   eyebrowTone?: 'default' | 'brand'
+  /** Short fact at the end of the Wayfinder rule, e.g. "6 services". */
+  meta?: ReactNode
   title: ReactNode
   titleAs?: SectionHeaderTitle
   titleId?: string
@@ -16,12 +21,19 @@ type SectionHeaderProps = {
   align?: SectionHeaderAlign
   width?: SectionHeaderWidth
   action?: ReactNode
+  inverse?: boolean
   className?: string
 }
 
+/**
+ * The standard section intro on every page.
+ * Left: zone rule, then the title (7 columns), with the description and action
+ * set against it (columns 9–12). Center: a compact stack for closing moments.
+ */
 export function SectionHeader({
   eyebrow,
-  eyebrowTone = 'default',
+  eyebrowTone: _eyebrowTone,
+  meta,
   title,
   titleAs = 'h2',
   titleId,
@@ -29,33 +41,45 @@ export function SectionHeader({
   align = 'left',
   width = 'full',
   action,
+  inverse = false,
   className,
 }: SectionHeaderProps) {
+  void _eyebrowTone
   const TitleTag = titleAs
-  const centered = align === 'center'
-  const capped = centered || width === 'reading'
+  const muted = inverse ? 'text-text-inverse-muted' : 'text-text-secondary'
+  const ink = inverse ? 'text-text-inverse' : 'text-text'
+
+  if (align === 'center') {
+    return (
+      <div className={cn('mx-auto flex max-w-[44rem] flex-col items-center gap-5 text-center', className)}>
+        {eyebrow ? (
+          <p className={cn('text-eyebrow', muted)}>{eyebrow}</p>
+        ) : null}
+        <TitleTag id={titleId} className={ink}>
+          {title}
+        </TitleTag>
+        {description ? <p className={cn('max-w-[38rem] text-body-large', muted)}>{description}</p> : null}
+        {action ? <div className="mt-2 flex flex-wrap justify-center gap-3">{action}</div> : null}
+      </div>
+    )
+  }
+
+  const reading = width === 'reading'
 
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-6',
-        centered && 'items-center text-center',
-        !centered && action ? 'sm:flex-row sm:items-end sm:justify-between' : undefined,
-        className,
-      )}
-    >
-      <div className={cn('flex min-w-0 flex-col gap-3', capped && 'max-w-reading', centered && 'items-center')}>
-        {eyebrow ? (
-          typeof eyebrow === 'string' || typeof eyebrow === 'number' ? (
-            <Eyebrow tone={eyebrowTone}>{eyebrow}</Eyebrow>
-          ) : (
-            eyebrow
-          )
+    <div className={cn('flex flex-col gap-8 md:gap-10', className)}>
+      {eyebrow ? <Wayfinder label={eyebrow} meta={meta} inverse={inverse} /> : null}
+      <div className={cn('grid gap-6 lg:items-start lg:gap-8', !reading && 'lg:grid-cols-12')}>
+        <TitleTag id={titleId} className={cn('max-w-[18ch]', ink, !reading && 'lg:col-span-7')}>
+          {typeof title === 'string' ? <RevealText text={title} /> : title}
+        </TitleTag>
+        {description || action ? (
+          <Reveal delay={180} className={cn('flex flex-col gap-6', !reading && 'lg:col-span-4 lg:col-start-9 lg:pt-1.5')}>
+            {description ? <p className={cn('max-w-[38rem] text-body-large', muted)}>{description}</p> : null}
+            {action ? <div className="flex flex-wrap gap-3">{action}</div> : null}
+          </Reveal>
         ) : null}
-        <TitleTag id={titleId}>{title}</TitleTag>
-        {description ? <p className="measure text-text-secondary">{description}</p> : null}
       </div>
-      {action ? <div className={cn('shrink-0', centered && 'flex justify-center')}>{action}</div> : null}
     </div>
   )
 }

@@ -1,51 +1,54 @@
+import { Reveal, RevealText } from '@/components/motion/Reveal.tsx'
 import { BookCallLink } from '@/components/ui/BookCallLink.tsx'
+import { HexMark } from '@/components/ui/HexMark.tsx'
+import { TextLink } from '@/components/ui/TextLink.tsx'
+import { studioEmail } from '@/content/contact.ts'
 
-function scallopPath() {
-  const bumps = 16
-  const cx = 50
-  const cy = 50
-  const inner = 38
-  const outer = 49
-  const commands: string[] = []
-
-  for (let index = 0; index < bumps; index += 1) {
-    const start = (index / bumps) * Math.PI * 2
-    const peak = ((index + 0.5) / bumps) * Math.PI * 2
-    const end = ((index + 1) / bumps) * Math.PI * 2
-    const x0 = cx + Math.cos(start) * inner
-    const y0 = cy + Math.sin(start) * inner
-    const x1 = cx + Math.cos(peak) * outer
-    const y1 = cy + Math.sin(peak) * outer
-    const x2 = cx + Math.cos(end) * inner
-    const y2 = cy + Math.sin(end) * inner
-    commands.push(index === 0 ? `M ${x0} ${y0}` : '')
-    commands.push(`Q ${x1} ${y1} ${x2} ${y2}`)
-  }
-
-  return `${commands.filter(Boolean).join(' ')} Z`
-}
-
-const scallop = scallopPath()
-
+/**
+ * The destination at the end of every page: the route runs from Idea to Reality,
+ * and reaching for Book a call fills it in.
+ */
 export function ConnectBanner() {
   return (
-    <section className="bg-page-white py-10 md:py-14" aria-label="Reach out">
-      <div className="mx-auto w-full max-w-[96rem] px-(--page-gutter)">
-        <BookCallLink className="flex flex-col items-start gap-6 rounded-[2.75rem] bg-brand px-7 py-7 no-underline transition-transform duration-300 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between sm:rounded-full sm:px-10 sm:py-8 md:px-14 md:py-9">
-          <p className="max-w-[46rem] text-[clamp(1.45rem,2.5vw,2.55rem)] leading-[1.05] font-bold tracking-tighter text-white uppercase">
-            Want to collaborate? Reach out to us. Let’s connect.
-          </p>
-          <span className="relative grid size-28 shrink-0 place-items-center sm:size-32 md:size-36">
-            <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden="true">
-              <path d={scallop} fill="#F5C84C" />
-            </svg>
-            <span className="relative px-4 text-center text-[0.78rem] leading-[1.05] font-bold tracking-tighter text-text uppercase md:text-[0.9rem]">
-              Book
-              <br />
-              a call
+    <section className="py-2 md:py-3" aria-labelledby="connect-title">
+      <div className="px-3 md:px-5">
+        <Reveal variant="panel" className="group/route relative mx-auto max-w-[1360px] overflow-hidden rounded-[24px] bg-[linear-gradient(135deg,#234ED1,#14245F)] px-6 pt-16 pb-10 text-white sm:px-10 md:rounded-[32px] md:px-16 md:pt-24 md:pb-14">
+          {/* Soft yellow glow, breathing in the top-right corner */}
+          <div aria-hidden="true" className="glow-breathe pointer-events-none absolute -top-40 -right-32 size-[30rem] rounded-full bg-[radial-gradient(circle,rgb(253_227_110/0.26),rgb(253_227_110/0.08)_40%,transparent_62%)] mix-blend-screen" />
+          <div className="relative grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-8">
+            <div className="lg:col-span-7">
+              <h2 id="connect-title" className="max-w-[14ch] text-section-title text-white">
+                <RevealText text="Want to collaborate?" delay={200} />
+              </h2>
+              <p className="mt-5 max-w-[30rem] text-body-large text-white/75">
+                Reach out to us. Let’s connect, and take your idea all the way to reality.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 lg:col-span-5 lg:justify-end">
+              <BookCallLink className="inline-flex min-h-(--button-height-desktop) items-center justify-center rounded-button bg-accent px-7 text-[1rem] font-semibold text-text no-underline transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:bg-white hover:text-text focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent">
+                Book a call
+              </BookCallLink>
+              <TextLink href={`mailto:${studioEmail}`} tone="inverse">
+                {studioEmail}
+              </TextLink>
+            </div>
+          </div>
+
+          {/* From idea to reality */}
+          <div className="relative mt-12 flex items-center gap-3 text-caption md:mt-16 md:gap-4" aria-hidden="true">
+            <span className="inline-flex shrink-0 items-center gap-2 text-text-inverse-muted">
+              <span className="size-3 rounded-full border-[2.5px] border-text-inverse bg-surface-brand-deep" />
+              Idea
             </span>
-          </span>
-        </BookCallLink>
+            <span className="relative h-1 flex-1 overflow-hidden rounded-full bg-white/25">
+              <span className="absolute inset-0 origin-left scale-x-0 rounded-full bg-accent transition-transform duration-700 ease-standard group-has-[a:hover]/route:scale-x-100 group-has-[a:focus-visible]/route:scale-x-100" />
+            </span>
+            <span className="inline-flex shrink-0 items-center gap-2 text-text-inverse">
+              <HexMark variant="active" size={16} />
+              Reality
+            </span>
+          </div>
+        </Reveal>
       </div>
     </section>
   )

@@ -2,7 +2,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { ReactLenis, useLenis } from 'lenis/react'
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -10,7 +10,16 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const [reduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const lenis = useLenis()
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
+  // null on first render, so a deep link like /#healthcare also counts as arriving.
+  const lastPathname = useRef<string | null>(null)
+  // Lenis arrives a tick after the first render. Read it from a ref so its arrival
+  // can't cancel a pending scroll in the route effect below.
+  const lenisRef = useRef(lenis)
+
+  useEffect(() => {
+    lenisRef.current = lenis
+  }, [lenis])
 
   useEffect(() => {
     if (reduced || !lenis) return
@@ -35,13 +44,44 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   }, [reduced, lenis])
 
   useEffect(() => {
-    if (reduced) {
-      window.scrollTo(0, 0)
-      return
+    const pageChanged = lastPathname.current !== pathname
+    lastPathname.current = pathname
+    const anchor = hash ? decodeURIComponent(hash.slice(1)) : ''
+
+    // A link to another page's section (e.g. /services#cloud-development) lands on
+    // that section. Same-page anchors are left to Lenis so they stay smooth.
+    if (anchor) {
+      if (!pageChanged) return
+      let target: HTMLElement | null = null
+      const jump = () => {
+        if (!target) return
+        const instance = lenisRef.current
+        if (reduced || !instance) target.scrollIntoView({ block: 'start' })
+        else instance.scrollTo(target, { immediate: true, force: true })
+      }
+      // Pinned sections add spacing when ScrollTrigger measures; land again after that.
+      const onRefresh = () => jump()
+      let tries = 0
+      const finder = window.setInterval(() => {
+        tries += 1
+        target = document.getElementById(anchor)
+        if (!target && tries < 20) return
+        window.clearInterval(finder)
+        jump()
+        ScrollTrigger.addEventListener('refresh', onRefresh)
+      }, 75)
+      const settle = window.setTimeout(() => ScrollTrigger.removeEventListener('refresh', onRefresh), 3000)
+      return () => {
+        window.clearInterval(finder)
+        window.clearTimeout(settle)
+        ScrollTrigger.removeEventListener('refresh', onRefresh)
+      }
     }
 
-    lenis?.scrollTo(0, { immediate: true })
-  }, [pathname, reduced, lenis])
+    const instance = lenisRef.current
+    if (reduced || !instance) window.scrollTo(0, 0)
+    else instance.scrollTo(0, { immediate: true, force: true })
+  }, [pathname, hash, reduced])
 
   if (reduced) return children
 
@@ -51,7 +91,10 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       options={{
         autoRaf: false,
         anchors: true,
-        lerp: 0.075,
+        // Smooth glide that still answers small wheel movements quickly
+        lerp: 0.085,
+        wheelMultiplier: 0.9,
+        touchMultiplier: 1.4,
         smoothWheel: true,
       }}
     >

@@ -3,8 +3,13 @@ import { Link } from 'react-router'
 import { cn } from '@/lib/cn.ts'
 import { omitKeys } from '@/lib/omit.ts'
 
+type TextLinkTone = 'ink' | 'brand' | 'inverse'
+
 type TextLinkShared = {
   trailingIcon?: ReactNode
+  tone?: TextLinkTone
+  /** Inside running text: drop the button-height tap box. */
+  inline?: boolean
   className?: string
   children: ReactNode
 }
@@ -23,18 +28,30 @@ type TextLinkAsRoute = TextLinkShared &
 
 export type TextLinkProps = TextLinkAsAnchor | TextLinkAsRoute
 
-function textLinkClassName(className?: string) {
+const toneClass: Record<TextLinkTone, string> = {
+  ink: 'text-text decoration-brand/45 hover:text-text hover:decoration-brand',
+  brand: 'text-brand-hover decoration-brand/45 hover:text-brand-active hover:decoration-brand-active',
+  inverse: 'text-text-inverse decoration-white/40 hover:text-text-inverse hover:decoration-accent',
+}
+
+/**
+ * Underlined text link; the underline thickens on hover. No arrow glyphs.
+ * `cn` joins classes without merging, so size changes go through props, not className.
+ */
+function textLinkClassName(tone: TextLinkTone, inline: boolean, className?: string) {
   return cn(
-    'inline-flex min-h-(--button-height) max-w-full items-center gap-1 text-body-small font-semibold text-brand-hover underline decoration-current underline-offset-[0.22em] transition-colors duration-(--duration-standard) ease-standard hover:text-brand-active',
+    'max-w-full items-center gap-1.5 text-body-small font-semibold underline decoration-[1.5px] underline-offset-[0.3em] transition-[color,text-decoration-color,text-decoration-thickness] duration-(--duration-standard) ease-standard hover:decoration-[2.5px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
+    inline ? 'inline' : 'inline-flex min-h-(--button-height)',
+    toneClass[tone],
     className,
   )
 }
 
-const sharedKeys = ['trailingIcon', 'className', 'children'] as const
+const sharedKeys = ['trailingIcon', 'tone', 'inline', 'className', 'children'] as const
 
 export function TextLink(props: TextLinkProps) {
-  const { trailingIcon, className, children } = props
-  const classes = textLinkClassName(className)
+  const { trailingIcon, tone = 'ink', inline = false, className, children } = props
+  const classes = textLinkClassName(tone, inline, className)
   const content = (
     <>
       <span>{children}</span>

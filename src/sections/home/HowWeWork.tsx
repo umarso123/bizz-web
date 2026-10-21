@@ -1,183 +1,155 @@
-import { m, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
-import { useCallback, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { AnimatePresence, m, useReducedMotion } from 'framer-motion'
+import { useState } from 'react'
+import { SectionHeader } from '@/components/common/SectionHeader.tsx'
 import { Container } from '@/components/layout/Container.tsx'
-import { Eyebrow } from '@/components/ui/Eyebrow.tsx'
+import { HEX_POINTS } from '@/components/ui/HexMark.tsx'
 import { homeContent } from '@/content/home.ts'
 import { cn } from '@/lib/cn.ts'
+import { WorkStill } from '@/sections/work/WorkStill.tsx'
 
-type Stage = (typeof homeContent.process.stages)[number]
+const ease = [0.22, 1, 0.36, 1] as const
 
-function StageImage({ stage, visible }: { stage: Stage; visible: boolean }) {
-  const [failed, setFailed] = useState(false)
-
+function Station({ selected, passed }: { selected: boolean; passed: boolean }) {
   return (
-    <div
-      className={cn(
-        'relative h-full w-full overflow-hidden rounded-2xl bg-brand-soft shadow-lg ring-1 ring-border-subtle',
-        !visible && 'opacity-0',
-      )}
-    >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          background: `
-            linear-gradient(145deg, var(--color-brand-soft) 0%, var(--color-accent-soft) 48%, var(--color-brand-subtle) 100%)
-          `,
-        }}
+    <svg viewBox="0 0 24 24" className="relative z-10 size-10 shrink-0 overflow-visible" aria-hidden="true">
+      <polygon
+        points={HEX_POINTS}
+        transform="translate(12 12) scale(1.5) translate(-12 -12)"
+        fill="var(--color-accent)"
+        fillOpacity={selected ? 0.3 : 0}
+        className="transition-[fill-opacity] duration-300"
       />
-      {!failed ? (
-        <img
-          src={stage.image}
-          alt={stage.alt}
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="lazy"
-          decoding="async"
-          draggable={false}
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
-          <p className="text-eyebrow text-brand">
-            {stage.number}
-          </p>
-          <p className="text-title text-text">{stage.title}</p>
-        </div>
-      )}
-    </div>
+      <polygon
+        points={HEX_POINTS}
+        fill={selected ? 'var(--color-accent)' : passed ? 'var(--color-brand-soft)' : 'var(--color-surface)'}
+        stroke="var(--color-text)"
+        strokeWidth="2.4"
+        strokeLinejoin="round"
+        className="transition-[fill] duration-300"
+      />
+    </svg>
   )
 }
 
 /**
- * Focus-areas style process list.
- * Hover a row → dim siblings, reveal a floating image that follows the cursor.
+ * The process is a real sequence, so it is drawn as a route: five stations,
+ * the line filling in up to the step you are looking at.
  */
 export function HowWeWork() {
   const reduced = useReducedMotion() === true
   const copy = homeContent.process
   const stages = copy.stages
-  const listRef = useRef<HTMLDivElement>(null)
-
   const [active, setActive] = useState(0)
-  const [hovering, setHovering] = useState(false)
-
-  const rawX = useMotionValue(0)
-  const rawY = useMotionValue(0)
-  const x = useSpring(rawX, { stiffness: 280, damping: 28, mass: 0.4 })
-  const y = useSpring(rawY, { stiffness: 280, damping: 28, mass: 0.4 })
-
-  const onListMove = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>) => {
-      if (reduced) return
-      const root = listRef.current
-      if (!root) return
-      const rect = root.getBoundingClientRect()
-      rawX.set(event.clientX - rect.left + 28)
-      rawY.set(event.clientY - rect.top - 120)
-    },
-    [rawX, rawY, reduced],
-  )
+  const stage = stages[active] ?? stages[0]
+  const fill = stages.length > 1 ? active / (stages.length - 1) : 0
 
   return (
-    <section
-      id="how-we-work"
-      className="relative overflow-x-clip bg-surface section-y"
-      aria-labelledby="how-we-work-title"
-    >
-      <Container variant="wide" className="relative w-full">
-        <Eyebrow>{copy.eyebrow}</Eyebrow>
-        <h2 id="how-we-work-title" className="mt-4 max-w-[18ch] text-section-title text-text">
-          {copy.title}
-        </h2>
-        <p className="mt-4 max-w-[42rem] text-body-large text-text-secondary">{copy.body}</p>
+    <section id="how-we-work" className="section-y bg-page-white" aria-labelledby="how-we-work-title">
+      <Container variant="wide" className="w-full">
+        <SectionHeader
+          eyebrow={copy.eyebrow}
+          meta={`${stages.length} steps`}
+          title={copy.title}
+          titleId="how-we-work-title"
+          description={copy.body}
+        />
 
-        <div
-          ref={listRef}
-          className="relative mt-10 md:mt-12"
-          onPointerMove={onListMove}
-          onPointerLeave={() => setHovering(false)}
-        >
-          {/* Floating hover image — desktop */}
-          {!reduced ? (
-            <m.div
+        {/* Wide screens: horizontal route with a detail card under it */}
+        <div className="mt-16 hidden md:block">
+          <div className="relative">
+            <span aria-hidden="true" className="absolute top-5 right-[10%] left-[10%] h-1 -translate-y-1/2 rounded-full bg-border" />
+            <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 left-0 z-20 hidden h-[11.5rem] w-[16rem] md:block lg:h-[13.5rem] lg:w-[19rem]"
-              style={{ x, y }}
-            >
-              <m.div
-                className="h-full w-full"
-                animate={{
-                  opacity: hovering ? 1 : 0,
-                  scale: hovering ? 1 : 0.92,
-                  rotate: hovering ? -2.5 : 0,
-                }}
-                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <StageImage stage={stages[active] ?? stages[0]} visible={hovering} />
-              </m.div>
-            </m.div>
-          ) : null}
-
-          <ul className="border-t border-border">
-            {stages.map((stage, index) => {
-              const isActive = hovering ? index === active : index === 0
-
-              return (
-                <li key={stage.number} className="border-b border-border">
-                  <button
-                    type="button"
-                    className={cn(
-                      'grid w-full grid-cols-1 items-center gap-4 py-7 text-left transition-colors duration-300 md:grid-cols-[minmax(0,1.05fr)_minmax(0,1.4fr)] md:gap-8 md:py-8 lg:py-9',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2',
-                    )}
-                    onPointerEnter={() => {
-                      setActive(index)
-                      setHovering(true)
-                    }}
-                    onFocus={() => {
-                      setActive(index)
-                      setHovering(true)
-                    }}
-                    onClick={() => {
-                      setActive(index)
-                      setHovering(true)
-                    }}
-                  >
-                    <span
-                      className={cn(
-                        'text-title transition-colors duration-300',
-                        isActive ? 'text-text' : 'text-text-secondary',
-                      )}
+              className="absolute top-5 left-[10%] h-1 -translate-y-1/2 rounded-full bg-brand transition-[width] duration-500 ease-standard"
+              style={{ width: `${fill * 80}%` }}
+            />
+            <ol className="relative grid grid-cols-5" aria-label="Process steps">
+              {stages.map((item, index) => {
+                const selected = index === active
+                return (
+                  <li key={item.number} className="flex justify-center">
+                    <button
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => setActive(index)}
+                      onPointerEnter={(event) => {
+                        if (event.pointerType === 'mouse') setActive(index)
+                      }}
+                      onFocus={() => setActive(index)}
+                      className="group flex flex-col items-center gap-4 rounded-lg px-2 pb-2 text-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
                     >
-                      {stage.title}
-                    </span>
-
-                    <span className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-4">
-                      {stage.tags.map((tag) => (
-                        <span key={tag} className="text-caption text-brand">
-                          {tag}
+                      <Station selected={selected} passed={index < active} />
+                      <span className="flex flex-col items-center gap-1">
+                        <span className="text-caption text-text-muted tabular-nums">Step {index + 1}</span>
+                        <span
+                          className={cn(
+                            'text-card-title transition-colors duration-300',
+                            selected ? 'text-text' : 'text-text-secondary group-hover:text-text',
+                          )}
+                        >
+                          {item.title}
                         </span>
-                      ))}
-                    </span>
-                  </button>
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
 
-                  {/* Mobile / reduced: inline image under active row */}
-                  <div
-                    className={cn(
-                      'overflow-hidden transition-[max-height,opacity] duration-400 md:hidden',
-                      index === active ? 'max-h-56 opacity-100 pb-6' : 'max-h-0 opacity-0',
-                    )}
-                  >
-                    <div className="aspect-16/10 max-w-sm overflow-hidden rounded-2xl">
-                      <StageImage stage={stage} visible={index === active} />
+          <div className="mt-12 overflow-hidden rounded-2xl border border-border-subtle bg-bg-subtle">
+            <AnimatePresence mode="wait" initial={false}>
+              <m.div
+                key={stage.number}
+                className="grid items-center gap-8 p-6 lg:grid-cols-12 lg:gap-8 lg:p-10"
+                initial={reduced ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={reduced ? undefined : { opacity: 0 }}
+                transition={{ duration: 0.22, ease }}
+                aria-live="polite"
+              >
+                <div className="relative overflow-hidden rounded-xl bg-surface lg:col-span-6">
+                  {stage.image ? (
+                    <img
+                      src={stage.image}
+                      alt={stage.alt}
+                      className="aspect-[16/10] h-full w-full object-contain p-6"
+                      loading="lazy"
+                      decoding="async"
+                      draggable={false}
+                    />
+                  ) : (
+                    <div className="relative aspect-[16/10]">
+                      <WorkStill slug={'still' in stage ? stage.still : 'healthcare'} />
                     </div>
-                    <p className="mt-3 max-w-md text-body text-text-secondary">{stage.body}</p>
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
+                  )}
+                </div>
+                <div className="lg:col-span-5 lg:col-start-8">
+                  <p className="text-caption text-text-muted tabular-nums">
+                    Step {active + 1} of {stages.length}
+                  </p>
+                  <h3 className="mt-3 text-title text-text">{stage.title}</h3>
+                  <p className="mt-4 max-w-[30rem] text-body-large text-text-secondary">{stage.body}</p>
+                </div>
+              </m.div>
+            </AnimatePresence>
+          </div>
         </div>
+
+        {/* Phones: the same route, top to bottom, every step open */}
+        <ol className="relative mt-12 grid gap-8 md:hidden" aria-label="Process steps">
+          <span aria-hidden="true" className="absolute top-5 bottom-5 left-5 w-1 -translate-x-1/2 rounded-full bg-brand" />
+          {stages.map((item, index) => (
+            <li key={item.number} className="relative flex gap-5">
+              <Station selected={index === 0} passed={false} />
+              <div className="pt-1.5">
+                <p className="text-caption text-text-muted tabular-nums">Step {index + 1}</p>
+                <h3 className="mt-1 text-card-title text-text">{item.title}</h3>
+                <p className="mt-2 text-body-small text-text-secondary">{item.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </Container>
     </section>
   )

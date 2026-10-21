@@ -11,6 +11,47 @@ export const servicesPage = {
     title: 'Strengthen your digital presence.',
     body: 'Captivate your audience with our skilled team’s versatile expertise. Propel your business to new heights and unlock its true potential today.',
   },
+  /** Healthcare leads the page. Offers and wording from the legacy Healthcare section. */
+  healthcare: {
+    eyebrow: 'Healthcare',
+    title: 'Healthcare leads.',
+    body: 'Bizaffix is about revolutionizing the healthcare industry with custom mobile applications, websites, designs, and branding solutions.',
+    cta: 'Explore healthcare',
+    ctaTo: '/healthcare',
+    offers: [
+      {
+        title: 'Clinical Decision Support',
+        body: 'Real-time, evidence-based recommendations that streamline decision-making.',
+        to: '/work/clinical-decision-support',
+      },
+      {
+        title: 'Telemedicine',
+        body: 'Patient-provider connections with the convenience of virtual healthcare.',
+        to: '/work/telemedicine',
+      },
+      {
+        title: 'Health Information Exchange',
+        body: 'Secure, scalable healthcare data sharing, tailored to your needs.',
+        to: '/work/health-information-exchange',
+      },
+      {
+        title: 'Electronic Health Records',
+        body: 'User-friendly records that enhance patient care and fit your workflow.',
+        to: '/work/electronic-health-records',
+      },
+      {
+        title: 'Integration and Interoperability',
+        body: 'Smooth data exchange that replaces siloed data with a unified ecosystem.',
+        to: '/work/integration-interoperability',
+      },
+    ],
+  },
+  /** The six services grouped by the platform they ship on. */
+  groups: [
+    { id: 'mobile', label: 'Mobile apps', services: ['android', 'ios', 'flutter'] },
+    { id: 'web', label: 'Web', services: ['web', 'fullstack'] },
+    { id: 'cloud', label: 'Cloud', services: ['cloud'] },
+  ],
   services: [
     {
       id: 'android',

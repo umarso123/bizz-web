@@ -1,67 +1,64 @@
-import { m, useReducedMotion } from 'framer-motion'
 import { Container } from '@/components/layout/Container.tsx'
+import { TintPanel } from '@/components/layout/TintPanel.tsx'
+import { Parallax } from '@/components/motion/Parallax.tsx'
+import { Reveal, RevealText } from '@/components/motion/Reveal.tsx'
+import { TextLink } from '@/components/ui/TextLink.tsx'
 import { homeContent } from '@/content/home.ts'
+import { mockups } from '@/content/mockups.ts'
 
-const ease = [0.22, 1, 0.36, 1] as const
-
+/**
+ * One case, told plainly: the problem in the legacy site's words, the product
+ * beside it. Not a testimonial, so no quotation marks.
+ */
 export function CaseHighlight() {
-  const reduced = useReducedMotion() === true
   const copy = homeContent.caseHighlight
 
   return (
-    <section
-      id="proof"
-      className="relative overflow-x-clip bg-page-white section-y"
-      aria-labelledby="case-highlight-title"
-    >
+    <section id="proof" className="relative py-2 md:py-3" aria-labelledby="case-highlight-title">
+      <TintPanel tint="cream">
+        <div className="section-y md:px-8">
       <Container variant="wide" className="relative w-full">
-        <m.figure
-          className="relative overflow-hidden rounded-2xl px-6 py-10 shadow-card md:px-12 md:py-14"
-          style={{
-            background:
-              'linear-gradient(110deg, var(--color-accent-soft) 0%, var(--color-bg) 46%, var(--color-surface-warm) 100%)',
-          }}
-          initial={reduced ? false : { opacity: 0, y: 22, scale: 0.985 }}
-          whileInView={reduced ? undefined : { opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.65, ease }}
-        >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-16 -left-10 h-48 w-48 rounded-full bg-accent/40 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-12 -bottom-20 h-64 w-64 rounded-full bg-accent/25 blur-3xl"
-          />
-
-          <blockquote className="relative">
-            <span
-              aria-hidden="true"
-              className="mb-4 block text-section-title text-brand"
-            >
-              “
-            </span>
-            <p
-              id="case-highlight-title"
-              className="max-w-160 text-title text-text"
-            >
-              {copy.quote}
-            </p>
-          </blockquote>
-
-          <figcaption className="relative mt-12 flex items-center gap-4">
-            <span
-              aria-hidden="true"
-              className="size-12 shrink-0 rounded-full bg-accent ring-4 ring-surface"
-            />
-            <div>
-              <p className="text-body-small font-semibold text-text">{copy.role}</p>
-              <p className="text-caption text-text-secondary">{copy.meta}</p>
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
+          <Reveal as="figure" variant="clip" className="lg:col-span-7">
+            <div className="overflow-hidden rounded-2xl border border-border bg-white p-6 sm:p-10">
+              <Parallax amount={24}>
+                <img
+                  src={mockups.optimizedStrengthScreens}
+                  alt="Optimized Strength app screens"
+                  className="mx-auto h-auto w-full max-w-[40rem] object-contain"
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                />
+              </Parallax>
             </div>
-          </figcaption>
-        </m.figure>
+          </Reveal>
+
+          <div className="lg:col-span-4 lg:col-start-9">
+            <Reveal variant="fade">
+              <p className="inline-flex rounded-pill bg-accent px-3 py-1 text-caption font-semibold text-text">{copy.eyebrow}</p>
+            </Reveal>
+            <h2 id="case-highlight-title" className="mt-4 text-section-title text-text">
+              <RevealText text={copy.title} delay={80} />
+            </h2>
+            <Reveal delay={220}>
+              <p className="mt-6 text-body-large text-text-secondary">{copy.problem}</p>
+            </Reveal>
+            <Reveal delay={340}>
+              <p className="mt-5 border-l-[3px] border-accent ps-5 text-body-large font-medium text-text">{copy.answer}</p>
+            </Reveal>
+            <Reveal delay={440}>
+              <TextLink to={copy.to} className="mt-6">
+                {copy.cta}
+              </TextLink>
+            </Reveal>
+          </div>
+        </div>
       </Container>
+        </div>
+      </TintPanel>
     </section>
   )
 }
+
+export default CaseHighlight
