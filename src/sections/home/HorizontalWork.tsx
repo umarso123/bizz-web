@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
 import { Link } from 'react-router'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Wayfinder } from '@/components/ui/Wayfinder.tsx'
+import { Arrow, PaperLink } from '@/components/paper/kit.tsx'
+import { PaperPin } from '@/components/paper/paper.tsx'
 import { mockups } from '@/content/mockups.ts'
 import { cn } from '@/lib/cn.ts'
+import { paperFont } from '@/lib/paper-theme.ts'
 import { WorkStill } from '@/sections/work/WorkStill.tsx'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -14,14 +16,17 @@ gsap.registerPlugin(ScrollTrigger)
 /* -------------------------------------------------------------------------- */
 
 /** House face, spelled out for canvas text measuring (canvas can't read CSS vars). */
-const FONT_HEADING = "'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+const FONT_HEADING = paperFont
+
+/** Left edge of the homepage container, for panels that start at the viewport edge. */
+const EDGE = 'ps-[max(clamp(20px,5vw,96px),calc((100vw-1440px)/2+clamp(20px,5vw,96px)))]'
+const EDGE_LEFT = 'left-[max(clamp(20px,5vw,96px),calc((100vw-1440px)/2+clamp(20px,5vw,96px)))]'
+
+/** Each print sits a little off-square. */
+const CARD_ROT = ['-1.2deg', '0.9deg', '-0.6deg', '1.1deg']
 
 /** Legacy project types (content/legacy-site.md). */
 const PROJECT_TYPES = ['Website', 'Logo', 'UI/UX', 'Product', 'Dashboard'] as const
-
-/** Shared look for the text-style links inside the track. */
-const trackLink =
-  'inline-flex items-center text-body-small font-semibold text-text underline decoration-brand/45 decoration-[1.5px] underline-offset-[0.3em] transition-[text-decoration-color,text-decoration-thickness] duration-200 hover:text-text hover:decoration-brand hover:decoration-[2.5px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand'
 
 /**
  * Hold duration at the end of the pinned section, expressed as a fraction of viewport height.
@@ -145,9 +150,8 @@ function useFitText({
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        // Match the rendered words: semibold, condensed (75%) signage width
-        ctx.font = `600 100px ${fontFamily}`
-        if ('fontStretch' in ctx) ctx.fontStretch = 'condensed'
+        // Match the rendered words: medium weight, normal width
+        ctx.font = `500 100px ${fontFamily}`
         wordWidthAt100 = ctx.measureText(longestWord).width
         // Negative letter-spacing adjustment (-0.04em)
         wordWidthAt100 = Math.max(100, wordWidthAt100 - longestWord.length * 4)
@@ -199,9 +203,9 @@ export function ServicesSection({ className = '', id = 'our-services' }: Service
     words: services,
     containerRef: panelRef,
     fontFamily: FONT_HEADING,
-    lineHeight: 0.82,
+    lineHeight: 0.95,
     paddingInlinePercent: 0.16,
-    maxFontSize: 240,
+    maxFontSize: 200,
     minFontSize: 36,
   })
 
@@ -210,14 +214,14 @@ export function ServicesSection({ className = '', id = 'our-services' }: Service
       ref={panelRef}
       id={id}
       className={cn(
-        'relative z-10 flex h-screen w-screen min-w-[100vw] shrink-0 flex-col justify-center px-[8vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-8 select-none',
+        'relative z-10 flex h-screen w-screen min-w-[100vw] shrink-0 flex-col justify-center px-[8vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-24 select-none',
         className,
       )}
       aria-label="What we do"
     >
-      <Wayfinder label="What we do" className="mb-6 max-w-[60rem] md:mb-8" />
+      <p className="ph-label mb-6 text-white/80 md:mb-8">What we do</p>
 
-      {/* Giant stacked words at signage width; scroll highlights each in turn */}
+      {/* Large stacked words; scroll highlights each in turn */}
       <div className="flex flex-col justify-center">
         {services.map((service, index) => {
           const isHovered = hoveredService === index
@@ -230,13 +234,13 @@ export function ServicesSection({ className = '', id = 'our-services' }: Service
                 onMouseEnter={() => setHoveredService(index)}
                 onMouseLeave={() => setHoveredService(null)}
                 className={cn(
-                  'service-word inline-block leading-[0.86] font-semibold tracking-[-0.04em] whitespace-nowrap [font-stretch:75%] transition-[color,opacity] duration-300',
-                  isHovered ? 'text-brand! opacity-100!' : isDimmed ? 'text-text opacity-30!' : 'text-text',
+                  'service-word inline-block leading-[0.95] font-medium tracking-[-0.045em] whitespace-nowrap transition-[color,opacity] duration-300',
+                  isHovered ? 'text-[var(--ph-yellow)]! opacity-100!' : isDimmed ? 'text-white opacity-30!' : 'text-white',
                 )}
                 style={{ fontSize: `${dynamicFontSize}px` }}
               >
                 {service}
-                {isLead ? <span className="text-accent">.</span> : null}
+                {isLead ? <span className="text-[var(--ph-yellow)]">.</span> : null}
               </span>
             </div>
           )
@@ -345,55 +349,55 @@ export function HorizontalWork({
         // Step 1: Word 0 ("HEALTHCARE") highlights in brand color, others dim to ~35%
         tl.to(
           serviceWordElements[0],
-          { color: 'var(--color-brand)', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
+          { color: '#FDE36E', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
           'servicesVisible',
         )
         tl.to(
           [serviceWordElements[1], serviceWordElements[2], serviceWordElements[3]],
-          { opacity: 0.35, color: 'var(--color-text)', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
+          { opacity: 0.35, color: '#FFFFFF', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
           'servicesVisible',
         )
 
         // Step 2: Word 1 ("DESIGN") highlights
         tl.to(
           serviceWordElements[1],
-          { color: 'var(--color-brand)', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
+          { color: '#FDE36E', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
           `servicesVisible+=${step}`,
         )
         tl.to(
           [serviceWordElements[0], serviceWordElements[2], serviceWordElements[3]],
-          { opacity: 0.35, color: 'var(--color-text)', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
+          { opacity: 0.35, color: '#FFFFFF', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
           `servicesVisible+=${step}`,
         )
 
         // Step 3: Word 2 ("DEVELOPMENT") highlights
         tl.to(
           serviceWordElements[2],
-          { color: 'var(--color-brand)', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
+          { color: '#FDE36E', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
           `servicesVisible+=${step * 2}`,
         )
         tl.to(
           [serviceWordElements[0], serviceWordElements[1], serviceWordElements[3]],
-          { opacity: 0.35, color: 'var(--color-text)', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
+          { opacity: 0.35, color: '#FFFFFF', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
           `servicesVisible+=${step * 2}`,
         )
 
         // Step 4: Word 3 ("BRANDING") highlights
         tl.to(
           serviceWordElements[3],
-          { color: 'var(--color-brand)', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
+          { color: '#FDE36E', opacity: 1, x: 14, duration: step * 0.7, ease: 'power1.inOut' },
           `servicesVisible+=${step * 3}`,
         )
         tl.to(
           [serviceWordElements[0], serviceWordElements[1], serviceWordElements[2]],
-          { opacity: 0.35, color: 'var(--color-text)', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
+          { opacity: 0.35, color: '#FFFFFF', x: 0, duration: step * 0.7, ease: 'power1.inOut' },
           `servicesVisible+=${step * 3}`,
         )
 
         // Step 5: Final state returns all words to normal before pin releases
         tl.to(
           serviceWordElements,
-          { opacity: 1, color: 'var(--color-text)', x: 0, duration: step * 0.8, ease: 'power1.inOut' },
+          { opacity: 1, color: '#FFFFFF', x: 0, duration: step * 0.8, ease: 'power1.inOut' },
           `servicesVisible+=${step * 4}`,
         )
       } else {
@@ -556,103 +560,85 @@ export function HorizontalWork({
     <div
       ref={containerRef}
       id="selected-work"
-      className={cn('relative w-full overflow-hidden', className)}
+      className={cn('relative w-full overflow-hidden bg-[var(--ph-night)] text-white', className)}
     >
-      {/* Custom "View" Cursor Pill for Cards */}
+
+      {/* "View case study" label that follows the pointer over cards */}
       {!isTouchDevice && isCursorVisible && (
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-1/2 rounded-pill bg-text px-4 py-1.5 text-caption font-semibold text-text-inverse shadow-md transition-transform duration-75 ease-out select-none"
+          className="ph-label pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-1/2 rounded-[2px] bg-[var(--ph-yellow)] px-3 py-1.5 text-[var(--ph-navy)] shadow-[0_6px_16px_rgb(10_26_58/0.35)] select-none"
           style={{
             left: `${cursorPos.x}px`,
             top: `${cursorPos.y}px`,
           }}
         >
-          View project
+          View case study
         </div>
       )}
 
       {/* Horizontal Flex Track (Pinned on Desktop, Native Scroll on Mobile) */}
       <div
         ref={trackRef}
-        className="relative flex h-screen w-max will-change-transform md:flex-row flex-col md:h-screen h-auto md:w-max w-full"
+        className="relative flex h-auto w-full flex-col will-change-transform md:h-screen md:w-max md:flex-row"
       >
-        {/* ================================================================= */}
-        {/* 1. INTRO PANEL (~45vw)                                            */}
-        {/* ================================================================= */}
+        {/* 1. INTRO PANEL: starts on the same left edge as every other section */}
         <section
-          className="relative flex h-screen w-screen shrink-0 flex-col justify-between border-b border-border px-[6vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 md:w-[44vw] md:min-w-[40vw] md:max-w-[48vw] md:border-r md:border-b-0"
+          className={cn(
+            'relative flex w-screen shrink-0 flex-col justify-between gap-12 border-b border-white/15 pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-16 pe-[6vw] md:h-screen md:w-[44vw] md:min-w-[40vw] md:max-w-[48vw] md:border-r md:border-b-0 md:pb-24',
+            EDGE,
+          )}
           aria-labelledby="selected-work-title"
         >
-          <Wayfinder label="Work" meta={`${projectList.length} projects`} />
-
-          {/* Heading with line-by-line reveal */}
-          <div className="my-auto py-6">
-            <h2
-              id="selected-work-title"
-              ref={introHeadingRef}
-              className="text-[clamp(3.25rem,6.6vw,7.25rem)] leading-[0.9] font-semibold tracking-[-0.04em] text-text [font-stretch:78%]"
-            >
-              <span className="block overflow-hidden">
-                <span className="intro-line inline-block">Selected</span>
-              </span>
-              <span className="block overflow-hidden">
-                <span className="intro-line inline-block">work</span>
+          <div className="my-auto">
+            <h2 id="selected-work-title" ref={introHeadingRef} className="ph-h2 text-white">
+              <span className="block overflow-hidden pb-[0.08em]">
+                <span className="intro-line inline-block">Selected work</span>
               </span>
             </h2>
-
-            <p className="mt-8 max-w-[24rem] text-body-large text-text-secondary">
-              Explored our projects yet? Have a look.
-            </p>
-
-            <div className="mt-6">
-              <Link to={viewAllLink} className={trackLink}>
-                View all projects
-              </Link>
-            </div>
+            <p className="ph-lead mt-6 text-white/85">Explored our projects yet? Have a look.</p>
+            <PaperLink to={viewAllLink} className="mt-8 text-white">
+              View all projects
+            </PaperLink>
           </div>
 
-          <p className="text-caption text-text-muted">Digital health, education, and fitness products.</p>
+          <p className="ph-label text-white/80">Digital health, education, and fitness products.</p>
         </section>
 
-        {/* ================================================================= */}
-        {/* 2. PROJECT CARDS (Real projects, Staggered offsets, Full-width blurbs) */}
-        {/* ================================================================= */}
+        {/* 2. PROJECT CARDS: cream prints, pinned and taped, slightly off-square */}
         {projectList.map((project, index) => {
           const isLower = project.verticalOffset === 'lower' || index % 2 === 1
 
           return (
             <section
               key={project.id}
-              className="project-card-panel relative flex h-screen w-screen shrink-0 flex-col justify-center border-b border-border px-[5.5vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 md:w-[38vw] md:min-w-[36vw] md:max-w-[42vw] md:border-r md:border-b-0"
+              className="project-card-panel relative flex w-screen shrink-0 flex-col justify-center border-b border-white/15 px-[clamp(20px,5vw,96px)] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-16 md:h-screen md:w-[38vw] md:min-w-[36vw] md:max-w-[42vw] md:border-r md:border-b-0 md:px-[3vw] md:pb-24"
               aria-label={project.title}
               onMouseMove={handleCardMouseMove}
               onMouseEnter={handleCardMouseEnter}
               onMouseLeave={handleCardMouseLeave}
             >
-              {/* Entire card is one link */}
-              <Link
-                to={project.link ?? `/work/${project.id}`}
-                className="group block rounded-xl no-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-              >
-                {/* Staggered Vertical Offset container: card 1 top, card 2 ~90px lower, card 3 top */}
-                <div
-                  className={`w-full transition-transform duration-300 ${
-                    isLower ? 'md:mt-[75px] lg:mt-[85px]' : 'md:mt-0'
-                  }`}
-                >
-                  {/* GSAP Parallax Card Container */}
-                  <div className="card-parallax-wrap">
-                    {/* Media well: white on the ward zone, flat, card-level radius */}
-                    <div className="relative aspect-[1.46/1] w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors duration-300 group-hover:border-border-strong">
-                      {/* Inner Image Mover for Dual-Layer Parallax */}
-                      <div className="card-img-mover absolute -inset-y-[10%] inset-x-0 w-full h-[120%] flex items-center justify-center p-6">
+              <div className={cn('w-full', isLower ? 'md:mt-12' : 'md:mt-0')}>
+                <div className="card-parallax-wrap">
+                  <Link
+                    to={project.link ?? `/work/${project.id}`}
+                    className="ph-paper ph-paper-cream ph-tilt group block p-4 text-[var(--ph-navy)] no-underline hover:text-[var(--ph-navy)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ph-yellow)] md:p-5"
+                    style={{ '--rot': CARD_ROT[index % CARD_ROT.length] } as CSSProperties}
+                  >
+                    <PaperPin className="top-[20px] left-1/2" />
+                    {/* A strip of tape over one corner */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute -top-2 -right-4 z-10 h-6 w-20 rotate-[32deg] bg-[rgb(253_227_110/0.85)] shadow-[0_1px_3px_rgb(10_26_58/0.25)]"
+                    />
+                    <div className="relative aspect-[1.46/1] w-full overflow-hidden rounded-[2px] border border-[var(--ph-border)] bg-white">
+                      <div className="card-img-mover absolute inset-x-0 -inset-y-[10%] flex h-[120%] w-full items-center justify-center p-6">
                         {project.image ? (
                           <img
                             src={project.image}
                             alt={project.alt ?? project.title}
                             loading="lazy"
-                            className="h-full w-full object-contain transform-gpu scale-[1.04] transition-transform duration-700 ease-out group-hover:scale-100"
+                            className="h-full w-full transform-gpu object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                           />
                         ) : (
                           <div className="absolute inset-0">
@@ -662,71 +648,64 @@ export function HorizontalWork({
                       </div>
                     </div>
 
-                    <div className="mt-6">
-                      <p className="inline-flex rounded-pill bg-accent/70 px-2.5 py-0.5 text-caption font-medium text-text">{project.category}</p>
-                      <h3 className="mt-2 text-title text-text">{project.title}</h3>
-                      <p className="mt-3 w-full max-w-[34rem] text-body text-text-secondary">{project.description}</p>
-                      <span className="mt-4 inline-flex text-body-small font-semibold text-text underline decoration-brand/45 decoration-[1.5px] underline-offset-[0.3em] transition-[text-decoration-color,text-decoration-thickness] duration-200 group-hover:decoration-accent-deep group-hover:decoration-[2.5px]">
+                    <div className="px-1 pt-5 pb-2">
+                      <p className="ph-label flex flex-wrap items-center gap-2 text-[var(--ph-grey)]">
+                        <span>Case {project.number}</span>
+                        <span className="bg-[var(--ph-yellow)] px-1.5 py-0.5 text-[var(--ph-navy)]">{project.category}</span>
+                      </p>
+                      <h3 className="ph-h3 mt-3">{project.title}</h3>
+                      <p className="ph-body mt-2 text-[var(--ph-grey)]">{project.description}</p>
+                      <span className="ph-link mt-4 text-[1rem] group-hover:bg-[length:100%_1.5px]">
                         View case study
+                        <Arrow />
                       </span>
                     </div>
-                  </div>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             </section>
           )
         })}
 
-        {/* ================================================================= */}
-        {/* 3. CLOSING PANEL (~38vw)                                          */}
-        {/* ================================================================= */}
+        {/* 3. PROJECT TYPES: a compact paper spec list */}
         <section
-          className="relative flex h-screen w-screen shrink-0 flex-col justify-center border-b border-border px-[5vw] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-12 md:w-[38vw] md:min-w-[36vw] md:max-w-[42vw] md:border-r md:border-b-0"
+          className="relative flex w-screen shrink-0 flex-col justify-center border-b border-white/15 px-[clamp(20px,5vw,96px)] pt-[calc(var(--header-clearance,5.75rem)+1.5rem)] pb-16 md:h-screen md:w-[34vw] md:min-w-[32vw] md:max-w-[38vw] md:border-r md:border-b-0 md:px-[3vw] md:pb-24"
           aria-labelledby="project-types-title"
         >
-          <div className="max-w-[26rem]">
-            <h3 id="project-types-title" className="text-title text-text">
+          <div className="ph-paper ph-paper-cream max-w-[26rem] text-[var(--ph-navy)]">
+            <p className="ph-label text-[var(--ph-grey)]">Project types</p>
+            <h3 id="project-types-title" className="ph-h3 mt-3">
               What we make
             </h3>
-            <ul className="mt-6 border-t border-border">
-              {PROJECT_TYPES.map((type) => (
-                <li
-                  key={type}
-                  className="flex items-center justify-between border-b border-border py-3.5 text-body text-text"
-                >
-                  {type}
-                  <span aria-hidden="true" className="size-1.5 rotate-45 rounded-[1px] bg-border-strong" />
+            <ul className="mt-6 border-t border-[var(--ph-border)]">
+              {PROJECT_TYPES.map((type, index) => (
+                <li key={type} className="grid grid-cols-[3.5rem_1fr] items-center border-b border-[var(--ph-border)] py-3">
+                  <span className="ph-label text-[var(--ph-grey)]">PT-0{index + 1}</span>
+                  <span className="ph-body">{type}</span>
                 </li>
               ))}
             </ul>
-            <div className="mt-6">
-              <Link to={viewAllLink} className={trackLink}>
-                View all projects
-              </Link>
-            </div>
+            <PaperLink to={viewAllLink} className="mt-6">
+              View all projects
+            </PaperLink>
           </div>
         </section>
 
-        {/* ================================================================= */}
-        {/* 4. OUR SERVICES SECTION (Slides in horizontally from the right)    */}
-        {/* ================================================================= */}
+        {/* 4. WHAT WE DO (slides in from the right, then holds) */}
         <ServicesSection />
       </div>
 
-      {/* =================================================================== */}
-      {/* 5. BOTTOM BAR: ACTIVE CARD COUNTER + THIN PROGRESS LINE             */}
-      {/* =================================================================== */}
+      {/* 5. PROGRESS: below all content, 32px clear of the cards */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-10 bottom-5 left-10 z-30 hidden items-center gap-4 select-none md:flex"
+        className={cn('pointer-events-none absolute right-[clamp(20px,5vw,96px)] bottom-6 z-30 hidden items-center gap-4 select-none md:flex', EDGE_LEFT)}
       >
-        <p className="shrink-0 text-caption text-text-secondary tabular-nums">
+        <p className="ph-label shrink-0 text-white/80">
           Project {activeCardIndex} of {projectList.length}
         </p>
-        {/* The route so far */}
-        <div className="h-0.5 flex-1 overflow-hidden rounded-full bg-border">
+        <div className="h-px flex-1 overflow-hidden bg-white/20">
           <div
-            className="h-full rounded-full bg-brand transition-[width] duration-75 ease-out"
+            className="h-full bg-[var(--ph-yellow)] transition-[width] duration-75 ease-out"
             style={{ width: `${Math.min(100, Math.max(0, scrollProgress * 100))}%` }}
           />
         </div>

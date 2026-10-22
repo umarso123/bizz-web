@@ -1,10 +1,8 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router'
-import { SectionHeader } from '@/components/common/SectionHeader.tsx'
-import { Container } from '@/components/layout/Container.tsx'
-import { TintPanel } from '@/components/layout/TintPanel.tsx'
-import { Reveal } from '@/components/motion/Reveal.tsx'
-import { TextLink } from '@/components/ui/TextLink.tsx'
+import { Reveal, RevealLines } from '@/components/motion/Reveal.tsx'
+import { PaperLink, PaperSection } from '@/components/paper/kit.tsx'
+import { PaperPin } from '@/components/paper/paper.tsx'
 import { servicesPage } from '@/content/services.ts'
 
 /** Line icons that draw themselves in when the card arrives (stroke reveal). */
@@ -15,7 +13,7 @@ function GroupIcon({ id }: { id: string }) {
     cloud: ['M7 18.5a4.5 4.5 0 0 1-.4-9 6 6 0 0 1 11.6 1.6A3.75 3.75 0 0 1 17.5 18.5Z'],
   }
   return (
-    <span className="grid size-11 place-items-center rounded-[12px] bg-brand-soft text-brand transition-colors duration-500 group-hover/card:bg-brand group-hover/card:text-white">
+    <span className="grid size-11 place-items-center rounded-[2px] border border-[var(--ph-border)] text-[var(--ph-blue)]">
       <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {(shapes[id] ?? shapes.web).map((d, index) => (
           <path key={index} d={d} pathLength={1} className="reveal-stroke" style={{ '--reveal-delay': `${200 + index * 150}ms` } as CSSProperties} />
@@ -25,91 +23,82 @@ function GroupIcon({ id }: { id: string }) {
   )
 }
 
-type Service = (typeof servicesPage.services)[number]
+/**
+ * Technologies from the legacy list, only where the service names them outright.
+ * Everything else shows just its platform; the full stack is listed under the grid.
+ */
+const namedTech: Record<string, string[]> = {
+  android: ['Kotlin'],
+  flutter: ['Flutter'],
+  web: ['HTML'],
+}
 
-const byId = new Map<string, Service>(servicesPage.services.map((service) => [service.id, service]))
+/** A slight, fixed tilt per card. */
+const ROT = ['-1deg', '0.8deg', '-0.5deg', '1.2deg', '-1.4deg', '0.6deg']
 
 /**
- * The six services as one signboard, split by the platform they ship on.
- * Technologies fill the shortest column, so the board reads as one piece.
+ * 07 — The six services as pinned spec cards (SVC-01 to SVC-06), equal heights,
+ * each with its platform and named technologies as tags at the bottom.
  */
 export function ServicesDirectory() {
-  const groups = servicesPage.groups
-  const technologies = servicesPage.technologies
+  const { groups, services, technologies } = servicesPage
+  const groupOf = new Map(groups.flatMap((group) => group.services.map((id) => [id, group] as const)))
 
   return (
-    <section id="services" className="relative py-2 md:py-3" aria-labelledby="services-directory-title">
-      <TintPanel tint="lightblue">
-        <div className="section-y md:px-8">
-      <Container variant="wide" className="relative w-full">
-        <SectionHeader
-          eyebrow="Services"
-          meta={`${servicesPage.services.length} services`}
-          title={servicesPage.hero.title}
-          titleId="services-directory-title"
-          description="Propel your business to new heights and unlock its true potential today."
-          action={<TextLink to="/services">View all services</TextLink>}
-        />
+    <PaperSection tone="white" id="services" labelledBy="services-directory-title">
+      <div className="grid grid-cols-12 gap-6">
+        <h2 id="services-directory-title" className="ph-h2 col-span-12 lg:col-span-5">
+          <RevealLines lines={[servicesPage.hero.title]} />
+        </h2>
+        <Reveal variant="fade" className="col-span-12 lg:col-span-6 lg:col-start-7">
+          <p className="ph-lead text-[var(--ph-grey)]">Propel your business to new heights and unlock its true potential today.</p>
+          <PaperLink to="/services" className="mt-6">
+            View all services
+          </PaperLink>
+        </Reveal>
+      </div>
 
-        <div className="mt-14 grid gap-5 md:mt-20 md:grid-cols-3">
-          {groups.map((group, groupIndex) => {
-            const items = group.services
-              .map((id) => byId.get(id))
-              .filter((service): service is Service => Boolean(service))
-            const last = groupIndex === groups.length - 1
-
-            return (
-              <Reveal
-                key={group.id}
-                delay={groupIndex * 110}
-                className="group/card flex flex-col rounded-[20px] border border-border bg-white/90 p-6 backdrop-blur-sm transition-[transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-brand sm:p-7"
+      <ul className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {services.map((service, index) => {
+          const group = groupOf.get(service.id)
+          const tags = [group?.label.toUpperCase().replace(' APPS', '') ?? '', ...(namedTech[service.id] ?? [])].filter(Boolean)
+          return (
+            <Reveal as="li" key={service.id} delay={(index % 3) * 90} className="flex">
+              <article
+                className="ph-paper ph-tilt flex w-full flex-col pt-10 md:pt-10"
+                style={{ '--rot': ROT[index % ROT.length] } as CSSProperties}
               >
-                <GroupIcon id={group.id} />
-                <div className="mt-5 flex items-baseline justify-between gap-4">
-                  <h3 className="text-[1.25rem] leading-tight font-semibold tracking-[-0.015em] text-text">{group.label}</h3>
-                  <p className="text-caption text-text-muted tabular-nums">
-                    {items.length} {items.length === 1 ? 'service' : 'services'}
-                  </p>
+                <PaperPin className="top-[22px] left-1/2" />
+                <div className="flex items-start justify-between gap-4">
+                  <GroupIcon id={group?.id ?? 'web'} />
+                  <span className="ph-label text-[var(--ph-grey)]">SVC-0{index + 1}</span>
                 </div>
-
-                <ul className="mt-6">
-                  {items.map((service, itemIndex) => (
-                    <Reveal as="li" key={service.id} delay={250 + groupIndex * 120 + itemIndex * 90} className="border-t border-border-subtle py-5 first:border-t-0 first:pt-0">
-                      <Link
-                        to={`/services#${service.slug}`}
-                        className="group inline-block text-[1.125rem] leading-snug font-semibold text-text no-underline hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-                      >
-                        <span className="underline decoration-transparent decoration-[1.5px] underline-offset-[0.25em] transition-[text-decoration-color] duration-200 group-hover:decoration-brand">
-                          {service.title}
-                        </span>
-                      </Link>
-                      <p className="mt-1.5 max-w-[30rem] text-[0.95rem] leading-[1.55] text-text-secondary">{service.body}</p>
-                    </Reveal>
+                <h3 className="ph-h3 mt-6">
+                  <Link
+                    to={`/services#${service.slug}`}
+                    className="text-[var(--ph-navy)] no-underline after:absolute after:inset-0 hover:text-[var(--ph-navy)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ph-blue)]"
+                  >
+                    {service.title}
+                  </Link>
+                </h3>
+                <p className="ph-body mt-3 text-[var(--ph-grey)]">{service.body}</p>
+                <ul className="mt-auto flex flex-wrap gap-2 pt-6" aria-label="Tags">
+                  {tags.map((tag) => (
+                    <li key={tag} className="ph-label rounded-[2px] border border-[var(--ph-border)] px-2 py-1 text-[var(--ph-navy)]">
+                      {tag}
+                    </li>
                   ))}
                 </ul>
+              </article>
+            </Reveal>
+          )
+        })}
+      </ul>
 
-                {last ? (
-                  <div className="mt-auto border-t border-border-subtle pt-6">
-                    <p className="text-eyebrow text-text-muted">{technologies.eyebrow}</p>
-                    <ul className="mt-3 flex flex-wrap gap-2" aria-label={technologies.eyebrow}>
-                      {technologies.items.map((item) => (
-                        <li
-                          key={item}
-                          className="rounded-pill border border-border px-3 py-1 text-caption font-medium text-text"
-                        >
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-              </Reveal>
-            )
-          })}
-        </div>
-      </Container>
-        </div>
-      </TintPanel>
-    </section>
+      <Reveal variant="fade" className="ph-label mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-[var(--ph-grey)]">
+        <p>{technologies.eyebrow}:</p>
+        <p className="text-[var(--ph-navy)]">{technologies.items.join(' · ')}</p>
+      </Reveal>
+    </PaperSection>
   )
 }

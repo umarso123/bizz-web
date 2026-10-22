@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link, useLocation } from 'react-router'
 import { bookCall, primaryNavigation } from '@/app/navigation.ts'
 import { BrandLogo } from '@/components/brand/BrandLogo.tsx'
+import { PaperPin, usePaperGrain } from '@/components/paper/paper.tsx'
 import { BookCallLink } from '@/components/ui/BookCallLink.tsx'
 import { cn } from '@/lib/cn.ts'
 
@@ -49,6 +50,9 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuPath, setMenuPath] = useState(pathname)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+  // The homepage wears the paper theme; every other page keeps this header as it was.
+  const paper = pathname === '/'
+  const grain = usePaperGrain()
 
   if (menuPath !== pathname) {
     setMenuPath(pathname)
@@ -107,18 +111,29 @@ export function Header() {
       className={cn(
         'pointer-events-none fixed inset-x-0 top-0 z-50 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none',
         tucked && !menuOpen && '-translate-y-[140%]',
+        paper && 'paper-home',
       )}
       onFocus={() => setTucked(false)}
     >
       <div className="flex flex-col items-center px-3 pt-3 sm:px-4 md:px-5 md:pt-3.5">
         <div
           className={cn(
-            'pointer-events-auto relative flex h-12 w-full items-center justify-between gap-2 rounded-full ps-3 pe-1.5 transition-[height,background-color,box-shadow,max-width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:gap-3 sm:ps-4 sm:pe-2 md:ps-5 md:pe-2',
-            barFrame,
-            // Shrinks a little and frosts more once the page has scrolled
-            scrolled ? 'max-w-[64rem] bg-white/85 backdrop-blur-3xl md:h-12' : 'max-w-[72rem] bg-white/70 backdrop-blur-2xl md:h-14',
+            'pointer-events-auto relative flex h-12 w-full items-center justify-between gap-2 ps-3 pe-1.5 transition-[height,background-color,box-shadow,max-width,border-radius] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:gap-3 sm:ps-4 sm:pe-2 md:ps-5 md:pe-2',
+            paper
+              ? // Homepage: a white paper strip pinned at the top; a frosted pill once scrolled
+                scrolled
+                ? 'max-w-[60rem] rounded-full bg-white/80 shadow-[0_2px_4px_rgb(10_26_58/0.12),0_14px_32px_-12px_rgb(10_26_58/0.3)] backdrop-blur-xl md:h-12'
+                : 'ph-grain max-w-[72rem] rounded-[3px] bg-white shadow-[0_2px_3px_rgb(10_26_58/0.2),0_18px_32px_-16px_rgb(10_26_58/0.4)] md:h-14 md:ps-16'
+              : cn(
+                  'rounded-full',
+                  barFrame,
+                  // Shrinks a little and frosts more once the page has scrolled
+                  scrolled ? 'max-w-[64rem] bg-white/85 backdrop-blur-3xl md:h-12' : 'max-w-[72rem] bg-white/70 backdrop-blur-2xl md:h-14',
+                ),
           )}
+          style={paper ? ({ '--ph-grain': grain } as CSSProperties) : undefined}
         >
+          {paper && !scrolled ? <PaperPin className="top-[34px] left-[24px] hidden h-9 w-[18px] md:block" /> : null}
           <BrandLogo imgClassName="h-5 w-auto max-w-[6.5rem] sm:h-6 sm:max-w-none md:h-7" />
 
           <nav aria-label="Primary" className="absolute left-1/2 hidden -translate-x-1/2 min-[960px]:block">
@@ -130,7 +145,7 @@ export function Header() {
                     aria-current={linkIsActive(item.to, pathname, hash) ? 'page' : undefined}
                     className={navClass(
                       linkIsActive(item.to, pathname, hash),
-                      'relative inline-flex px-3 py-2 text-[0.9375rem]',
+                      paper ? 'ph-label relative inline-flex px-3 py-2' : 'relative inline-flex px-3 py-2 text-[0.9375rem]',
                     )}
                   >
                     {item.label}
@@ -148,9 +163,18 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-1">
-            <BookCallLink className="inline-flex h-9 items-center rounded-full bg-button-brand px-3 text-[0.8125rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-text-inverse no-underline transition-colors duration-(--duration-standard) ease-standard hover:bg-button-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-10 sm:px-4 sm:text-[0.875rem] md:h-11 md:px-5 md:text-[0.9375rem]">
-              {bookCall.label}
-            </BookCallLink>
+            {paper ? (
+              // A blue sheet with a torn left edge
+              <BookCallLink
+                className="ph-torn-btn inline-flex h-9 items-center bg-[#234ED1] pe-4 [--ph-torn-pad:1rem] md:[--ph-torn-pad:1.25rem] text-[0.875rem] font-medium tracking-[-0.01em] whitespace-nowrap text-white no-underline shadow-[0_2px_3px_rgb(10_26_58/0.25)] transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px hover:bg-[#1c41b5] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#234ED1] sm:h-10 md:h-11 md:ps-6 md:pe-5 md:text-[0.9375rem]"
+              >
+                {bookCall.label}
+              </BookCallLink>
+            ) : (
+              <BookCallLink className="inline-flex h-9 items-center rounded-full bg-button-brand px-3 text-[0.8125rem] font-semibold tracking-[-0.01em] whitespace-nowrap text-text-inverse no-underline transition-colors duration-(--duration-standard) ease-standard hover:bg-button-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:h-10 sm:px-4 sm:text-[0.875rem] md:h-11 md:px-5 md:text-[0.9375rem]">
+                {bookCall.label}
+              </BookCallLink>
+            )}
             <button
               ref={menuButtonRef}
               type="button"
@@ -169,8 +193,10 @@ export function Header() {
           id={menuId}
           hidden={!menuOpen}
           className={cn(
-            'pointer-events-auto mx-auto mt-2 w-full max-w-[72rem] rounded-[1.5rem] p-2 min-[960px]:hidden',
-            bar,
+            'pointer-events-auto mx-auto mt-2 w-full max-w-[72rem] p-2 min-[960px]:hidden',
+            paper
+              ? 'rounded-[3px] bg-white shadow-[0_2px_3px_rgb(10_26_58/0.2),0_18px_32px_-16px_rgb(10_26_58/0.4)]'
+              : cn('rounded-[1.5rem]', bar),
           )}
         >
           <ul className="flex flex-col">

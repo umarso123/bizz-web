@@ -1,0 +1,29 @@
+/*
+ * Dazzed, the licensed brand face. Put the files in public/fonts/dazzed/ with these
+ * names. Until they exist the browser falls back to the next face in the stack.
+ * The face is registered as 'Bizaffix Dazzed' so only the homepage and footer use it;
+ * other pages still list plain 'Dazzed' (not loaded) and keep Instrument Sans.
+ */
+@font-face {
+  font-family: 'Bizaffix Dazzed';
+  src: url('/fonts/dazzed/Dazzed-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bizaffix Dazzed';
+  src: url('/fonts/dazzed/Dazzed-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bizaffix Dazzed';
+  src: url('/fonts/dazzed/Dazzed-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

@@ -1,0 +1,536 @@
+/*
+ * "Engineered on paper": homepage only (everything is scoped to .paper-home).
+ * Paper effects from the Pushpin Tear Footer; structure, labels and grids kept technical.
+ * Colours: brand palette only (src/lib/paper-theme.ts).
+ */
+
+/* In the components layer, so Tailwind utilities on the same element still win. */
+@layer components {
+  .paper-home {
+    --ph-blue: #234ed1;
+    --ph-stroke: #2563eb;
+    --ph-cyan: #009bdf;
+    --ph-navy: #0d121f;
+    --ph-grey: #5a6472;
+    --ph-border: #dde3ec;
+    --ph-light-blue: #e7edfc;
+    --ph-periwinkle: #b3c5fa;
+    --ph-cream: #fffcf0;
+    --ph-yellow: #fde36e;
+    --ph-night: #14245f;
+    --ph-shadow: 10 26 58;
+    --ph-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    font-family: 'Bizaffix Dazzed', 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--ph-navy);
+  }
+
+  /* Dazzed has no width axis: undo the signage font-stretch the rest of the site uses. */
+  .paper-home :is(h1, h2, h3, h4) {
+    font-family: inherit;
+    font-stretch: 100%;
+    /* base.css colours headings navy; on a sheet they take the sheet's ink instead */
+    color: inherit;
+  }
+
+  /* Display headings, set like the footer wordmark. */
+  .paper-home .ph-display {
+    font-weight: 500;
+    letter-spacing: -0.05em;
+    line-height: 0.98;
+  }
+
+  /* Technical labels: section numbers, tags, metadata, captions. */
+  .paper-home .ph-label {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 768px) {
+    .paper-home .ph-label {
+      font-size: 0.8125rem;
+    }
+  }
+
+  /* Accent word: navy on a yellow highlighter stroke that sweeps in after the line rises. */
+  .paper-home .ph-mark {
+    position: relative;
+    z-index: 0;
+    display: inline-block;
+    padding: 0 0.08em;
+    color: var(--ph-navy);
+  }
+
+  .paper-home .ph-mark::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0.1em -0.04em 0.02em -0.06em;
+    background: var(--ph-yellow);
+    border-radius: 0.06em 0.14em 0.08em 0.18em;
+    transform: skewX(-6deg) scaleX(1);
+    transform-origin: 0 50%;
+    transition: transform 0.9s var(--ph-ease) 0.75s;
+  }
+
+  [data-inview='false'] .ph-mark::before {
+    transform: skewX(-6deg) scaleX(0);
+    transition-delay: 0s;
+  }
+
+  /* Technical grid: 24px cells, a stronger line every 120px. */
+  .paper-home .ph-grid {
+    background-image:
+      linear-gradient(to right, rgb(221 227 236 / 0.25) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(221 227 236 / 0.25) 1px, transparent 1px),
+      linear-gradient(to right, rgb(221 227 236 / 0.45) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(221 227 236 / 0.45) 1px, transparent 1px);
+    background-size:
+      24px 24px,
+      24px 24px,
+      120px 120px,
+      120px 120px;
+  }
+
+  /* The same grid printed in white at 6% on blue sheets. */
+  .paper-home .ph-grid-inverse {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+      linear-gradient(to right, rgb(255 255 255 / 0.11) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.11) 1px, transparent 1px);
+    background-size:
+      24px 24px,
+      24px 24px,
+      120px 120px,
+      120px 120px;
+  }
+
+  /* Paper grain from lib/paper.ts, laid over a sheet (set --ph-grain inline). */
+  .paper-home .ph-grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: var(--ph-grain);
+    opacity: 0.35;
+    border-radius: inherit;
+  }
+
+  /* Crop marks at a section's corners. */
+  .paper-home .ph-crop {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    border-color: currentColor;
+    border-style: solid;
+    border-width: 0;
+    opacity: 0.55;
+  }
+
+  .paper-home .ph-crop[data-corner='tl'] {
+    top: 0;
+    left: 0;
+    border-top-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .paper-home .ph-crop[data-corner='tr'] {
+    top: 0;
+    right: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .paper-home .ph-crop[data-corner='bl'] {
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .paper-home .ph-crop[data-corner='br'] {
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+  }
+
+  /* Paper cards: navy shadows like the footer's flaps, never grey. */
+  .paper-home .ph-card {
+    position: relative;
+    background: var(--ph-cream);
+    border: 1px solid var(--ph-border);
+    border-radius: 4px;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.8) inset,
+      0 2px 3px rgb(var(--ph-shadow) / 0.2),
+      0 18px 36px -14px rgb(var(--ph-shadow) / 0.3);
+    transition:
+      transform 0.6s var(--ph-ease),
+      box-shadow 0.6s var(--ph-ease);
+  }
+
+  /* Pins: the footer's glossy pushpin, sized by its wrapper. */
+  .paper-home .ph-pin {
+    position: absolute;
+    width: 26px;
+    height: 52px;
+    transform: translate(-50%, -100%) rotate(calc(5deg + var(--tilt, 0deg)));
+    transform-origin: 50% 100%;
+    transition: transform 0.7s var(--ph-ease);
+    pointer-events: none;
+  }
+
+  .paper-home .ph-pin svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* The pin's cast shadow, falling to the lower left like the footer's. */
+  .paper-home .ph-pin::before {
+    content: '';
+    position: absolute;
+    right: 50%;
+    bottom: 0;
+    width: 120%;
+    height: 10%;
+    transform-origin: 100% 50%;
+    transform: rotate(16deg);
+    border-radius: 50%;
+    background: linear-gradient(90deg, transparent, rgb(var(--ph-shadow) / 0.28) 60%, rgb(var(--ph-shadow) / 0.42));
+    filter: blur(2px);
+  }
+
+  /* The live clock's colon blinks (the footer's own rule only applies inside the footer). */
+  .paper-home .tpf-clock {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .paper-home .tpf-clock i {
+    font-style: normal;
+    animation: ph-blink 2s steps(1) infinite;
+  }
+
+  /* Live dot, as in the footer's availability line. */
+  .paper-home .ph-live {
+    position: relative;
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .paper-home .ph-live::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    animation: ph-ping 2.2s var(--ph-ease) infinite;
+  }
+
+  @keyframes ph-blink {
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  @keyframes ph-ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+
+    80%,
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .paper-home .ph-live::after,
+    .paper-home .tpf-clock i {
+      animation: none;
+    }
+
+    .paper-home .ph-mark::before {
+      transition: none;
+      transform: skewX(-6deg) scaleX(1);
+    }
+  }
+
+  /* Light paper takes less grain, so cream still reads as cream. */
+  .paper-home .ph-card.ph-grain::after,
+  header.paper-home .ph-grain::after {
+    opacity: 0.14;
+  }
+
+  /* The technical grid in brand blue, faint, for cream sheets. */
+  .paper-home .ph-grid-blue {
+    background-image:
+      linear-gradient(to right, rgb(35 78 209 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(35 78 209 / 0.035) 1px, transparent 1px),
+      linear-gradient(to right, rgb(35 78 209 / 0.065) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(35 78 209 / 0.065) 1px, transparent 1px);
+    background-size:
+      24px 24px,
+      24px 24px,
+      120px 120px,
+      120px 120px;
+  }
+
+  .paper-home .ph-grain-light::after {
+    opacity: 0.14;
+  }
+
+  /* ── Tokens: one container, one section rhythm, one type scale ───────────── */
+
+  /* Every section's content starts on this edge. */
+  .paper-home .ph-container {
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 96px);
+  }
+
+  /* Section padding: 64 mobile, 96 tablet, 128 desktop. */
+  .paper-home .ph-pad {
+    padding-block: 64px;
+  }
+
+  @media (min-width: 768px) {
+    .paper-home .ph-pad {
+      padding-block: 96px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .paper-home .ph-pad {
+      padding-block: 128px;
+    }
+  }
+
+  .paper-home .ph-h1 {
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    font-weight: 500;
+    letter-spacing: -0.05em;
+  }
+
+  .paper-home .ph-h2 {
+    font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.045em;
+  }
+
+  .paper-home .ph-h3 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .paper-home .ph-lead {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    max-width: 60ch;
+  }
+
+  .paper-home .ph-body {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  /* base.css sizes every <p> itself; inside a label, take the label's type instead. */
+  .paper-home .ph-label :is(p, span, h2, h3, dt, dd, li, a) {
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+  }
+
+  /* The one paper card: 4px corners, a hairline, a navy paper shadow. */
+  .paper-home .ph-paper {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--ph-border);
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow:
+      0 1px 2px rgb(var(--ph-shadow) / 0.12),
+      0 14px 30px -18px rgb(var(--ph-shadow) / 0.35);
+  }
+
+  @media (min-width: 768px) {
+    .paper-home .ph-paper {
+      padding: 32px;
+    }
+  }
+
+  .paper-home .ph-paper-cream {
+    background: var(--ph-cream);
+  }
+
+  /* Pinned cards sit slightly off-square (set --rot); hover straightens and lifts them. */
+  .paper-home .ph-tilt {
+    rotate: calc(var(--rot, 0deg) * var(--rot-k, 1));
+    transition:
+      rotate 0.6s var(--ph-ease),
+      translate 0.6s var(--ph-ease),
+      box-shadow 0.6s var(--ph-ease);
+  }
+
+  .paper-home .ph-tilt:is(:hover, :focus-within) {
+    rotate: 0deg;
+    translate: 0 -4px;
+    box-shadow:
+      0 1px 2px rgb(var(--ph-shadow) / 0.14),
+      0 22px 40px -18px rgb(var(--ph-shadow) / 0.42);
+  }
+
+  @media (max-width: 767px) {
+    .paper-home {
+      --rot-k: 0.5;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .paper-home .ph-tilt {
+      transition: none;
+    }
+  }
+
+  /* Secondary link: text, arrow, and an underline that draws in on hover or focus. */
+  .paper-home .ph-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat;
+    padding-bottom: 2px;
+    transition: background-size 0.45s var(--ph-ease);
+  }
+
+  .paper-home .ph-link:is(:hover, :focus-visible) {
+    color: inherit;
+    background-size: 100% 1.5px;
+  }
+
+  .paper-home .ph-link svg {
+    transition: translate 0.45s var(--ph-ease);
+  }
+
+  .paper-home .ph-link:hover svg {
+    translate: 4px 0;
+  }
+
+  /* The technical grid in navy, faint, for yellow sheets. */
+  .paper-home .ph-grid-navy {
+    background-image:
+      linear-gradient(to right, rgb(13 18 31 / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 18 31 / 0.03) 1px, transparent 1px),
+      linear-gradient(to right, rgb(13 18 31 / 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 18 31 / 0.055) 1px, transparent 1px);
+    background-size:
+      24px 24px,
+      24px 24px,
+      120px 120px,
+      120px 120px;
+  }
+}
+
+/*
+ * Paper-cut buttons: a flat sheet with a torn left edge (the navbar's Book a call).
+ * Unlayered on purpose, so it overrides the pill rounding Button gets from utilities.
+ * The edge is rng(29) from lib/tear.ts, generated once. On keyboard focus the cut is
+ * dropped so the focus ring shows in full.
+ */
+.paper-home .ph-torn-btn {
+  border-radius: 0 3px 3px 0;
+  padding-inline-start: calc(var(--ph-torn-pad, 1.5rem) + 4px);
+  clip-path: polygon(3.5px 0, 100% 0, 100% 100%, 2.3px 100%, 3.7px 88.9%, 4.3px 77.8%, 4.5px 66.7%, 4.4px 55.6%, 4.7px 44.4%, 3.7px 33.3%, 4.2px 22.2%, 3.1px 11.1%, 3.5px 0);
+}
+
+.paper-home .ph-torn-btn:focus-visible {
+  clip-path: none;
+}
+
+/*
+ * Footer (components/ui/pushpin-tear-footer.tsx) in the site's label style.
+ * Unlayered and one class more specific than the footer's own <style>, so these win.
+ */
+.bz-footer .tpf-col h3 {
+  font-size: max(12px, 1.4cqmin);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* The wordmark already says it: no small duplicate name above it. */
+.bz-footer .tpf-eye {
+  visibility: hidden;
+}
+
+.bz-footer .tpf-flank,
+.bz-footer .tpf-credit {
+  letter-spacing: 0.1em;
+}
+
+/*
+ * Footer type on the homepage scale: three tiers only.
+ * Labels 13px uppercase, text and links 16px, display ("work.", "connect.", the wordmark) as built.
+ */
+.bz-footer .tpf-col h3,
+.bz-footer .tpf-flank,
+.bz-footer .tpf-credit,
+.bz-footer .tpf-bub {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bz-footer .tpf-mail,
+.bz-footer .tpf-status,
+.bz-footer .tpf-col,
+.bz-footer .tpf-side,
+.bz-footer .tpf-foot {
+  font-size: 16px;
+  letter-spacing: 0;
+}
+
+/* The column CTAs keep their own display size inside the 16px column. */
+.bz-footer .tpf-col .tpf-big {
+  font-size: max(26px, 4.6cqmin);
+}
+
+@media (max-width: 640px) {
+  .bz-footer .tpf-col h3,
+  .bz-footer .tpf-flank,
+  .bz-footer .tpf-credit,
+  .bz-footer .tpf-bub {
+    font-size: 12px;
+  }
+
+  .bz-footer .tpf-mail,
+  .bz-footer .tpf-status,
+  .bz-footer .tpf-col,
+  .bz-footer .tpf-side,
+  .bz-footer .tpf-foot {
+    font-size: 15px;
+  }
+}

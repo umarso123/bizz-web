@@ -1,14 +1,8 @@
 import { AnimatePresence, m, useReducedMotion } from 'framer-motion'
 import { useId, useState } from 'react'
-import { Container } from '@/components/layout/Container.tsx'
-import { TintPanel } from '@/components/layout/TintPanel.tsx'
-import { Parallax } from '@/components/motion/Parallax.tsx'
-import { Reveal, RevealText } from '@/components/motion/Reveal.tsx'
-import { Button } from '@/components/ui/Button.tsx'
-import { HexMark } from '@/components/ui/HexMark.tsx'
-import { TextLink } from '@/components/ui/TextLink.tsx'
-import { Wayfinder } from '@/components/ui/Wayfinder.tsx'
-import { CareWorkspaceShot } from '@/components/visuals/HealthShots.tsx'
+import { Reveal, RevealLines } from '@/components/motion/Reveal.tsx'
+import { PaperButton, PaperLink, PaperSection, tones } from '@/components/paper/kit.tsx'
+import { PaperPin } from '@/components/paper/paper.tsx'
 import { healthcareIntro, healthcareSolutions } from '@/content/healthcare.ts'
 import { cn } from '@/lib/cn.ts'
 
@@ -17,108 +11,94 @@ function Toggle({ open }: { open: boolean }) {
     <span
       aria-hidden="true"
       className={cn(
-        'relative grid size-9 shrink-0 place-items-center rounded-full border transition-colors duration-300',
-        open ? 'border-accent bg-accent text-text' : 'border-border-strong text-text group-hover:border-text/60',
+        'relative grid size-9 shrink-0 place-items-center rounded-[2px] border transition-colors duration-300',
+        open ? 'border-[var(--ph-navy)] bg-[var(--ph-navy)] text-white' : 'border-[var(--ph-border)] text-[var(--ph-navy)] group-hover:border-[var(--ph-navy)]',
       )}
     >
-      <span className="absolute h-[1.5px] w-3.5 rounded-full bg-current" />
-      <span
-        className={cn(
-          'absolute h-3.5 w-[1.5px] rounded-full bg-current transition-transform duration-300 ease-standard',
-          open && 'scale-y-0',
-        )}
-      />
+      <span className="absolute h-[1.5px] w-3.5 bg-current" />
+      <span className={cn('absolute h-3.5 w-[1.5px] bg-current transition-transform duration-300', open && 'scale-y-0')} />
     </span>
   )
 }
 
 /**
- * The healthcare wing: the five solutions over the shared page background,
- * each opening to the full description from the legacy site.
+ * 03 — The healthcare wing on a yellow sheet. The intro stays in view (sticky)
+ * while the five solutions, paper rows HC-01 to HC-05, open to the full
+ * description from the legacy site.
  */
 export function HealthcareZone() {
   const reduced = useReducedMotion() === true
   const [open, setOpen] = useState<number>(0)
   const baseId = useId()
+  const t = tones.yellow
 
   return (
-    <section id="healthcare" className="relative py-2 text-text md:py-3" aria-labelledby="healthcare-zone-title">
-      <TintPanel tint="lightblue">
-        <div className="section-y md:px-8">
-      <Container variant="wide" className="relative w-full">
-        <Wayfinder label="Healthcare" meta={`${healthcareSolutions.length} solutions`} />
-
-        <div className="mt-12 grid gap-14 md:mt-16 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-5">
-            <h2 id="healthcare-zone-title" className="max-w-[12ch] text-section-title text-text">
-              <RevealText text={healthcareIntro.title} />
+    <PaperSection tone="yellow" id="healthcare" labelledBy="healthcare-zone-title">
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-span-12 lg:col-span-5">
+          <div className="lg:sticky lg:top-[calc(var(--header-clearance)+24px)]">
+            <h2 id="healthcare-zone-title" className="ph-h2">
+              <RevealLines lines={['Healthcare is', 'where we go deep.']} stagger={100} />
             </h2>
-            <Reveal delay={200}>
-              <p className="mt-6 max-w-[34rem] text-body-large text-text-secondary">{healthcareIntro.body}</p>
+            <Reveal delay={160}>
+              <p className="ph-lead mt-6">{healthcareIntro.body}</p>
             </Reveal>
-            <Reveal delay={320} className="mt-10 flex flex-wrap items-center gap-3">
-              <Button size="lg" variant="primary" to="/healthcare">
+            <Reveal delay={260} className="mt-8">
+              <PaperButton tone={t.button} to="/healthcare">
                 Explore healthcare
-              </Button>
-            </Reveal>
-
-            <Reveal variant="clip" delay={150} className="mt-12 hidden overflow-hidden rounded-2xl lg:block">
-              <Parallax amount={28} className="aspect-[16/11]">
-                <CareWorkspaceShot />
-              </Parallax>
+              </PaperButton>
             </Reveal>
           </div>
+        </div>
 
-          <ul className="lg:col-span-6 lg:col-start-7">
-            {healthcareSolutions.map((item, index) => {
-              const isOpen = open === index
-              const panelId = `${baseId}-panel-${item.id}`
-              const buttonId = `${baseId}-button-${item.id}`
-              return (
-                <Reveal as="li" key={item.id} delay={index * 90} className="border-t border-border last:border-b">
-                  <h3 className="text-title">
-                    <button
-                      id={buttonId}
-                      type="button"
-                      aria-expanded={isOpen}
-                      aria-controls={panelId}
-                      onClick={() => setOpen(isOpen ? -1 : index)}
-                      className="group flex w-full items-center gap-5 py-6 text-left text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:py-7"
+        <ul className="col-span-12 mt-10 grid gap-3 lg:col-span-7 lg:mt-0" aria-label="Healthcare solutions">
+          {healthcareSolutions.map((item, index) => {
+            const isOpen = open === index
+            const panelId = `${baseId}-panel-${item.id}`
+            const buttonId = `${baseId}-button-${item.id}`
+            return (
+              <Reveal as="li" key={item.id} delay={index * 70} className="ph-paper relative p-0 md:p-0">
+                {isOpen ? <PaperPin className="top-[18px] left-[calc(100%-56px)] hidden md:block" /> : null}
+                <h3>
+                  <button
+                    id={buttonId}
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    onClick={() => setOpen(isOpen ? -1 : index)}
+                    className="group grid w-full grid-cols-[3.75rem_1fr_auto] items-center gap-4 px-6 py-5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ph-blue)] md:px-8 md:py-6"
+                  >
+                    <span className="ph-label text-[var(--ph-grey)]">HC-0{index + 1}</span>
+                    <span className="ph-h3">{item.title}</span>
+                    <Toggle open={isOpen} />
+                  </button>
+                </h3>
+                <AnimatePresence initial={false}>
+                  {isOpen ? (
+                    <m.div
+                      id={panelId}
+                      role="region"
+                      aria-labelledby={buttonId}
+                      initial={reduced ? false : { height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={reduced ? undefined : { height: 0, opacity: 0 }}
+                      transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                      className="overflow-hidden"
                     >
-                      <HexMark variant={isOpen ? 'active' : 'station'} size={18} />
-                      <span className="flex-1 text-title text-text">{item.title}</span>
-                      <Toggle open={isOpen} />
-                    </button>
-                  </h3>
-                  <AnimatePresence initial={false}>
-                    {isOpen ? (
-                      <m.div
-                        id={panelId}
-                        role="region"
-                        aria-labelledby={buttonId}
-                        initial={reduced ? false : { height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={reduced ? undefined : { height: 0, opacity: 0 }}
-                        transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="pb-8 ps-[2.375rem] pe-14">
-                          <p className="max-w-[36rem] text-body text-text-secondary">{item.body}</p>
-                          <TextLink to={`/work/${item.slug}`} className="mt-3">
-                            View case study
-                          </TextLink>
-                        </div>
-                      </m.div>
-                    ) : null}
-                  </AnimatePresence>
-                </Reveal>
-              )
-            })}
-          </ul>
-        </div>
-      </Container>
-        </div>
-      </TintPanel>
-    </section>
+                      <div className="border-t border-[var(--ph-border)] px-6 pt-5 pb-6 md:ps-[calc(2rem+3.75rem+1rem)] md:pe-8 md:pb-8">
+                        <p className="ph-body max-w-[60ch] text-[var(--ph-grey)]">{item.body}</p>
+                        <PaperLink to={`/work/${item.slug}`} className="mt-4">
+                          View case study
+                        </PaperLink>
+                      </div>
+                    </m.div>
+                  ) : null}
+                </AnimatePresence>
+              </Reveal>
+            )
+          })}
+        </ul>
+      </div>
+    </PaperSection>
   )
 }

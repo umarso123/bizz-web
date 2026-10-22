@@ -85,6 +85,15 @@ Bizaffix is about revolutionizing the healthcare industry with custom mobile app
 - Try Bizaffix today. Just book a call and you will be scheduled to try our product, a 2-month trial first. Or maybe you will take a tour on our web. Book Now.
 - Want to collaborate? Reach out to us. Email form with Send.
 
+## Global presence
+
+From the old site's presence section (screenshot supplied by the team, October 2026).
+
+- Bizaffix's global presence
+- Now extending to numerous cities throughout the world.
+- Locations: Texas, Dubai. Add others only when the team confirms them.
+- Let's Talk
+
 ## Footer
 
 From idea to reality: Delivering exceptional software solutions.

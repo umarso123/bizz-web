@@ -1,149 +1,137 @@
-import { m, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
-import { Link } from 'react-router'
-import { bookCallButtonProps } from '@/app/navigation.ts'
-import { Container } from '@/components/layout/Container.tsx'
+import type { CSSProperties, PointerEvent } from 'react'
 import { CountUp, Reveal, RevealLines } from '@/components/motion/Reveal.tsx'
-import { Button } from '@/components/ui/Button.tsx'
-import { HexMark } from '@/components/ui/HexMark.tsx'
+import { PaperButton, PaperLink, tones } from '@/components/paper/kit.tsx'
+import { CropMarks, PaperPin, usePaperGrain } from '@/components/paper/paper.tsx'
+import { TornEdge } from '@/components/paper/TornEdge.tsx'
 import { homeContent } from '@/content/home.ts'
 import { premiumHome } from '@/content/premium-home.ts'
 import { servicesPage } from '@/content/services.ts'
+import { paperInk } from '@/lib/paper-theme.ts'
 
 /** Facts from the site's own content; numbers count up on arrival. */
-const stats: readonly { value?: number; label: string }[] = [
-  { label: 'Mobile · Web · Cloud' },
-  { value: servicesPage.services.length, label: 'core services' },
-  { value: homeContent.industries.length, label: 'industries served' },
+const stats: readonly { value?: number; label: string; text?: string }[] = [
+  { label: 'Platforms', text: 'Mobile · Web · Cloud' },
+  { value: servicesPage.services.length, label: 'Core services' },
+  { value: homeContent.industries.length, label: 'Industries served' },
 ]
 
-function Arrow() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      className="size-4 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1"
-      aria-hidden="true"
-    >
-      <path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-/** The flat Healthcare card: overlaps the hero's bottom edge and rises into place on scroll. */
+/** The Healthcare card: cream paper pinned to the hero sheet with the screen's one yellow pin. */
 function HealthcareCard() {
-  const reduced = useReducedMotion() === true
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'start 55%'] })
-  const y = useTransform(scrollYProgress, [0, 1], [40, 0])
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.6, 1])
-
   return (
-    <Container variant="wide" className="relative z-10 -mt-6 w-full">
-      <m.div
-        ref={ref}
-        style={reduced ? undefined : { y, opacity }}
-        className="flex flex-col gap-5 rounded-[20px] border border-border bg-white/75 p-6 backdrop-blur-md md:flex-row md:items-center md:gap-8 md:p-7"
+    <Reveal variant="rise" delay={150} className="relative mt-16">
+      <div
+        className="ph-paper ph-paper-cream ph-tilt grid gap-6 pt-10 text-[var(--ph-navy)] md:grid-cols-12 md:items-center md:pt-8"
+        style={{ '--rot': '-0.6deg' } as CSSProperties}
       >
-        <p className="flex shrink-0 items-center gap-2 text-eyebrow font-semibold text-text">
-          <span aria-hidden="true" className="size-2 rounded-full bg-accent ring-2 ring-accent/30" />
-          Healthcare
-        </p>
-        <p className="min-w-0 flex-1 text-[1.125rem] leading-snug font-semibold text-text md:text-[1.25rem]">
-          Clinical tools, telemedicine &amp; interoperability
-        </p>
-        <ul className="flex shrink-0 flex-wrap gap-2" aria-label="Healthcare focus areas">
+        <PaperPin color={paperInk.yellow} className="top-[22px] left-1/2 md:left-[calc(100%/12*2)]" />
+        <p className="ph-label text-[var(--ph-grey)] md:col-span-3">Industry 01 — Healthcare</p>
+        <p className="ph-h3 md:col-span-4">Clinical tools, telemedicine &amp; interoperability</p>
+        <ul className="flex flex-wrap gap-2 md:col-span-3" aria-label="Healthcare focus areas">
           {['EHR', 'HIE', 'Telehealth'].map((tag) => (
-            <li key={tag} className="rounded-pill border border-[rgb(15_23_42/0.08)] bg-white/70 px-3 py-1 text-caption font-medium text-text">
+            <li key={tag} className="ph-label rounded-[2px] border border-[var(--ph-border)] bg-white px-2 py-1">
               {tag}
             </li>
           ))}
         </ul>
-        <Link
-          to="/healthcare"
-          className="group inline-flex shrink-0 items-center gap-2 text-body-small font-semibold text-brand no-underline hover:text-brand-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-        >
+        <PaperLink to="/healthcare" className="md:col-span-2 md:justify-self-end">
           Explore healthcare
-          <Arrow />
-        </Link>
-      </m.div>
-    </Container>
+        </PaperLink>
+      </div>
+    </Reveal>
   )
 }
 
+/**
+ * 01 — The hero is a brand-blue sheet: a faint white grid, crop marks, the label
+ * row, the headline, and a torn bottom edge that rips open from a centre pin as
+ * the page scrolls.
+ */
 export function PremiumHero() {
   const copy = premiumHome.hero
+  const grain = usePaperGrain()
+  const t = tones.blue
+
+  // Pins lean toward the pointer, like the footer's.
+  const lean = (event: PointerEvent<HTMLElement>) => {
+    const box = event.currentTarget.getBoundingClientRect()
+    const tilt = Math.max(-9, Math.min(9, ((event.clientX - box.left) / box.width - 0.5) * 18))
+    event.currentTarget.style.setProperty('--tilt', `${tilt.toFixed(2)}deg`)
+  }
 
   return (
-    <>
-      <section
-        className="relative -mt-(--header-clearance) flex min-h-[calc(100svh-3.5rem)] flex-col pt-[calc(var(--header-clearance)+2rem)]"
-        aria-labelledby="premium-hero-title"
-      >
-        <Container variant="wide" className="relative my-auto w-full py-10 lg:py-14">
-          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
-            <div className="lg:col-span-7">
-              <Reveal variant="fade">
-                <p className="flex items-center gap-2 text-eyebrow text-text-secondary">
-                  <HexMark variant="solid" size={10} />
-                  Technology studio · Austin, Texas
-                </p>
-              </Reveal>
+    <section
+      onPointerMove={lean}
+      onPointerLeave={(event) => event.currentTarget.style.setProperty('--tilt', '0deg')}
+      className={`relative -mt-(--header-clearance) ${t.sheet}`}
+      aria-labelledby="premium-hero-title"
+    >
+      <div aria-hidden="true" className={`absolute inset-0 ${t.grid}`} />
+      <div aria-hidden="true" className="ph-grain absolute inset-0" style={{ '--ph-grain': grain } as CSSProperties} />
 
-              <h1
-                id="premium-hero-title"
-                className="mt-6 text-[length:clamp(2.5rem,6vw,5.5rem)] leading-[0.95] font-semibold tracking-[-0.03em] text-text [font-stretch:84%]"
-              >
-                <span className="sr-only">{copy.title}</span>
-                <span aria-hidden="true">
-                  <RevealLines
-                    delay={120}
-                    lines={[
-                      'Digital products',
-                      'that move healthcare',
-                      <span key="accent" className="font-['Instrument_Serif'] font-normal tracking-[-0.01em] text-brand italic [font-stretch:100%]">
-                        forward.
-                      </span>,
-                    ]}
-                  />
-                </span>
-              </h1>
+      <div className="ph-container pt-[calc(var(--header-clearance)+32px)] pb-16">
+        <CropMarks className="inset-x-[calc(clamp(20px,5vw,96px)-12px)] top-[calc(var(--header-clearance)+8px)] bottom-8 hidden text-white md:block" />
 
-              <Reveal delay={420}>
-                <p className="mt-7 max-w-[60ch] text-body-large text-text-secondary">
-                  We design and engineer mobile apps, web platforms, and healthcare software, from idea to reality.
-                </p>
-              </Reveal>
+        <h1 id="premium-hero-title" className="ph-h1 text-white">
+          <span className="sr-only">{copy.title}</span>
+          <span aria-hidden="true">
+            <RevealLines
+              delay={140}
+              stagger={110}
+              lines={[
+                'Digital products',
+                'that move healthcare',
+                <span key="accent" className="ph-mark">
+                  forward.
+                </span>,
+              ]}
+            />
+          </span>
+        </h1>
 
-              <Reveal delay={520} className="mt-9 flex flex-wrap items-center gap-3">
-                <Button size="lg" variant="brand" {...bookCallButtonProps()}>
-                  {copy.primaryCta}
-                </Button>
-                <Button size="lg" variant="ghost" href={copy.secondaryTo} className="group" trailingIcon={<Arrow />}>
-                  {copy.secondaryCta}
-                </Button>
-              </Reveal>
-            </div>
-
-            {/* Breathing space where the background shows, with three small facts */}
-            <ul className="flex flex-col items-start gap-3 lg:col-span-4 lg:col-start-9 lg:items-end" aria-label="Bizaffix at a glance">
-              {stats.map((stat, index) => (
-                <Reveal as="li" key={stat.label} variant="fade" delay={650 + index * 120} className={index === 1 ? 'lg:me-16' : undefined}>
-                  <span
-                    className="pill-float inline-flex items-baseline gap-2 rounded-pill border border-border bg-white/60 px-5 py-2.5 backdrop-blur-md"
-                    style={{ animationDelay: `-${index * 2}s` }}
-                  >
-                    {stat.value !== undefined ? <CountUp value={stat.value} className="text-title text-text" /> : null}
-                    <span className={stat.value !== undefined ? "text-body-small text-text-secondary" : "text-body-small font-semibold text-text"}>{stat.label}</span>
-                  </span>
-                </Reveal>
-              ))}
-            </ul>
+        <div className="mt-6 grid grid-cols-12 gap-6 md:mt-8 lg:items-end">
+          <div className="col-span-12 lg:col-span-6">
+            <Reveal delay={380}>
+              <p className="ph-lead text-white">
+                We design and engineer mobile apps, web platforms, and healthcare software, from idea to reality.
+              </p>
+            </Reveal>
+            <Reveal delay={460} className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+              <PaperButton tone={t.button}>{copy.primaryCta}</PaperButton>
+              <PaperLink to={copy.secondaryTo} className="text-white">
+                {copy.secondaryCta}
+              </PaperLink>
+            </Reveal>
           </div>
-        </Container>
-      </section>
 
-      <HealthcareCard />
-    </>
+          {/* Readout: the studio at a glance */}
+          <dl className="col-span-12 lg:col-span-5 lg:col-start-8" aria-label="Bizaffix at a glance">
+            {stats.map((stat, index) => (
+              <Reveal
+                key={stat.label}
+                variant="fade"
+                delay={200 + index * 90}
+                className="flex items-baseline justify-between gap-6 border-t border-white/25 py-4 last:border-b"
+              >
+                <dt className={`ph-label ${t.muted}`}>{stat.label}</dt>
+                <dd className="text-white tabular-nums">
+                  {stat.value !== undefined ? (
+                    <CountUp value={stat.value} className="text-[1.5rem] leading-none font-medium tracking-[-0.03em]" />
+                  ) : (
+                    <span className="ph-label">{stat.text}</span>
+                  )}
+                </dd>
+              </Reveal>
+            ))}
+          </dl>
+        </div>
+
+        <HealthcareCard />
+
+      </div>
+
+      {/* Hero → next: a big tear from a centre pin; the sheet rips upward */}
+      <TornEdge seed={11} pin="center" under={paperInk.white} />
+    </section>
   )
 }
 

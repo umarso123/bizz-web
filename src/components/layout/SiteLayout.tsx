@@ -1,10 +1,10 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { Outlet, useLocation } from 'react-router'
 import { ConnectBanner } from '@/components/layout/ConnectBanner.tsx'
-import { Footer } from '@/components/layout/Footer.tsx'
+import { SiteFooter } from '@/components/layout/SiteFooter.tsx'
 import { Header } from '@/components/layout/Header.tsx'
-import { AmbientBackground } from '@/components/motion/AmbientBackground.tsx'
 import { ScrollRoute } from '@/components/motion/ScrollRoute.tsx'
+import { PaperConnect } from '@/sections/home/PaperConnect.tsx'
 
 export function SiteLayout() {
   const { pathname } = useLocation()
@@ -12,14 +12,14 @@ export function SiteLayout() {
   return (
     // One motion provider for every page, so shared scroll visuals animate everywhere
     <LazyMotion features={domAnimation}>
-      <AmbientBackground />
       <ScrollRoute />
       <Header />
       <div className="pt-(--header-clearance)">
         <Outlet />
       </div>
-      {pathname === '/contact' ? null : <ConnectBanner />}
-      <Footer />
+      {/* The homepage closes on its own yellow sheet; contact has the form instead */}
+      {pathname === '/' ? <PaperConnect /> : pathname === '/contact' ? null : <ConnectBanner />}
+      <SiteFooter />
       <div aria-hidden="true" className="page-grain" />
     </LazyMotion>
   )

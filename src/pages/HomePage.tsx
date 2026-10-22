@@ -1,15 +1,14 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { useEffect } from 'react'
-import { CaseHighlight } from '@/sections/home/CaseHighlight.tsx'
+import { CenterTearReveal } from '@/components/paper/CenterTearReveal.tsx'
 import { HealthcareZone } from '@/sections/home/HealthcareZone.tsx'
 import { HorizontalWork } from '@/sections/home/HorizontalWork.tsx'
 import { IndustriesMarquee } from '@/sections/home/IndustriesMarquee.tsx'
 import { ApproachStack } from '@/sections/home/ApproachStack.tsx'
+import { GlobalPresence } from '@/sections/home/GlobalPresence.tsx'
 import { Members } from '@/sections/home/Members.tsx'
 import { PremiumHero } from '@/sections/home/PremiumHero.tsx'
 import { ServicesDirectory } from '@/sections/home/ServicesDirectory.tsx'
-import { StatsBand } from '@/sections/home/StatsBand.tsx'
-import { WhoWeWorkWith } from '@/sections/home/WhoWeWorkWith.tsx'
 
 /**
  * The homepage as a rhythm of panels, never two alike in a row:
@@ -25,18 +24,18 @@ export function HomePage() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <main className="homepage">
+      <main className="homepage paper-home">
         <PremiumHero />
         <IndustriesMarquee />
         <HealthcareZone />
-        {/* Work: a full-bleed cream band (it pins edge to edge while scrolling sideways) */}
-        <HorizontalWork className="bg-[rgb(255_252_240/0.9)]" />
-        <WhoWeWorkWith />
-        <CaseHighlight />
+        {/* 04 Work: a night sheet that pins edge to edge while scrolling sideways */}
+        <HorizontalWork />
+        {/* WhoWeWorkWith → CaseHighlight: the centre tear reveal */}
+        <CenterTearReveal />
         <ServicesDirectory />
         <ApproachStack />
-        <StatsBand />
         <Members />
+        <GlobalPresence />
       </main>
     </LazyMotion>
   )
