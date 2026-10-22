@@ -20,6 +20,47 @@ export const aboutPage = {
     closing:
       'Let’s embrace the possibilities and sail for success in the ever-evolving world of digital opportunities.',
   },
+  /** Figures from the old About page. Locations (3) waits until all three are confirmed. */
+  impact: {
+    label: 'Our impact',
+    meta: 'Since 2022',
+    title: 'Transforming businesses, one digital solution at a time.',
+    body: 'We’ve become a catalyst for entrepreneurial growth, helping startups compete with industry giants, and our healthcare software improves efficiency and patient care.',
+    closing: 'Our impact is real, and we’re just getting started.',
+    numbers: [
+      { value: 400, label: 'Projects completed' },
+      { value: 100, label: 'Brands developed' },
+      { value: 50, label: 'Happy customers' },
+      { value: 8, label: 'Product launches' },
+    ],
+  },
+  values: {
+    label: 'Values',
+    title: 'Empowering entrepreneurs and advancing innovation.',
+    body: 'Our values form the core of our operations, guiding our actions and driving our commitment to our clients.',
+    items: [
+      {
+        title: 'Entrepreneurial empowerment',
+        body: 'We believe in the power of ideas and the people behind them, and help entrepreneurs turn innovative concepts into successful businesses.',
+      },
+      {
+        title: 'User-centricity',
+        body: 'Users sit at the heart of everything we do. We create experiences that are intuitive, user-friendly, and engaging, not just good-looking.',
+      },
+      {
+        title: 'Innovation',
+        body: 'We push the boundaries of UI/UX design, web and app development, and healthcare software. We aim to shape the digital landscape, not keep up with it.',
+      },
+      {
+        title: 'Partnership',
+        body: 'We see ourselves not as a service provider but as part of your team, building solid, lasting partnerships.',
+      },
+      {
+        title: 'Integrity',
+        body: 'We work with transparency and honesty, and hold ourselves accountable for the quality of what we deliver.',
+      },
+    ],
+  },
   industries: {
     label: 'Industries',
     title: 'Healthcare leads.',

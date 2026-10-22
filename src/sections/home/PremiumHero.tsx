@@ -3,16 +3,17 @@ import { CountUp, Reveal, RevealLines } from '@/components/motion/Reveal.tsx'
 import { PaperButton, PaperLink, tones } from '@/components/paper/kit.tsx'
 import { CropMarks, PaperPin, usePaperGrain } from '@/components/paper/paper.tsx'
 import { TornEdge } from '@/components/paper/TornEdge.tsx'
-import { homeContent } from '@/content/home.ts'
+import { aboutPage } from '@/content/about.ts'
 import { premiumHome } from '@/content/premium-home.ts'
-import { servicesPage } from '@/content/services.ts'
 import { paperInk } from '@/lib/paper-theme.ts'
 
-/** Facts from the site's own content; numbers count up on arrival. */
+/** The old About page's figures (content/legacy-site.md); numbers count up on arrival. */
+const [projects, brands, customers] = aboutPage.impact.numbers
 const stats: readonly { value?: number; label: string; text?: string }[] = [
-  { label: 'Platforms', text: 'Mobile · Web · Cloud' },
-  { value: servicesPage.services.length, label: 'Core services' },
-  { value: homeContent.industries.length, label: 'Industries served' },
+  { value: projects.value, label: projects.label },
+  { value: brands.value, label: brands.label },
+  { value: customers.value, label: customers.label },
+  { label: 'Founded', text: '2022' },
 ]
 
 /** The Healthcare card: cream paper pinned to the hero sheet with the screen's one yellow pin. */
@@ -117,7 +118,7 @@ export function PremiumHero() {
                   {stat.value !== undefined ? (
                     <CountUp value={stat.value} className="text-[1.5rem] leading-none font-medium tracking-[-0.03em]" />
                   ) : (
-                    <span className="ph-label">{stat.text}</span>
+                    <span className="text-[1.5rem] leading-none font-medium tracking-[-0.03em]">{stat.text}</span>
                   )}
                 </dd>
               </Reveal>

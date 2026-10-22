@@ -2,8 +2,8 @@ import { AnimatePresence, m, useReducedMotion } from 'framer-motion'
 import { useId, useState } from 'react'
 import { Reveal, RevealLines } from '@/components/motion/Reveal.tsx'
 import { PaperButton, PaperLink, PaperSection, tones } from '@/components/paper/kit.tsx'
-import { PaperPin } from '@/components/paper/paper.tsx'
-import { healthcareIntro, healthcareSolutions } from '@/content/healthcare.ts'
+import { healthcareSolutions } from '@/content/healthcare.ts'
+import { premiumHome } from '@/content/premium-home.ts'
 import { cn } from '@/lib/cn.ts'
 
 function Toggle({ open }: { open: boolean }) {
@@ -23,8 +23,8 @@ function Toggle({ open }: { open: boolean }) {
 
 /**
  * 03 — The healthcare wing on a yellow sheet. The intro stays in view (sticky)
- * while the five solutions, paper rows HC-01 to HC-05, open to the full
- * description from the legacy site.
+ * while the five solutions, paper rows HC-01 to HC-05, open to a short summary
+ * (the full legacy description lives on the Healthcare page).
  */
 export function HealthcareZone() {
   const reduced = useReducedMotion() === true
@@ -41,7 +41,7 @@ export function HealthcareZone() {
               <RevealLines lines={['Healthcare is', 'where we go deep.']} stagger={100} />
             </h2>
             <Reveal delay={160}>
-              <p className="ph-lead mt-6">{healthcareIntro.body}</p>
+              <p className="ph-lead mt-6">{premiumHome.copy.healthcareLead}</p>
             </Reveal>
             <Reveal delay={260} className="mt-8">
               <PaperButton tone={t.button} to="/healthcare">
@@ -58,7 +58,6 @@ export function HealthcareZone() {
             const buttonId = `${baseId}-button-${item.id}`
             return (
               <Reveal as="li" key={item.id} delay={index * 70} className="ph-paper relative p-0 md:p-0">
-                {isOpen ? <PaperPin className="top-[18px] left-[calc(100%-56px)] hidden md:block" /> : null}
                 <h3>
                   <button
                     id={buttonId}
@@ -86,7 +85,7 @@ export function HealthcareZone() {
                       className="overflow-hidden"
                     >
                       <div className="border-t border-[var(--ph-border)] px-6 pt-5 pb-6 md:ps-[calc(2rem+3.75rem+1rem)] md:pe-8 md:pb-8">
-                        <p className="ph-body max-w-[60ch] text-[var(--ph-grey)]">{item.body}</p>
+                        <p className="ph-body max-w-[60ch] text-[var(--ph-grey)]">{premiumHome.copy.healthcareSummaries[item.id] ?? item.body}</p>
                         <PaperLink to={`/work/${item.slug}`} className="mt-4">
                           View case study
                         </PaperLink>

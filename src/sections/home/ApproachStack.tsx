@@ -2,7 +2,7 @@ import { useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion'
 import { useRef, useState, type CSSProperties, type Ref } from 'react'
 import { Reveal, RevealLines } from '@/components/motion/Reveal.tsx'
 import { PaperSection, tones } from '@/components/paper/kit.tsx'
-import { PaperPin, usePaperGrain } from '@/components/paper/paper.tsx'
+import { usePaperGrain } from '@/components/paper/paper.tsx'
 import { homeContent } from '@/content/home.ts'
 import { cn } from '@/lib/cn.ts'
 import { useMediaQuery } from '@/sections/home/homeJourney.ts'
@@ -102,11 +102,6 @@ export function ApproachStack() {
       <Reveal delay={160}>
         <p className="ph-lead mt-6">{copy.body}</p>
       </Reveal>
-      <Reveal delay={240}>
-        <p className={cn('ph-body mt-4 max-w-[60ch]', t.muted)}>
-          With our team of skilled experts, we’re not just about lines of code; we’re about building relationships.
-        </p>
-      </Reveal>
     </div>
   )
 
@@ -159,7 +154,6 @@ export function ApproachStack() {
                     className={cn('ph-paper absolute inset-x-0 top-6 h-[376px] origin-top p-0 transition-[transform,opacity] duration-700 md:p-0', ease)}
                     style={{ transform: place.transform, opacity: place.opacity, zIndex: place.z }}
                   >
-                    {front ? <PaperPin className="top-[22px] left-1/2" /> : null}
                     <div
                       className={cn(
                         'grid h-full grid-cols-[52%_minmax(0,1fr)] items-center gap-6 p-6 transition-opacity duration-500 md:p-8',

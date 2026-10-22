@@ -3,6 +3,7 @@ import { bookCall, bookCallButtonProps } from '@/app/navigation.ts'
 import { SectionHeader } from '@/components/common/SectionHeader.tsx'
 import { Container } from '@/components/layout/Container.tsx'
 import { PageHero } from '@/components/layout/PageHero.tsx'
+import { CountUp, Reveal, RevealText } from '@/components/motion/Reveal.tsx'
 import { Button } from '@/components/ui/Button.tsx'
 import { HexMark } from '@/components/ui/HexMark.tsx'
 import { HexMonogram } from '@/components/ui/HexMonogram.tsx'
@@ -72,6 +73,34 @@ export function AboutPage() {
               <p className="text-body-large text-text-secondary">{copy.story.relationships}</p>
               <p className="text-body text-text-secondary">{copy.story.closing}</p>
             </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Our impact: the old site's own figures, on the deep brand panel */}
+      <section className="section-y bg-surface-brand-deep text-text-inverse" aria-labelledby="about-impact-title">
+        <Container variant="wide" className="w-full">
+          <Wayfinder label={copy.impact.label} meta={copy.impact.meta} inverse />
+          <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-8">
+            <div className="lg:col-span-5">
+              <h2 id="about-impact-title" className="text-section-title text-text-inverse">
+                <RevealText text={copy.impact.title} />
+              </h2>
+              <Reveal delay={200}>
+                <p className="mt-6 text-body-large text-text-inverse-muted">{copy.impact.body}</p>
+                <p className="mt-4 text-body text-text-inverse">{copy.impact.closing}</p>
+              </Reveal>
+            </div>
+            <dl className="grid grid-cols-2 gap-x-8 gap-y-12 lg:col-span-6 lg:col-start-7 lg:self-end">
+              {copy.impact.numbers.map((item, index) => (
+                <Reveal key={item.label} delay={index * 100} className="flex flex-col-reverse border-t border-white/20 pt-5">
+                  <dt className="mt-3 text-body-small font-semibold text-text-inverse">{item.label}</dt>
+                  <dd className="text-[length:clamp(3rem,2rem+3vw,5rem)] leading-none font-semibold tracking-[-0.03em] text-accent tabular-nums [font-stretch:84%]">
+                    <CountUp value={item.value} />
+                  </dd>
+                </Reveal>
+              ))}
+            </dl>
           </div>
         </Container>
       </section>
@@ -176,8 +205,36 @@ export function AboutPage() {
         </Container>
       </section>
 
+      {/* Values: five principles, numbered */}
+      <section className="section-y bg-bg-subtle" aria-labelledby="about-values-title">
+        <Container variant="wide" className="w-full">
+          <SectionHeader
+            eyebrow={copy.values.label}
+            meta={`${copy.values.items.length} values`}
+            title={copy.values.title}
+            titleId="about-values-title"
+            description={copy.values.body}
+          />
+
+          <ol className="mt-14 border-t border-border md:mt-20">
+            {copy.values.items.map((value, index) => (
+              <Reveal
+                as="li"
+                key={value.title}
+                delay={index * 60}
+                className="grid gap-3 border-b border-border py-8 md:grid-cols-12 md:items-baseline md:gap-8"
+              >
+                <span className="text-caption text-text-muted tabular-nums md:col-span-1">{String(index + 1).padStart(2, '0')}</span>
+                <h3 className="text-title text-text md:col-span-4">{value.title}</h3>
+                <p className="max-w-[36rem] text-body text-text-secondary md:col-span-6 md:col-start-7">{value.body}</p>
+              </Reveal>
+            ))}
+          </ol>
+        </Container>
+      </section>
+
       {/* Process: a real sequence, drawn as a route */}
-      <section className="section-y bg-bg-subtle" aria-labelledby="about-process-title">
+      <section className="section-y bg-page-white" aria-labelledby="about-process-title">
         <Container variant="wide" className="w-full">
           <SectionHeader
             eyebrow={copy.process.label}
@@ -215,7 +272,7 @@ export function AboutPage() {
       </section>
 
       {/* Team: monograms stand in until real portraits are supplied */}
-      <section className="section-y bg-page-white" aria-labelledby="about-team-title">
+      <section className="section-y bg-bg-subtle" aria-labelledby="about-team-title">
         <Container variant="wide" className="w-full">
           <SectionHeader
             eyebrow={copy.team.label}

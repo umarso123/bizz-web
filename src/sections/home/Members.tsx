@@ -1,8 +1,8 @@
 import { useState, type CSSProperties } from 'react'
 import { Reveal, RevealLines } from '@/components/motion/Reveal.tsx'
 import { PaperLink, PaperSection } from '@/components/paper/kit.tsx'
-import { PaperPin } from '@/components/paper/paper.tsx'
 import { homeContent } from '@/content/home.ts'
+import { premiumHome } from '@/content/premium-home.ts'
 
 type Person = (typeof homeContent.members.people)[number]
 
@@ -42,7 +42,7 @@ function Portrait({ person }: { person: Person }) {
   )
 }
 
-/** 09 — The people behind the work, as pinned paper ID badges. */
+/** 09 — The people behind the work, as paper ID badges. */
 export function Members() {
   const copy = homeContent.members
   const people = copy.people
@@ -55,7 +55,7 @@ export function Members() {
           <RevealLines lines={[copy.title]} />
         </h2>
         <Reveal variant="fade" className="col-span-12 lg:col-span-6 lg:col-start-7">
-          <p className="ph-lead text-[var(--ph-grey)]">{copy.body}</p>
+          <p className="ph-lead text-[var(--ph-grey)]">{premiumHome.copy.membersBody}</p>
           <PaperLink to="/careers" className="mt-6">
             Work with us
           </PaperLink>
@@ -65,8 +65,7 @@ export function Members() {
       <ul className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {people.map((person, index) => (
           <Reveal as="li" key={person.id} variant="fade" delay={index * 90} className="flex">
-            <article className="ph-paper ph-paper-cream ph-tilt flex w-full flex-col p-4 pt-8 md:p-5 md:pt-8" style={{ '--rot': ROT[index % ROT.length] } as CSSProperties}>
-              <PaperPin className="top-[18px] left-1/2" />
+            <article className="ph-paper ph-paper-cream ph-tilt flex w-full flex-col p-4 md:p-5" style={{ '--rot': ROT[index % ROT.length] } as CSSProperties}>
               <Portrait person={person} />
               <h3 className="ph-h3 mt-4">{person.name}</h3>
               <p className="ph-label mt-2 text-[var(--ph-blue)]">{person.role}</p>

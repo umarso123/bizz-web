@@ -4,6 +4,7 @@ import { PaperLink } from '@/components/paper/kit.tsx'
 import { CropMarks, PaperPin, usePaperGrain } from '@/components/paper/paper.tsx'
 import { homeContent } from '@/content/home.ts'
 import { mockups } from '@/content/mockups.ts'
+import { premiumHome } from '@/content/premium-home.ts'
 import { cn } from '@/lib/cn.ts'
 import { paperInk } from '@/lib/paper-theme.ts'
 
@@ -41,7 +42,7 @@ export function CaseHighlight({ className, contentRef }: CaseHighlightProps) {
               <div className="ph-paper ph-paper-cream ph-tilt p-4 md:p-6" style={{ '--rot': '-1.2deg' } as CSSProperties}>
                 <PaperPin color={paperInk.yellow} className="top-[26px] left-1/2" />
                 <span className="ph-label absolute top-4 left-4 z-10 bg-[var(--ph-yellow)] px-2 py-1 text-[var(--ph-navy)] md:top-6 md:left-6">
-                  Case 01 — Fitness
+                  {premiumHome.copy.caseLabel}
                 </span>
                 <div className="relative overflow-hidden rounded-[2px] bg-white">
                   <img

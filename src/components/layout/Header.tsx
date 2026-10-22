@@ -122,7 +122,8 @@ export function Header() {
             paper
               ? // Homepage: a white paper strip pinned at the top; a frosted pill once scrolled
                 scrolled
-                ? 'max-w-[60rem] rounded-full bg-white/80 shadow-[0_2px_4px_rgb(10_26_58/0.12),0_14px_32px_-12px_rgb(10_26_58/0.3)] backdrop-blur-xl md:h-12'
+                ? // From 960px the button is the last thing in the pill: an even 2px inset all round so its rounded end runs parallel to the pill's
+                  'max-w-[60rem] rounded-full bg-white/80 min-[960px]:pe-0.5! shadow-[0_2px_4px_rgb(10_26_58/0.12),0_14px_32px_-12px_rgb(10_26_58/0.3)] backdrop-blur-xl md:h-12'
                 : 'ph-grain max-w-[72rem] rounded-[3px] bg-white shadow-[0_2px_3px_rgb(10_26_58/0.2),0_18px_32px_-16px_rgb(10_26_58/0.4)] md:h-14 md:ps-16'
               : cn(
                   'rounded-full',
@@ -164,9 +165,12 @@ export function Header() {
 
           <div className="flex items-center gap-1">
             {paper ? (
-              // A blue sheet with a torn left edge
+              // A blue sheet with a torn left edge; in the pill its right end rounds to follow the pill's curve
               <BookCallLink
-                className="ph-torn-btn inline-flex h-9 items-center bg-[#234ED1] pe-4 [--ph-torn-pad:1rem] md:[--ph-torn-pad:1.25rem] text-[0.875rem] font-medium tracking-[-0.01em] whitespace-nowrap text-white no-underline shadow-[0_2px_3px_rgb(10_26_58/0.25)] transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px hover:bg-[#1c41b5] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#234ED1] sm:h-10 md:h-11 md:ps-6 md:pe-5 md:text-[0.9375rem]"
+                className={cn(
+                  'ph-torn-btn inline-flex h-9 items-center bg-[#234ED1] pe-4 [--ph-torn-pad:1rem] md:[--ph-torn-pad:1.25rem] text-[0.875rem] font-medium tracking-[-0.01em] whitespace-nowrap text-white no-underline shadow-[0_2px_3px_rgb(10_26_58/0.25)] transition-[background-color,transform,border-radius] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-px hover:bg-[#1c41b5] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#234ED1] sm:h-10 md:h-11 md:ps-6 md:pe-5 md:text-[0.9375rem]',
+                  scrolled && 'min-[960px]:rounded-r-full!',
+                )}
               >
                 {bookCall.label}
               </BookCallLink>

@@ -107,3 +107,40 @@ Industries: Healthcare, Educational, Fintech, Fitness, eCommerce
 Useful links: Careers, Packages, Articles by Bizaffix
 
 Bizaffix LLC © 2023 All Rights Reserved.
+
+## About page
+
+From the old site's About page (supplied by the team, October 2026).
+
+Discover | Design | Develop
+
+Meet Your Dedicated Team of Digital Masters. Meet the dedicated team at Bizaffix, your strategic partners in digital transformation. We offer expert UI/UX design for seamless user experiences, robust web development for engaging digital presence, innovative app development for intuitive mobile solutions, and customized healthcare software solutions ensuring HIPAA compliance. We aim to combine our passion and expertise to help your business excel in a digital era. As your allies, we're committed to pushing boundaries and nurturing long-term relationships.
+
+### Values
+
+Empowering Entrepreneurs and Advancing Innovation. At Bizaffix, our values form the core of our operations, guiding our actions and driving our commitment to our clients.
+
+- Entrepreneurial Empowerment: We believe in the power of ideas and the individuals behind them. Our main goal is to support entrepreneurs in bringing their visions to life through cutting-edge digital solutions. We take pride in being a catalyst that helps turn innovative concepts into successful businesses.
+- User-Centricity: Putting users at the heart of everything we do is fundamental to our approach. We strive to create digital experiences that are not just visually appealing but intuitive, user-friendly, and engaging.
+- Innovation: We constantly seek to push the boundaries of what's possible in UI/UX design, web and app development, and healthcare software solutions. We aim to shape the digital landscape, not just keep up with it.
+- Partnership: We value collaboration and believe in building solid and lasting partnerships with our clients. We see ourselves not as a service provider but as an integral part of your team.
+- Integrity: We operate with transparency, honesty, and integrity in every aspect of our business, and hold ourselves accountable to deliver the highest quality solutions.
+
+(The old page also had Mission and Vision tabs, but no text for them was supplied.)
+
+### Numbers
+
+Stated on the old About page. These are the only figures the site may publish.
+
+- Founding year: 2022
+- Happy customers: 50
+- Brands developed: 100
+- Locations: 3 (only Texas and Dubai are confirmed; see Global presence)
+- Product launches: 8
+- Projects completed: 400
+
+"We work through every aspect at the planning. We do it for you with love."
+
+### Our impact
+
+Transforming Businesses, One Digital Solution at a Time. Our impact extends beyond creating digital solutions. We've become a crucial catalyst for entrepreneurial growth, helping startups compete with industry giants. Our specialized healthcare software solutions improve efficiency and patient care, and we're proud to make a tangible difference in people's lives, fostering better and more personalized healthcare experiences. The true testament to our impact lies in the success of the entrepreneurs we partner with: we've championed their dreams, turning innovative ideas into thriving businesses and supporting them throughout their entrepreneurial journey. We're not just building digital solutions; we're shaping futures, driving growth, and creating a more connected digital world. Our impact is real, and we're just getting started.

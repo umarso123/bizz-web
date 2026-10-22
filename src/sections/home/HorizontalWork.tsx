@@ -3,8 +3,8 @@ import { Link } from 'react-router'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Arrow, PaperLink } from '@/components/paper/kit.tsx'
-import { PaperPin } from '@/components/paper/paper.tsx'
 import { mockups } from '@/content/mockups.ts'
+import { premiumHome } from '@/content/premium-home.ts'
 import { cn } from '@/lib/cn.ts'
 import { paperFont } from '@/lib/paper-theme.ts'
 import { WorkStill } from '@/sections/work/WorkStill.tsx'
@@ -596,7 +596,7 @@ export function HorizontalWork({
                 <span className="intro-line inline-block">Selected work</span>
               </span>
             </h2>
-            <p className="ph-lead mt-6 text-white/85">Explored our projects yet? Have a look.</p>
+            <p className="ph-lead mt-6 text-white/85">{premiumHome.copy.workLead}</p>
             <PaperLink to={viewAllLink} className="mt-8 text-white">
               View all projects
             </PaperLink>
@@ -625,7 +625,6 @@ export function HorizontalWork({
                     className="ph-paper ph-paper-cream ph-tilt group block p-4 text-[var(--ph-navy)] no-underline hover:text-[var(--ph-navy)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ph-yellow)] md:p-5"
                     style={{ '--rot': CARD_ROT[index % CARD_ROT.length] } as CSSProperties}
                   >
-                    <PaperPin className="top-[20px] left-1/2" />
                     {/* A strip of tape over one corner */}
                     <span
                       aria-hidden="true"

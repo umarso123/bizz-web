@@ -3,10 +3,12 @@ import { Reveal, RevealLines, useRevealed } from '@/components/motion/Reveal.tsx
 import { PaperLink, PaperSection } from '@/components/paper/kit.tsx'
 import { PaperPin, usePaperGrain } from '@/components/paper/paper.tsx'
 import { TornEdge } from '@/components/paper/TornEdge.tsx'
+import { premiumHome } from '@/content/premium-home.ts'
 import { presence } from '@/content/presence.ts'
 import { projectToMap, worldDots } from '@/content/world-dots.ts'
 import { paperInk } from '@/lib/paper-theme.ts'
 
+const lines = premiumHome.copy.presenceLines
 const places = presence.locations.map((place) => ({ ...place, at: projectToMap(place.lat, place.lon) }))
 
 /** The route line between consecutive locations: a shallow arc above the map. */
@@ -96,16 +98,16 @@ export function GlobalPresence() {
       <div className="grid grid-cols-12 gap-6 lg:items-center">
         <div className="col-span-12 lg:col-span-5">
           <h2 id="presence-title" className="ph-h2 text-white">
-            <span className="sr-only">{presence.title}</span>
+            <span className="sr-only">{lines.join(' ')}</span>
             <span aria-hidden="true">
               <RevealLines
                 stagger={100}
                 lines={[
-                  'Now extending to',
-                  'numerous cities',
-                  <>
-                    throughout <span className="ph-mark">the world.</span>
-                  </>,
+                  lines[0],
+                  lines[1],
+                  <span key="accent" className="ph-mark">
+                    {lines[2]}
+                  </span>,
                 ]}
               />
             </span>
