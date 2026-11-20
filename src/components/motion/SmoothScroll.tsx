@@ -7,6 +7,13 @@ import { useLocation } from 'react-router'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
+/*
+ * Mobile browsers resize the viewport as the address bar shows and hides. By
+ * default every resize makes ScrollTrigger re-measure every pin (the homepage
+ * has five), which is a visible hitch mid-scroll. Only width changes refresh now.
+ */
+ScrollTrigger.config({ ignoreMobileResize: true, autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize' })
+
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const [reduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const lenis = useLenis()
@@ -94,8 +101,10 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
         // Smooth glide that still answers small wheel movements quickly
         lerp: 0.085,
         wheelMultiplier: 0.9,
-        touchMultiplier: 1.4,
         smoothWheel: true,
+        // Touch keeps the browser's own native, momentum scrolling: Lenis only
+        // smooths wheel and trackpad. Hijacking touch is what makes mobile feel laggy.
+        syncTouch: false,
       }}
     >
       {children}

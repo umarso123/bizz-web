@@ -1,0 +1,1008 @@
+/*
+ * "Studio" homepage system. Everything is scoped to .sh (the homepage <main>
+ * and its header).
+ *
+ *  Page      warm cream paper, navy ink
+ *  Accent    brand blue, the one loud colour; cyan + periwinkle support it
+ *  Display   Anton, condensed caps, tight leading
+ *  Voice     Instrument Sans, condensed and heavy for statements
+ *  Shapes    full pills (stickers, buttons), 24px cards, round arrow buttons
+ *  Motion    expo/back eases; every scroll scene is scrubbed and reversible
+ */
+
+@layer components {
+  .sh {
+    --sh-paper: #faf6ec;
+    --sh-paper-deep: #f2ecdc;
+    --sh-ink: #0d121f;
+    --sh-ink-soft: #3b4354;
+    --sh-blue: #234ed1;
+    --sh-blue-deep: #1a3db0;
+    --sh-cyan: #009bdf;
+    --sh-sky: #b3c5fa;
+    --sh-mist: #e7edfc;
+    --sh-yellow: #fde36e;
+    --sh-white: #ffffff;
+    --sh-hero: #2350d2;
+    --sh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --sh-ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --sh-gutter: clamp(16px, 4vw, 64px);
+    --sh-display: 'Anton', 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+    --sh-voice: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--sh-voice);
+    color: var(--sh-ink);
+  }
+
+  main.sh {
+    background: var(--sh-paper);
+    overflow-x: clip;
+  }
+
+  .sh :is(h1, h2, h3, h4) {
+    font-stretch: 100%;
+    color: inherit;
+  }
+
+  .sh-wrap {
+    width: 100%;
+    max-width: 1560px;
+    margin-inline: auto;
+    padding-inline: var(--sh-gutter);
+  }
+
+  /* ------------------------------------------------------------ type */
+
+  .sh-display {
+    font-family: var(--sh-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.86;
+    letter-spacing: -0.005em;
+  }
+
+  .sh-statement {
+    font-family: var(--sh-voice);
+    font-weight: 650;
+    font-stretch: 84%;
+    font-size: clamp(2.1rem, 5.6vw, 6rem);
+    line-height: 1.02;
+    letter-spacing: -0.048em;
+  }
+
+  .sh-title-voice {
+    font-family: var(--sh-voice);
+    font-weight: 650;
+    font-stretch: 86%;
+    letter-spacing: -0.045em;
+    line-height: 1.02;
+  }
+
+  .sh-label {
+    font-size: clamp(0.8125rem, 0.9vw, 1rem);
+    font-weight: 550;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .sh-body {
+    font-size: clamp(1rem, 1.05vw, 1.125rem);
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+  }
+
+  /* Display split into characters: each sits in its own mask so it can rise in. */
+  .sh-chars {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* No will-change here: there are ~150 characters on the page, and a promoted
+     layer each costs GPU memory and compositing time on every frame. GSAP
+     promotes them only while they tween (force3D: auto). */
+  .sh-char {
+    display: inline-block;
+  }
+
+  /* --------------------------------------------------------- stickers */
+
+  .sh-sticker {
+    --r: -6deg;
+    position: absolute;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.62em 1.35em 0.68em;
+    border-radius: 999px;
+    font-family: var(--sh-voice);
+    font-weight: 600;
+    font-stretch: 92%;
+    font-size: clamp(0.8125rem, 1.35vw, 1.375rem);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    transform: rotate(var(--r));
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.12) inset,
+      0 10px 24px -10px rgb(10 26 58 / 0.55);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .sh-sticker[data-tone='ink'] {
+    background: var(--sh-ink);
+    color: var(--sh-white);
+  }
+
+  .sh-sticker[data-tone='blue'] {
+    background: var(--sh-blue);
+    color: var(--sh-white);
+  }
+
+  .sh-sticker[data-tone='cyan'] {
+    background: var(--sh-cyan);
+    color: var(--sh-white);
+  }
+
+  .sh-sticker[data-tone='yellow'] {
+    background: var(--sh-yellow);
+    color: var(--sh-ink);
+  }
+
+  .sh-sticker[data-tone='outline'] {
+    background: var(--sh-white);
+    color: var(--sh-blue);
+    box-shadow: 0 0 0 1.5px var(--sh-blue);
+    font-weight: 550;
+    white-space: normal;
+    border-radius: 2em;
+  }
+
+  /* Inline (in flow) stickers, e.g. inside the services rows. */
+  .sh-sticker[data-flow] {
+    position: relative;
+  }
+
+  /* ---------------------------------------------------------- buttons */
+
+  .sh-btn {
+    --btn-h: 3.25rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    height: var(--btn-h);
+    padding: 0 0.3rem 0 1.5rem;
+    border-radius: 999px;
+    background: var(--sh-ink);
+    color: var(--sh-white);
+    font-size: 1rem;
+    font-weight: 550;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    text-decoration: none;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      transform 0.5s var(--sh-ease),
+      box-shadow 0.5s var(--sh-ease);
+  }
+
+  .sh-btn:hover {
+    color: var(--sh-white);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -14px rgb(10 26 58 / 0.6);
+  }
+
+  .sh-btn:focus-visible {
+    outline: 2px solid var(--sh-yellow);
+    outline-offset: 3px;
+  }
+
+  .sh-btn-dot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: calc(var(--btn-h) - 0.6rem);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: var(--sh-blue);
+    color: var(--sh-white);
+    overflow: hidden;
+    transition: background-color 0.4s var(--sh-ease);
+  }
+
+  .sh-btn[data-tone='light'] {
+    background: var(--sh-white);
+    color: var(--sh-ink);
+  }
+
+  .sh-btn[data-tone='light']:hover {
+    color: var(--sh-ink);
+  }
+
+  .sh-btn[data-size='lg'] {
+    --btn-h: clamp(3.75rem, 5vw, 4.75rem);
+    padding-left: clamp(1.5rem, 2.2vw, 2.25rem);
+    font-size: clamp(1.0625rem, 1.4vw, 1.375rem);
+    gap: 1.5rem;
+  }
+
+  /* Two arrows: one leaves to the top right as the other arrives from the bottom left. */
+  .sh-arrow {
+    position: absolute;
+    width: 42%;
+    height: 42%;
+    transition: transform 0.55s var(--sh-ease);
+  }
+
+  .sh-arrow + .sh-arrow {
+    transform: translate(-160%, 160%);
+  }
+
+  :is(.sh-btn, .sh-round, a, button):hover > .sh-btn-dot > .sh-arrow:first-child,
+  :is(.sh-btn, .sh-round, a, button):hover > .sh-arrow:first-child,
+  .sh-card-link:hover .sh-round > .sh-arrow:first-child {
+    transform: translate(160%, -160%);
+  }
+
+  :is(.sh-btn, .sh-round, a, button):hover > .sh-btn-dot > .sh-arrow + .sh-arrow,
+  :is(.sh-btn, .sh-round, a, button):hover > .sh-arrow + .sh-arrow,
+  .sh-card-link:hover .sh-round > .sh-arrow + .sh-arrow {
+    transform: translate(0, 0);
+  }
+
+  /* A round arrow button on its own (work cards, the stack). */
+  .sh-round {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--size, 3.25rem);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: var(--sh-blue);
+    color: var(--sh-white);
+    overflow: hidden;
+    transition:
+      transform 0.5s var(--sh-ease),
+      background-color 0.4s var(--sh-ease);
+  }
+
+  .sh-round > .sh-arrow {
+    width: 40%;
+    height: 40%;
+  }
+
+  .sh-text-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 550;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .sh-text-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0.25);
+    transform-origin: 0 50%;
+    transition: transform 0.6s var(--sh-ease);
+  }
+
+  .sh-text-link:hover {
+    color: inherit;
+  }
+
+  .sh-text-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* ------------------------------------------------------------- hero */
+
+  .sh-hero {
+    position: relative;
+    color: var(--sh-white);
+    background: var(--sh-hero);
+  }
+
+  .sh-hero-stage {
+    position: relative;
+    height: 100svh;
+    min-height: 620px;
+    overflow: hidden;
+    background: var(--sh-hero);
+  }
+
+  .sh-hero-canvas-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .sh-hero-tilt {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+  }
+
+  .sh-hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  .sh-hero-canvas[data-dragging='true'] {
+    cursor: grabbing;
+  }
+
+  .sh-hero-tilt:focus-visible {
+    outline: none;
+  }
+
+  .sh-hero-tilt:focus-visible::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(40vh, 40vw);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 999px;
+    outline: 2px dashed var(--sh-yellow);
+    outline-offset: 8px;
+  }
+
+  .sh-hero-title {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: clamp(88px, 13vh, 132px);
+    padding-bottom: clamp(108px, 17vh, 168px);
+    pointer-events: none;
+    font-size: min(16.5vw, 27vh);
+    text-align: center;
+  }
+
+  .sh-hero-line {
+    position: relative;
+    display: block;
+    will-change: transform;
+  }
+
+  .sh-hero-line .sh-char-mask {
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.04em 0.01em 0;
+    margin: -0.04em -0.01em 0;
+    vertical-align: top;
+  }
+
+  .sh-hero-loops {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .sh-hero-foot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(20px, 3.5vh, 40px);
+    z-index: 4;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 24px;
+  }
+
+  .sh-hero-cue {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .sh-hero-cue-line {
+    width: 1.5px;
+    height: 44px;
+    background: linear-gradient(rgb(255 255 255 / 0.9), rgb(255 255 255 / 0));
+    transform-origin: 50% 0;
+    animation: sh-cue 2.2s var(--sh-ease) infinite;
+  }
+
+  @keyframes sh-cue {
+    0% {
+      transform: scaleY(0);
+      opacity: 1;
+    }
+    55% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(1);
+      opacity: 0;
+    }
+  }
+
+  .sh-hero-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 22%;
+    z-index: 3;
+    width: min(92vw, 1100px);
+    margin-inline: auto;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  /* The next sheet rising over the pinned hero, its top edge an arch that flattens. */
+  .sh-hero-sheet {
+    position: absolute;
+    left: -2vw;
+    right: -2vw;
+    bottom: 0;
+    z-index: 5;
+    height: 112%;
+    background: var(--sh-paper);
+    border-radius: 50% 50% 0 0 / 22vw 22vw 0 0;
+    /* Hidden until GSAP takes it over (no JS, reduced motion). */
+    visibility: hidden;
+    will-change: transform, border-radius;
+  }
+
+  /* -------------------------------------------------------------- ribbon */
+
+  /* Pulled up over the end of the pinned hero, so the bands arrive as the cream sheet settles. */
+  .sh-ribbon {
+    position: relative;
+    z-index: 6;
+    margin-top: -80svh;
+    overflow: hidden;
+  }
+
+  .sh-ribbon svg {
+    display: block;
+    width: max(100%, 980px);
+    height: auto;
+    /* Centred when wider than the screen (no CSS translate: GSAP owns this transform). */
+    margin-left: min(0px, calc(50% - 490px));
+    overflow: visible;
+  }
+
+  .sh-ribbon text {
+    font-family: var(--sh-display);
+    text-transform: uppercase;
+  }
+
+  /* ----------------------------------------------------------- statement */
+
+  .sh-about {
+    position: relative;
+  }
+
+  .sh-about-stage {
+    position: relative;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: clamp(28px, 5vh, 56px);
+    padding-block: clamp(64px, 14vh, 160px);
+  }
+
+  .sh-about-text {
+    position: relative;
+    max-width: 17.5em;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .sh-word {
+    color: var(--sh-sky);
+    transition: color 0.12s linear;
+  }
+
+  /* ---------------------------------------------------------------- work */
+
+  .sh-work-track {
+    display: flex;
+    gap: clamp(16px, 2vw, 32px);
+    width: max-content;
+    padding-inline: var(--sh-gutter);
+    will-change: transform;
+  }
+
+  /* Seven cards skew with scroll speed: their own layers, so a skew never re-rasterises the images. */
+  .sh-card {
+    position: relative;
+    flex: none;
+    will-change: transform;
+    width: var(--sh-card-w);
+  }
+
+  .sh-card-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+    border-radius: clamp(18px, 1.6vw, 26px);
+    background: var(--tint, var(--sh-mist));
+    transform: translateZ(0);
+  }
+
+  .sh-card-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.08);
+    transition: transform 1.1s var(--sh-ease);
+  }
+
+  .sh-card-media[data-fit='contain'] img {
+    object-fit: contain;
+    padding: 8% 7%;
+    mix-blend-mode: multiply;
+  }
+
+  .sh-card-link:hover .sh-card-media img {
+    transform: scale(1.12);
+  }
+
+  .sh-card-link:hover .sh-round {
+    transform: rotate(-8deg) scale(1.06);
+  }
+
+  .sh-card-badge {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(44px, 3.6vw, 56px);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: var(--tint-ink, var(--sh-blue));
+    color: var(--sh-white);
+    font-family: var(--sh-display);
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    letter-spacing: 0.02em;
+  }
+
+  .sh-progress {
+    position: relative;
+    height: 3px;
+    border-radius: 3px;
+    background: rgb(13 18 31 / 0.1);
+    overflow: hidden;
+  }
+
+  .sh-progress > span {
+    position: absolute;
+    inset: 0;
+    background: var(--sh-blue);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+  }
+
+  /* ------------------------------------------------------------ services */
+
+  .sh-services {
+    position: relative;
+  }
+
+  .sh-services-path {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .sh-service {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 1.6vw, 22px);
+  }
+
+  .sh-service-name {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.4vw, 22px);
+    font-size: clamp(3.25rem, 8.6vw, 9.5rem);
+    color: var(--sh-blue);
+  }
+
+  .sh-service-name > span {
+    display: inline-block;
+  }
+
+  .sh-icon-tile {
+    --r: -7deg;
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 0.92em;
+    aspect-ratio: 1;
+    border-radius: 0.2em;
+    background: var(--sh-blue);
+    color: var(--sh-white);
+    transform: rotate(var(--r));
+    box-shadow:
+      0 0 0 0.07em var(--sh-paper),
+      0 0 0 calc(0.07em + 1.5px) rgb(35 78 209 / 0.18),
+      0 0.12em 0.3em -0.08em rgb(10 26 58 / 0.45);
+    transition: transform 0.6s var(--sh-ease-back);
+  }
+
+  .sh-service:hover .sh-icon-tile {
+    transform: rotate(calc(var(--r) * -1)) scale(1.06);
+  }
+
+  .sh-icon-tile svg {
+    width: 64%;
+    height: 64%;
+  }
+
+  .sh-service-note {
+    --r: -3deg;
+    max-width: 23rem;
+    padding: 0.9em 1.5em 1em;
+    border-radius: 2em;
+    background: var(--sh-white);
+    color: var(--sh-blue);
+    box-shadow: 0 0 0 1.5px var(--sh-blue);
+    font-size: clamp(0.9375rem, 1.1vw, 1.125rem);
+    font-weight: 550;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    transform: rotate(var(--r));
+  }
+
+  .sh-pen {
+    fill: var(--sh-blue);
+    stroke: var(--sh-ink);
+    stroke-width: 2.5;
+  }
+
+  /* ------------------------------------------------------------- process */
+
+  .sh-process {
+    padding: clamp(10px, 1.4vw, 24px);
+  }
+
+  .sh-process-panel {
+    position: relative;
+    height: calc(100svh - 2 * clamp(10px, 1.4vw, 24px));
+    min-height: 600px;
+    border-radius: clamp(22px, 2.2vw, 36px);
+    background: var(--sh-blue);
+    color: var(--sh-white);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .sh-stack {
+    position: absolute;
+    left: 50%;
+    top: 54%;
+    width: min(88vw, 1020px);
+    height: min(60svh, 520px);
+    translate: -50% -50%;
+    perspective: 1600px;
+  }
+
+  /*
+   * The card only moves. Its shadow is a box-shadow on an underlay, not a
+   * drop-shadow filter: a filter on a transforming element is re-rasterised on
+   * every frame (measured: 48ms → 21ms per frame in this section). The underlay
+   * stops short of the folded corner so the shadow still reads as cut paper.
+   */
+  .sh-stack-card {
+    position: absolute;
+    inset: 0;
+    transform-origin: 50% 120%;
+    will-change: transform;
+  }
+
+  .sh-stack-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 clamp(26px, 2.6vw, 40px) clamp(26px, 2.6vw, 40px) 0;
+    border-radius: clamp(18px, 1.8vw, 28px);
+    box-shadow:
+      0 22px 44px -6px rgb(10 26 58 / 0.34),
+      0 2px 4px rgb(10 26 58 / 0.16);
+    pointer-events: none;
+  }
+
+  .sh-stack-paper {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+    gap: clamp(20px, 4vw, 64px);
+    align-items: center;
+    padding: clamp(22px, 4vw, 64px);
+    border-radius: clamp(18px, 1.8vw, 28px);
+    background-color: #fffdf7;
+    color: var(--sh-blue);
+  }
+
+  .sh-stack-num {
+    font-family: var(--sh-display);
+    font-size: clamp(6rem, 15vw, 15rem);
+    line-height: 0.8;
+    color: var(--sh-blue);
+    -webkit-text-stroke: 0;
+  }
+
+  .sh-stack-num[data-outline] {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--sh-blue);
+  }
+
+  .sh-ticks {
+    position: absolute;
+    right: clamp(18px, 4vw, 72px);
+    top: 50%;
+    z-index: 3;
+    display: grid;
+    gap: 14px;
+    translate: 0 -50%;
+  }
+
+  .sh-ticks > span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    margin-left: auto;
+    border-radius: 2px;
+    background: rgb(255 255 255 / 0.5);
+    transition:
+      width 0.5s var(--sh-ease),
+      background-color 0.5s var(--sh-ease);
+  }
+
+  .sh-ticks > span[data-on='true'] {
+    width: 52px;
+    background: var(--sh-white);
+  }
+
+  /* --------------------------------------------------------------- close */
+
+  .sh-close-title {
+    font-size: clamp(4rem, 15vw, 16rem);
+    text-align: center;
+  }
+
+  /* Hover jostle: only once the entrance has finished, so CSS never fights the tween. */
+  .sh-wave.is-ready .sh-char {
+    transition: transform 0.5s var(--sh-ease-back);
+    transition-delay: calc(var(--ci, 0) * 18ms);
+  }
+
+  .sh-wave.is-ready:hover .sh-char {
+    transform: translateY(-0.07em) rotate(var(--cr, -3deg));
+  }
+
+  .sh-spin {
+    animation: sh-spin 14s linear infinite;
+  }
+
+  @keyframes sh-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  /* -------------------------------------------------------- reduced motion */
+
+  @media (prefers-reduced-motion: reduce) {
+    .sh-hero-cue-line,
+    .sh-spin {
+      animation: none;
+    }
+
+    .sh-word {
+      transition: none;
+    }
+  }
+}
+
+@keyframes sh-menu-in {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .sh .sh-hero-title {
+    padding-bottom: 120px;
+    font-size: min(19vw, 22vh);
+  }
+
+  .sh .sh-stack {
+    height: min(54svh, 480px);
+  }
+
+  .sh .sh-stack-paper {
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: 12px;
+  }
+
+  .sh .sh-stack-num {
+    font-size: 4.5rem;
+  }
+
+  .sh .sh-ticks {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ paper cut
+ * A corner cut off the sheet and folded back over it (a dog-ear). The cut is a
+ * clip-path; the fold is the mirrored triangle, drawn in the paper's back colour
+ * with a crease shade, so it always stays inside the clip. --cut animates.
+ */
+@property --cut {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --snip {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@layer components {
+  .sh .sh-cut,
+  .sh .sh-cut-br {
+    --cut: clamp(26px, 2.6vw, 40px);
+    position: relative;
+    transition: --cut 0.7s var(--sh-ease);
+  }
+
+  /* Top-right dog-ear. */
+  .sh .sh-cut {
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+  }
+
+  .sh .sh-cut::after,
+  .sh .sh-cut-br::after {
+    content: '';
+    position: absolute;
+    z-index: 3;
+    width: var(--cut);
+    height: var(--cut);
+    pointer-events: none;
+    filter: drop-shadow(-2px 3px 3px rgb(10 26 58 / 0.28));
+  }
+
+  .sh .sh-cut::after {
+    top: 0;
+    right: 0;
+    background: linear-gradient(to bottom left, transparent 50%, #d8cdb2 50%, #efe7d3 64%, #fffaf0 100%);
+    border-bottom-left-radius: 3px;
+  }
+
+  /* Bottom-right dog-ear, plus a small snip off the top-left corner. */
+  .sh .sh-cut-br {
+    --snip: clamp(14px, 1.4vw, 22px);
+    clip-path: polygon(var(--snip) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--snip));
+  }
+
+  .sh .sh-cut-br::after {
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top left, transparent 50%, #d8cdb2 50%, #ece3cc 62%, #fffaf0 100%);
+    border-top-left-radius: 3px;
+    filter: drop-shadow(-3px -2px 3px rgb(10 26 58 / 0.22));
+  }
+
+  /* The fold lifts when you reach for it. */
+  .sh .sh-card-link:hover .sh-cut,
+  .sh .sh-cut-br:hover {
+    --cut: clamp(42px, 4vw, 64px);
+  }
+
+  /* The stack's paper fills its card (the cut's position: relative must not win). */
+  .sh .sh-stack-paper.sh-cut-br {
+    position: absolute;
+  }
+
+  /* Paper tooth on the cream cards. */
+  .sh .sh-stack-paper {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .05 0 0 0 0 .07 0 0 0 0 .12 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sh .sh-cut,
+    .sh .sh-cut-br {
+      transition: none;
+    }
+  }
+}
+
+/* Below-the-fold sections that are not pinned: rendering is skipped until they near
+   the viewport. (Pinned sections are excluded: ScrollTrigger must measure them.) */
+@layer components {
+  .sh #closing {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1100px;
+  }
+}
+
+/* ------------------------------------------------------- fit to the screen
+ * Section headings and the work rail size by whichever is tighter, the width or
+ * the height of the screen, so a wide-but-short laptop (1920×840, 1366×768)
+ * gets the whole pinned frame (header, title, cards, names, progress) on screen.
+ */
+@layer components {
+  .sh {
+    /* Display size: 9% of the width, but never more than 13% of the height. */
+    --sh-fit-title: clamp(3rem, min(9vw, 13svh), 9.5rem);
+  }
+
+  .sh .sh-fit-title {
+    font-size: var(--sh-fit-title);
+  }
+
+  /* The pinned work frame: clears the floating header, and its gaps shrink on short screens. */
+  .sh .sh-work-pin {
+    --pin-top: max(84px, 10svh);
+    --pin-gap: clamp(14px, 3.5svh, 48px);
+    --pin-bottom: clamp(16px, 3svh, 40px);
+    /* Everything in the frame that isn't the card image: title (two lines at 0.86),
+       the meta row under each card (~76px), the progress bar, gaps and padding. */
+    --pin-rest: calc(var(--pin-top) + var(--pin-bottom) + 3 * var(--pin-gap) + 2 * 0.86 * var(--sh-fit-title) + 80px);
+    --sh-card-w: clamp(240px, min(38vw, (100svh - var(--pin-rest)) * 16 / 11), 680px);
+    display: flex;
+    min-height: 100svh;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--pin-gap);
+    padding-top: var(--pin-top);
+    padding-bottom: var(--pin-bottom);
+  }
+
+  @media (max-width: 767px) {
+    .sh .sh-work-pin {
+      --sh-card-w: min(80vw, 420px);
+      min-height: 0;
+      padding-top: 24px;
+    }
+  }
+}

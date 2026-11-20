@@ -11,7 +11,7 @@ const desktopNavQuery = '(min-width: 960px)'
 
 /** Frame shared by the bar and the mobile menu; the surface (fill and blur) is set per state. */
 const barFrame = 'border border-white/80 shadow-[0_1px_0_rgb(255_255_255/0.9)_inset,0_12px_40px_rgb(13_18_31/0.08)] backdrop-saturate-150'
-const bar = `${barFrame} bg-white/70 backdrop-blur-2xl`
+const bar = `${barFrame} bg-white/85 backdrop-blur-md`
 
 function MenuIcon() {
   return (
@@ -129,7 +129,7 @@ export function Header() {
                   'rounded-full',
                   barFrame,
                   // Shrinks a little and frosts more once the page has scrolled
-                  scrolled ? 'max-w-[64rem] bg-white/85 backdrop-blur-3xl md:h-12' : 'max-w-[72rem] bg-white/70 backdrop-blur-2xl md:h-14',
+                  scrolled ? 'max-w-[64rem] bg-white/90 backdrop-blur-md md:h-12' : 'max-w-[72rem] bg-white/85 backdrop-blur-md md:h-14',
                 ),
           )}
           style={paper ? ({ '--ph-grain': grain } as CSSProperties) : undefined}

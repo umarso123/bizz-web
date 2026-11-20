@@ -14,11 +14,111 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=Instrument+Serif:ital@1&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:wdth,wght@75..100,400..700&family=Instrument+Serif:ital@1&display=swap"
       rel="stylesheet"
     />
+    <style>
+      #initial-loader {
+        position: fixed;
+        z-index: 9999;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: #fff;
+        color: #0d121f;
+        font-family: 'Instrument Sans', sans-serif;
+        opacity: 1;
+        transition: opacity 320ms ease;
+      }
+
+      #initial-loader.is-leaving {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .initial-loader-content {
+        display: grid;
+        justify-items: center;
+        gap: 26px;
+        padding: 24px;
+      }
+
+      .initial-loader-logo {
+        display: block;
+        width: 180px;
+        height: 40px;
+        object-fit: contain;
+      }
+
+      .initial-loader-route {
+        width: 156px;
+        height: 28px;
+        overflow: visible;
+      }
+
+      .initial-loader-line {
+        fill: none;
+        stroke: #234ed1;
+        stroke-width: 2;
+        stroke-dasharray: 132;
+        stroke-dashoffset: 132;
+        animation: initial-route-draw 1.3s ease-in-out infinite alternate;
+      }
+
+      .initial-loader-station {
+        fill: #fff;
+        stroke: #0d121f;
+        stroke-width: 2;
+      }
+
+      .initial-loader-station-active {
+        fill: #fde36e;
+      }
+
+      .initial-loader-caption {
+        margin: 0;
+        color: #5a6472;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      @keyframes initial-route-draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #initial-loader {
+          transition: none;
+        }
+
+        .initial-loader-line {
+          animation: none;
+          stroke-dashoffset: 0;
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="initial-loader" role="status" aria-label="Loading Bizaffix">
+      <div class="initial-loader-content">
+        <img
+          class="initial-loader-logo"
+          src="/images/brand/bizaffix-logo.png"
+          alt="Bizaffix"
+          width="180"
+          height="40"
+        />
+        <svg class="initial-loader-route" viewBox="0 0 156 28" aria-hidden="true">
+          <path class="initial-loader-line" d="M13 14h130" />
+          <polygon class="initial-loader-station" points="13,3 22,8.5 22,19.5 13,25 4,19.5 4,8.5" />
+          <polygon class="initial-loader-station initial-loader-station-active" points="78,3 87,8.5 87,19.5 78,25 69,19.5 69,8.5" />
+          <polygon class="initial-loader-station" points="143,3 152,8.5 152,19.5 143,25 134,19.5 134,8.5" />
+        </svg>
+        <p class="initial-loader-caption">From idea to reality</p>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

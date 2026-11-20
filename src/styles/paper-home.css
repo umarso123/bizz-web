@@ -19,6 +19,8 @@
     --ph-yellow: #fde36e;
     --ph-night: #14245f;
     --ph-shadow: 10 26 58;
+    /* The one soft card shadow for light sections. */
+    --ph-soft-shadow: 0 1px 2px rgb(10 26 58 / 0.06), 0 8px 24px rgb(10 26 58 / 0.06);
     --ph-ease: cubic-bezier(0.22, 1, 0.36, 1);
     font-family: 'Bizaffix Dazzed', 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: var(--ph-navy);
@@ -44,15 +46,9 @@
     font-size: 0.75rem;
     line-height: 1.3;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     font-variant-numeric: tabular-nums;
-  }
-
-  @media (min-width: 768px) {
-    .paper-home .ph-label {
-      font-size: 0.8125rem;
-    }
   }
 
   /* Accent word: navy on a yellow highlighter stroke that sweeps in after the line rises. */
@@ -84,10 +80,10 @@
   /* Technical grid: 24px cells, a stronger line every 120px. */
   .paper-home .ph-grid {
     background-image:
-      linear-gradient(to right, rgb(221 227 236 / 0.25) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(221 227 236 / 0.25) 1px, transparent 1px),
-      linear-gradient(to right, rgb(221 227 236 / 0.45) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(221 227 236 / 0.45) 1px, transparent 1px);
+      linear-gradient(to right, rgb(13 18 31 / 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 18 31 / 0.025) 1px, transparent 1px),
+      linear-gradient(to right, rgb(13 18 31 / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 18 31 / 0.04) 1px, transparent 1px);
     background-size:
       24px 24px,
       24px 24px,
@@ -166,16 +162,13 @@
     background: var(--ph-cream);
     border: 1px solid var(--ph-border);
     border-radius: 4px;
-    box-shadow:
-      0 1px 0 rgb(255 255 255 / 0.8) inset,
-      0 2px 3px rgb(var(--ph-shadow) / 0.2),
-      0 18px 36px -14px rgb(var(--ph-shadow) / 0.3);
+    box-shadow: var(--ph-soft-shadow);
     transition:
       transform 0.6s var(--ph-ease),
       box-shadow 0.6s var(--ph-ease);
   }
 
-  /* Pins: the footer's glossy pushpin, sized by its wrapper. */
+  /* Pins: the footer's logo pushpin, sized by its wrapper. */
   .paper-home .ph-pin {
     position: absolute;
     width: 26px;
@@ -278,10 +271,10 @@
   /* The technical grid in brand blue, faint, for cream sheets. */
   .paper-home .ph-grid-blue {
     background-image:
-      linear-gradient(to right, rgb(35 78 209 / 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(35 78 209 / 0.035) 1px, transparent 1px),
-      linear-gradient(to right, rgb(35 78 209 / 0.065) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(35 78 209 / 0.065) 1px, transparent 1px);
+      linear-gradient(to right, rgb(35 78 209 / 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(35 78 209 / 0.025) 1px, transparent 1px),
+      linear-gradient(to right, rgb(35 78 209 / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(35 78 209 / 0.04) 1px, transparent 1px);
     background-size:
       24px 24px,
       24px 24px,
@@ -289,8 +282,10 @@
       120px 120px;
   }
 
-  .paper-home .ph-grain-light::after {
-    opacity: 0.14;
+  /* Light sheets and cards stay clean: no grain. */
+  .paper-home .ph-grain-light::after,
+  .paper-home .ph-card.ph-grain::after {
+    display: none;
   }
 
   /* ── Tokens: one container, one section rhythm, one type scale ───────────── */
@@ -299,14 +294,14 @@
   .paper-home .ph-container {
     position: relative;
     width: 100%;
-    max-width: 1440px;
+    max-width: calc(1200px + 2 * clamp(20px, 5vw, 96px));
     margin-inline: auto;
     padding-inline: clamp(20px, 5vw, 96px);
   }
 
-  /* Section padding: 64 mobile, 96 tablet, 128 desktop. */
+  /* Section padding: 72 mobile, 96 tablet, 120 desktop (8px grid). */
   .paper-home .ph-pad {
-    padding-block: 64px;
+    padding-block: 72px;
   }
 
   @media (min-width: 768px) {
@@ -317,40 +312,41 @@
 
   @media (min-width: 1024px) {
     .paper-home .ph-pad {
-      padding-block: 128px;
+      padding-block: 120px;
     }
   }
 
   .paper-home .ph-h1 {
-    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-size: clamp(3rem, 7vw, 6rem);
     line-height: 0.95;
     font-weight: 500;
     letter-spacing: -0.05em;
   }
 
   .paper-home .ph-h2 {
-    font-size: clamp(2.5rem, 4.5vw, 4.5rem);
-    line-height: 1;
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 3.5rem);
+    line-height: 1.04;
     font-weight: 500;
     letter-spacing: -0.045em;
   }
 
   .paper-home .ph-h3 {
-    font-size: 1.5rem;
+    font-size: clamp(1.5rem, 1.3rem + 0.5vw, 1.75rem);
     line-height: 1.2;
     font-weight: 500;
     letter-spacing: -0.02em;
   }
 
   .paper-home .ph-lead {
-    font-size: 1.25rem;
-    line-height: 1.5;
-    max-width: 60ch;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    max-width: 62ch;
   }
 
   .paper-home .ph-body {
     font-size: 1.0625rem;
-    line-height: 1.6;
+    line-height: 1.55;
+    max-width: 62ch;
   }
 
   /* base.css sizes every <p> itself; inside a label, take the label's type instead. */
@@ -367,9 +363,7 @@
     border: 1px solid var(--ph-border);
     border-radius: 4px;
     padding: 24px;
-    box-shadow:
-      0 1px 2px rgb(var(--ph-shadow) / 0.12),
-      0 14px 30px -18px rgb(var(--ph-shadow) / 0.35);
+    box-shadow: var(--ph-soft-shadow);
   }
 
   @media (min-width: 768px) {
@@ -384,7 +378,7 @@
 
   /* Pinned cards sit slightly off-square (set --rot); hover straightens and lifts them. */
   .paper-home .ph-tilt {
-    rotate: calc(var(--rot, 0deg) * var(--rot-k, 1));
+    rotate: clamp(-0.4deg, calc(var(--rot, 0deg) * var(--rot-k, 1)), 0.4deg);
     transition:
       rotate 0.6s var(--ph-ease),
       translate 0.6s var(--ph-ease),
@@ -395,8 +389,8 @@
     rotate: 0deg;
     translate: 0 -4px;
     box-shadow:
-      0 1px 2px rgb(var(--ph-shadow) / 0.14),
-      0 22px 40px -18px rgb(var(--ph-shadow) / 0.42);
+      0 1px 2px rgb(10 26 58 / 0.06),
+      0 16px 32px rgb(10 26 58 / 0.1);
   }
 
   @media (max-width: 767px) {
@@ -413,6 +407,7 @@
 
   /* Secondary link: text, arrow, and an underline that draws in on hover or focus. */
   .paper-home .ph-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
@@ -422,6 +417,12 @@
     background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat;
     padding-bottom: 2px;
     transition: background-size 0.45s var(--ph-ease);
+  }
+
+  .paper-home .ph-link::after {
+    content: '';
+    position: absolute;
+    inset: -10px -4px;
   }
 
   .paper-home .ph-link:is(:hover, :focus-visible) {
@@ -440,10 +441,10 @@
   /* The technical grid in navy, faint, for yellow sheets. */
   .paper-home .ph-grid-navy {
     background-image:
-      linear-gradient(to right, rgb(13 18 31 / 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(13 18 31 / 0.03) 1px, transparent 1px),
-      linear-gradient(to right, rgb(13 18 31 / 0.055) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(13 18 31 / 0.055) 1px, transparent 1px);
+      linear-gradient(to right, rgb(13 18 31 / 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 18 31 / 0.025) 1px, transparent 1px),
+      linear-gradient(to right, rgb(13 18 31 / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 18 31 / 0.04) 1px, transparent 1px);
     background-size:
       24px 24px,
       24px 24px,

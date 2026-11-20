@@ -5,6 +5,8 @@
 @import './base.css';
 @import './home.css';
 @import './paper-home.css';
+@import './home-sections.css';
+@import './studio-home.css';
 
 :root {
   --background: #ffffff;

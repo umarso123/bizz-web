@@ -625,11 +625,11 @@ export function HorizontalWork({
                     className="ph-paper ph-paper-cream ph-tilt group block p-4 text-[var(--ph-navy)] no-underline hover:text-[var(--ph-navy)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--ph-yellow)] md:p-5"
                     style={{ '--rot': CARD_ROT[index % CARD_ROT.length] } as CSSProperties}
                   >
-                    {/* A strip of tape over one corner */}
-                    <span
+                    {/* One strip of tape in the whole section: on the first card only */}
+                    {index === 0 ? (<span
                       aria-hidden="true"
                       className="absolute -top-2 -right-4 z-10 h-6 w-20 rotate-[32deg] bg-[rgb(253_227_110/0.85)] shadow-[0_1px_3px_rgb(10_26_58/0.25)]"
-                    />
+                    />) : null}
                     <div className="relative aspect-[1.46/1] w-full overflow-hidden rounded-[2px] border border-[var(--ph-border)] bg-white">
                       <div className="card-img-mover absolute inset-x-0 -inset-y-[10%] flex h-[120%] w-full items-center justify-center p-6">
                         {project.image ? (

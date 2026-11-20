@@ -157,31 +157,31 @@ export function Clock({ zone, label }: { zone: string; label: string }) {
   )
 }
 
-/** The pushpin: glossy domed cap, waisted neck, flange, steel needle. Shaded from `base`. */
+/** The Bizaffix mark (src/assets/bizaffix/Vector.svg, 73×84), used as the pin's head. */
+const LOGO_PATH =
+  "M71.8993 19.9974L37.6064 0.294504C36.9185 -0.0981679 36.0815 -0.0981679 35.3936 0.294504L1.12361 19.9974C0.435684 20.3901 0 21.1408 0 21.9377V61.9786C0 62.7871 0.435684 63.5262 1.12361 63.9304L35.4165 83.7142C36.0815 84.0953 36.907 84.0953 37.572 83.7142L71.8535 64.2076C72.5643 63.8034 73 63.0527 73 62.2327V48.3275C73 47.5422 72.5872 46.803 71.9108 46.4103L65.0889 42.1141C64.5271 41.7907 64.5042 40.9822 65.0316 40.6242L72.014 36.7783C72.6216 36.3626 72.9885 35.6581 72.9885 34.9189V21.9492C72.9885 21.1523 72.5643 20.4247 71.8764 20.032L71.8993 19.9974ZM26.1181 41.2017L34.8318 35.9006C35.107 35.7389 35.4509 35.7389 35.7261 35.9006L62.9334 51.1917C63.5984 51.5844 64.0112 52.312 64.0112 53.0858V57.255C64.0112 58.0519 63.5869 58.8026 62.8875 59.1953L37.0102 74.0129C36.3223 74.4055 35.4739 74.4055 34.7974 74.0013L9.09204 58.791C8.41558 58.3868 7.99136 57.6477 7.99136 56.8623V27.4004C7.99136 26.592 8.42705 25.8528 9.11497 25.4486L35.3592 10.1921C36.0586 9.78792 36.93 9.81102 37.6179 10.2383L62.9678 24.4207C63.6099 24.8249 63.9997 25.541 63.9997 26.3032V30.6688C63.9997 31.4773 63.564 32.2164 62.8761 32.5975L56.1918 36.1085C55.9166 36.2702 55.5726 36.2586 55.2975 36.0854L37.6293 26.3032C36.6319 25.6796 35.3707 25.6796 34.3732 26.3032L15.6044 37.6792C15.054 38.0141 14.733 38.6377 14.7674 39.2845L14.8591 42.1025C14.905 42.8301 15.398 43.4538 16.0974 43.6501L18.8376 44.805C19.2848 44.932 19.7663 44.8743 20.1676 44.6433L26.1066 41.2017H26.1181Z"
+
+/**
+ * The pushpin: the Bizaffix logo as its head, standing on a steel needle.
+ * Same 100×200 box as before (needle tip at the bottom), so every pin's sizing,
+ * tilt and drop/stab animation is unchanged. Shaded from `base`.
+ */
 export function Pin({ base, id }: { base: string; id: string }) {
-  const hi = mixHex(base, "#ffffff", 0.62)
+  const hi = mixHex(base, "#ffffff", 0.45)
   const mid = base
-  const lo = mixHex(base, "#000000", 0.42)
-  const deep = mixHex(base, "#000000", 0.66)
+  const lo = mixHex(base, "#000000", 0.35)
+  const deep = mixHex(base, "#000000", 0.6)
   const t = { transition: "stop-color .7s ease" }
-  const side = (gid: string) => (
-    <linearGradient id={gid} x1="0" x2="1" y1="0" y2="0">
-      <stop offset="0" style={{ ...t, stopColor: lo }} />
-      <stop offset=".24" style={{ ...t, stopColor: mid }} />
-      <stop offset=".4" style={{ ...t, stopColor: hi }} />
-      <stop offset=".58" style={{ ...t, stopColor: mid }} />
-      <stop offset="1" style={{ ...t, stopColor: deep }} />
-    </linearGradient>
-  )
+  // The logo, scaled to the head area: x 10–90, y 6–98.
+  const head = "translate(10 6) scale(1.096)"
   return (
     <svg viewBox="0 0 100 200" className="tpf-pin-svg" aria-hidden="true">
       <defs>
-        {side(id + "s")}
-        <radialGradient id={id + "t"} cx=".38" cy=".3" r=".8">
+        <linearGradient id={id + "f"} x1="0" x2="1" y1="0" y2="1">
           <stop offset="0" style={{ ...t, stopColor: hi }} />
-          <stop offset=".55" style={{ ...t, stopColor: mid }} />
+          <stop offset=".45" style={{ ...t, stopColor: mid }} />
           <stop offset="1" style={{ ...t, stopColor: lo }} />
-        </radialGradient>
+        </linearGradient>
         <linearGradient id={id + "n"} x1="0" x2="1" y1="0" y2="0">
           <stop offset="0" stopColor="#5b616b" />
           <stop offset=".4" stopColor="#f4f5f7" />
@@ -192,17 +192,13 @@ export function Pin({ base, id }: { base: string; id: string }) {
           <feGaussianBlur stdDeviation="1.4" />
         </filter>
       </defs>
-      <path d="M48.3 112h3.4l-.7 76-1 4-1-4z" fill={"url(#" + id + "n)"} />
+      <path d="M48.3 94h3.4l-.7 94-1 4-1-4z" fill={"url(#" + id + "n)"} />
       <ellipse cx="50" cy="191.5" rx="3.2" ry="1.1" fill="#0a1a3a" opacity=".35" />
-      <path d="M28 103v6.5a22 7 0 0 0 44 0V103z" fill={"url(#" + id + "s)"} />
-      <ellipse cx="50" cy="103" rx="22" ry="7" fill={"url(#" + id + "t)"} />
-      <path d="M41.5 38c1.6 16 4.6 26 3 36-1.8 10-13 19-14.6 29h40.2c-1.6-10-12.8-19-14.6-29-1.6-10 1.4-20 3-36z" fill={"url(#" + id + "s)"} />
-      <path d="M16 22v14a34 13 0 0 0 68 0V22z" fill={"url(#" + id + "s)"} />
-      <ellipse cx="50" cy="22" rx="34" ry="13" fill={"url(#" + id + "t)"} />
-      <ellipse cx="50" cy="22" rx="33" ry="12.3" fill="none" stroke="#fff" strokeOpacity=".28" strokeWidth=".8" />
-      <ellipse cx="37" cy="17.5" rx="12" ry="4" fill="#fff" opacity=".7" filter={"url(#" + id + "b)"} />
-      <path d="M22 38c4 4.5 9.5 6.4 15 7" stroke="#fff" strokeOpacity=".35" strokeWidth="2" fill="none" strokeLinecap="round" filter={"url(#" + id + "b)"} />
-      <path d="M45 50c.8 8 1.6 14 .8 22" stroke="#fff" strokeOpacity=".45" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+      {/* thickness: a darker copy just behind and below the face */}
+      <path d={LOGO_PATH} transform={"translate(11.5 9) scale(1.096)"} style={{ ...t, fill: deep }} />
+      <path d={LOGO_PATH} transform={head} fill={"url(#" + id + "f)"} />
+      <path d={LOGO_PATH} transform={head} fill="none" stroke="#fff" strokeOpacity=".3" strokeWidth=".6" />
+      <ellipse cx="34" cy="24" rx="12" ry="4" transform="rotate(-30 34 24)" fill="#fff" opacity=".45" filter={"url(#" + id + "b)"} />
     </svg>
   )
 }

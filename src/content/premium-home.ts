@@ -6,7 +6,7 @@
 export const premiumHome = {
   hero: {
     badge: 'Healthcare technology studio',
-    title: 'Digital products that move healthcare forward.',
+    title: 'We build technology that moves healthcare forward.',
     body: 'We design and engineer mobile apps, web platforms, and healthcare solutions, from idea to reality, with clarity people can use.',
     primaryCta: 'Book a call',
     secondaryCta: 'See our work',

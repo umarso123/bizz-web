@@ -9,7 +9,7 @@ import { cn } from '@/lib/cn.ts'
  * buttons. Tokens live in styles/paper-home.css (ph-container, ph-pad, ph-h2…).
  */
 
-export type SheetTone = 'blue' | 'night' | 'yellow' | 'white' | 'cream' | 'periwinkle'
+export type SheetTone = 'blue' | 'night' | 'yellow' | 'white' | 'cream' | 'lightBlue' | 'periwinkle'
 
 type ToneStyle = {
   sheet: string
@@ -18,16 +18,17 @@ type ToneStyle = {
   rule: string
   grid: string
   grainLight: boolean
-  /** Primary button tone: blue on light sheets, navy on blue and yellow ones. */
-  button: 'blue' | 'navy'
+  /** Primary button tone: navy everywhere, white paper on night sheets. */
+  button: ButtonTone
 }
 
 export const tones: Record<SheetTone, ToneStyle> = {
   blue: { sheet: 'bg-[var(--ph-blue)] text-white', muted: 'text-white/85', rule: 'border-white/25', grid: 'ph-grid-inverse', grainLight: false, button: 'navy' },
-  night: { sheet: 'bg-[var(--ph-night)] text-white', muted: 'text-white/80', rule: 'border-white/20', grid: 'ph-grid-inverse', grainLight: false, button: 'blue' },
+  night: { sheet: 'bg-[var(--ph-night)] text-white', muted: 'text-white/80', rule: 'border-white/20', grid: 'ph-grid-inverse', grainLight: false, button: 'white' },
   yellow: { sheet: 'bg-[var(--ph-yellow)] text-[var(--ph-navy)]', muted: 'text-[rgb(13_18_31/0.8)]', rule: 'border-[rgb(13_18_31/0.2)]', grid: 'ph-grid-navy', grainLight: true, button: 'navy' },
-  white: { sheet: 'bg-white text-[var(--ph-navy)]', muted: 'text-[var(--ph-grey)]', rule: 'border-[var(--ph-border)]', grid: 'ph-grid', grainLight: true, button: 'blue' },
-  cream: { sheet: 'bg-[var(--ph-cream)] text-[var(--ph-navy)]', muted: 'text-[var(--ph-grey)]', rule: 'border-[var(--ph-border)]', grid: 'ph-grid-blue', grainLight: true, button: 'blue' },
+  white: { sheet: 'bg-white text-[var(--ph-navy)]', muted: 'text-[var(--ph-grey)]', rule: 'border-[var(--ph-border)]', grid: 'ph-grid', grainLight: true, button: 'navy' },
+  cream: { sheet: 'bg-[var(--ph-cream)] text-[var(--ph-navy)]', muted: 'text-[var(--ph-grey)]', rule: 'border-[var(--ph-border)]', grid: 'ph-grid-blue', grainLight: true, button: 'navy' },
+  lightBlue: { sheet: 'bg-[var(--ph-light-blue)] text-[var(--ph-navy)]', muted: 'text-[var(--ph-grey)]', rule: 'border-[var(--ph-border)]', grid: 'ph-grid-blue', grainLight: true, button: 'navy' },
   periwinkle: { sheet: 'bg-[var(--ph-periwinkle)] text-[var(--ph-navy)]', muted: 'text-[rgb(13_18_31/0.8)]', rule: 'border-[rgb(13_18_31/0.18)]', grid: 'ph-grid-navy', grainLight: true, button: 'navy' },
 }
 
@@ -79,21 +80,25 @@ export function Arrow({ className }: { className?: string }) {
 const buttonTone = {
   blue: 'bg-[var(--ph-blue,#234ED1)] hover:bg-[#1c41b5] focus-visible:outline-[#0D121F]',
   navy: 'bg-[#0D121F] hover:bg-[#1a2233] focus-visible:outline-white',
+  /** On night and blue panels: white paper, navy ink. */
+  white: 'bg-white text-[#0D121F]! hover:bg-[#E7EDFC] hover:text-[#0D121F]! focus-visible:outline-white',
 } as const
+
+export type ButtonTone = keyof typeof buttonTone
 
 const buttonBase =
   'ph-torn-btn inline-flex h-12 items-center gap-3 pe-6 text-[1rem] font-medium tracking-[-0.01em] whitespace-nowrap text-white no-underline transition-[background-color,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [--ph-torn-pad:1.5rem] hover:-translate-y-px hover:text-white focus-visible:outline-2 focus-visible:outline-offset-3 md:h-14'
 
 type PaperButtonProps = {
-  tone?: 'blue' | 'navy'
+  tone?: ButtonTone
   /** A route; omit to make it the Book a call button. */
   to?: string
   className?: string
   children: ReactNode
 }
 
-/** The primary button: a paper sheet with a torn left edge. Blue, or navy on blue and yellow sheets. */
-export function PaperButton({ tone = 'blue', to, className, children }: PaperButtonProps) {
+/** The primary button: a navy paper sheet with a torn left edge (white on night panels). */
+export function PaperButton({ tone = 'navy', to, className, children }: PaperButtonProps) {
   const classes = cn(buttonBase, buttonTone[tone], className)
   const content = (
     <>
@@ -109,6 +114,27 @@ export function PaperButton({ tone = 'blue', to, className, children }: PaperBut
     )
   }
   return <BookCallLink className={classes}>{content}</BookCallLink>
+}
+
+type PaperSubmitProps = {
+  tone?: ButtonTone
+  disabled?: boolean
+  className?: string
+  children: ReactNode
+}
+
+/** The primary button as a form submit: same sheet, height and torn edge as PaperButton. */
+export function PaperSubmit({ tone = 'navy', disabled, className, children }: PaperSubmitProps) {
+  return (
+    <button
+      type="submit"
+      disabled={disabled}
+      className={cn(buttonBase, buttonTone[tone], 'cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0', className)}
+    >
+      {children}
+      <Arrow />
+    </button>
+  )
 }
 
 type PaperLinkProps = {

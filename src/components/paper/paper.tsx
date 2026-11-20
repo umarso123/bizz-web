@@ -14,7 +14,7 @@ export function usePaperGrain(seed = 42) {
 }
 
 /**
- * The footer's glossy pushpin. Position it with left/top (the needle point);
+ * The footer's logo pushpin (Bizaffix mark on a steel needle). Position it with left/top (the needle point);
  * it leans with --tilt from the nearest ancestor that sets it.
  */
 export function PaperPin({

@@ -5,6 +5,7 @@ import { CropMarks, PaperPin, usePaperGrain } from '@/components/paper/paper.tsx
 import { TornEdge } from '@/components/paper/TornEdge.tsx'
 import { aboutPage } from '@/content/about.ts'
 import { premiumHome } from '@/content/premium-home.ts'
+import { hero } from '@/data/home.ts'
 import { paperInk } from '@/lib/paper-theme.ts'
 
 /** The old About page's figures (content/legacy-site.md); numbers count up on arrival. */
@@ -72,17 +73,25 @@ export function PremiumHero() {
       <div className="ph-container pt-[calc(var(--header-clearance)+32px)] pb-16">
         <CropMarks className="inset-x-[calc(clamp(20px,5vw,96px)-12px)] top-[calc(var(--header-clearance)+8px)] bottom-8 hidden text-white md:block" />
 
+        {hero.badge ? (
+          <Reveal variant="fade" className="mb-8">
+            <p className="ph-label inline-flex min-h-8 items-center gap-2.5 rounded-full border border-white/30 px-3.5 text-white">
+              <span className="ph-live text-[var(--ph-yellow)]" aria-hidden="true" />
+              {hero.badge}
+            </p>
+          </Reveal>
+        ) : null}
+
         <h1 id="premium-hero-title" className="ph-h1 text-white">
-          <span className="sr-only">{copy.title}</span>
+          <span className="sr-only">{hero.title}</span>
           <span aria-hidden="true">
             <RevealLines
               delay={140}
               stagger={110}
               lines={[
-                'Digital products',
-                'that move healthcare',
-                <span key="accent" className="ph-mark">
-                  forward.
+                ...hero.lines.slice(0, -1),
+                <span key="accent">
+                  {hero.lines.at(-1)} <span className="ph-mark">{hero.accent}</span>
                 </span>,
               ]}
             />
@@ -92,12 +101,10 @@ export function PremiumHero() {
         <div className="mt-6 grid grid-cols-12 gap-6 md:mt-8 lg:items-end">
           <div className="col-span-12 lg:col-span-6">
             <Reveal delay={380}>
-              <p className="ph-lead text-white">
-                We design and engineer mobile apps, web platforms, and healthcare software, from idea to reality.
-              </p>
+              <p className="ph-lead text-white">{hero.lead}</p>
             </Reveal>
             <Reveal delay={460} className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-              <PaperButton tone={t.button}>{copy.primaryCta}</PaperButton>
+              <PaperButton tone={t.button}>{hero.primaryCta}</PaperButton>
               <PaperLink to={copy.secondaryTo} className="text-white">
                 {copy.secondaryCta}
               </PaperLink>
