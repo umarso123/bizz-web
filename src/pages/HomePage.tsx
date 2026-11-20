@@ -1,5 +1,6 @@
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { useEffect } from 'react'
+import { CompassPromo } from '@/sections/home/CompassPromo.tsx'
 import { CenterTearReveal } from '@/components/paper/CenterTearReveal.tsx'
 import { HealthcareZone } from '@/sections/home/HealthcareZone.tsx'
 import { HorizontalWork } from '@/sections/home/HorizontalWork.tsx'
@@ -33,6 +34,7 @@ export function HomePage() {
         {/* WhoWeWorkWith → CaseHighlight: the centre tear reveal */}
         <CenterTearReveal />
         <ServicesDirectory />
+        <CompassPromo />
         <ApproachStack />
         <Members />
         <GlobalPresence />

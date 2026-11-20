@@ -13,6 +13,7 @@ export const primaryNavigation = [
   { label: 'Services', to: '/services' },
   { label: 'Work', to: '/work' },
   { label: 'About', to: '/about' },
+  { label: 'Compass', to: '/compass' },
   { label: 'Careers', to: '/careers' },
   { label: 'Contact', to: '/contact' },
 ] as const satisfies readonly NavItem[]
