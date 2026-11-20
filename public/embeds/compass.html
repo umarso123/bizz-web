@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#009bdf"><title>Bizaffix Compass</title><meta name="description" content="Bizaffix Compass compliance discovery demo: describe a product, answer adaptive questions, get a preliminary engineering and compliance roadmap."><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%23009bdf%27/%3E%3C/svg%3E">
+<style>
+/* Mobile-first. Base rules target phones; min-width queries add tablet (600px+) and desktop (900px+) layout. */
+:root{color-scheme:light;--ink:#2b2f36;--muted:#627086;--brand:#009bdf;--brand-dark:#0077ad;--charcoal:#4f4f4f;--pale:#e6f5fc;--bg:#f6f7fb;--line:#dfe4ed;--white:#fff;--green:#076a50;--amber:#885510;--red:#9d3440;--shadow:0 18px 50px #0b2a3a0e;--gutter-l:max(16px,env(safe-area-inset-left,0px));--gutter-r:max(16px,env(safe-area-inset-right,0px));--tap:44px}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.5;cursor:not-allowed}
+a{color:var(--brand-dark);overflow-wrap:anywhere}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #5fc1ee;outline-offset:3px}
+h1,h2,h3,h4{color:var(--charcoal);text-wrap:balance}
+h1,h2,h3,h4,p{margin-top:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Shell */
+.container{width:100%;max-width:1100px;margin-inline:auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
+.bar{background:#fff;border-bottom:1px solid var(--line)}
+.nav{min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:850;letter-spacing:-.5px;min-width:0}
+.brand .logo{height:26px;width:auto;display:block}
+.brand .product{color:var(--charcoal);font-weight:600;letter-spacing:-.3px;padding-left:8px;border-left:1px solid var(--line);white-space:nowrap}
+.subtle{font-size:12px;color:var(--muted);text-align:right}
+.nav .subtle{display:none}
+.footer{text-align:center;padding-block:22px;color:var(--muted);font-size:12px}
+
+/* Controls */
+.tag{display:inline-block;font-size:11px;font-weight:750;background:#e1f3fb;color:#006b9b;padding:5px 10px;border-radius:99px}
+.btn{background:var(--brand);border:1px solid var(--brand);color:#fff;border-radius:11px;padding:11px 16px;font-weight:740;min-height:var(--tap);line-height:1.25}
+.btn:hover{filter:brightness(.94)}
+.btn.outline{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.text{background:transparent;border-color:transparent;color:var(--brand-dark);box-shadow:none}
+.btn.small{padding:8px 12px;min-height:38px;font-size:13px}
+.btn.danger{color:var(--red);font-weight:800}
+.field{display:block;font-weight:700;font-size:13px;margin:18px 0 7px}
+.input,.textarea,.select{width:100%;border:1px solid #cdd5e2;border-radius:11px;padding:12px;background:#fff;color:var(--ink);min-height:var(--tap);font-size:16px}  /* 16px stops iOS zoom-on-focus */
+.textarea{min-height:140px;resize:vertical}
+.hint{color:var(--muted);font-size:12px;margin:7px 0}
+.error{color:var(--red);font-size:13px;font-weight:650;margin-top:8px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.row>.btn{flex:1 1 auto}
+.line{height:1px;background:var(--line);margin:18px 0}
+.label{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.pill{font-size:11px;font-weight:750;padding:5px 9px;background:#f1f2f8;border-radius:99px;display:inline-block;line-height:1.2}
+.pill.high{background:#fff0e5;color:#8b5319}
+.pill.info{background:#e1f3fb;color:#006b9b}
+.pill.green{background:#e7f6ef;color:#13654c}
+.pill.law{background:#e1f3fb;color:#006b9b}
+.pill.cert{background:#e7f6ef;color:#13654c}
+.pill.marking{background:#fff0e5;color:#8b5319}
+.pill.registration{background:#eef0f3;color:#4f4f4f}
+.pill.guidance{background:#f1f2f8;color:#4b5563}
+.pill.law,.pill.cert,.pill.marking,.pill.registration,.pill.guidance{margin-left:4px;vertical-align:middle}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid #bfe3f5;border-radius:99px;background:#e9f5fc;color:#005f8a;padding:7px 10px;font-size:12px;display:inline-flex;align-items:center;gap:4px}
+.chip button{border:0;background:transparent;color:var(--brand-dark);padding:0 2px 0 6px;font-weight:800;font-size:16px;line-height:1;min-width:28px;min-height:28px}
+.box{background:#f8f9fc;border:1px solid #edf0f6;padding:14px;border-radius:13px;margin:15px 0;min-width:0}
+.box h3{font-size:15px;margin:0 0 8px}
+.box p{margin-bottom:7px}
+.notice{border-radius:12px;border:1px solid #cfe8f5;padding:12px 14px;background:#f0f8fd;color:#2e5f78;font-size:12px}
+.notice.warning{background:#fff9ed;border-color:#e9d8b7;color:#6e4f20}
+.notice.success{background:#eef8f3;border-color:#cce9d9;color:#245e47}
+.checkboxline{display:flex;gap:10px;align-items:flex-start;font-size:13px;margin:13px 0;min-height:var(--tap)}
+.checkboxline input{width:20px;height:20px;flex:none;margin-top:1px}
+
+/* Landing */
+.hero{padding-block:34px 30px;background:radial-gradient(circle at 83% 26%,#dcf1fb,transparent 44%),#fff}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:center}
+.hero h1{font-size:clamp(30px,8.5vw,54px);letter-spacing:-1.2px;line-height:1.12;margin:16px 0}
+.hero p{font-size:16px;color:var(--muted);max-width:540px}
+.hero-details{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+.hero-details span{background:#fff;border:1px solid var(--line);padding:7px 11px;border-radius:99px;font-size:12px}
+.hero .row .btn{flex:1 1 100%}
+.preview{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px;min-width:0}
+.preview h3{margin:10px 0}
+.mini{padding:12px 0;border-bottom:1px solid #edf0f4;font-size:13px}
+.mini:last-child{border:0}
+.benefits{display:grid;grid-template-columns:1fr;gap:12px;margin:22px auto 34px}
+.benefit{padding:20px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.benefit h3{font-size:16px}
+.benefit p{font-size:13px;color:var(--muted);margin:0}
+
+/* Workspace */
+.workspace{padding-block:10px 72px}
+.layout{max-width:1000px;margin:auto;display:block}
+.side{padding-top:4px}
+.side>.label,.side>.box{display:none}
+#sidebar{display:flex;gap:6px;overflow-x:auto;padding:6px 0 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#sidebar::-webkit-scrollbar{display:none}
+.sideitem{flex:none;font-size:12px;padding:8px 12px;border:1px solid var(--line);border-radius:99px;color:var(--muted);background:#fff;white-space:nowrap;line-height:1.2}
+.sideitem.active{border-color:var(--brand);background:var(--brand);color:#fff;font-weight:750}
+.sideitem.done{color:var(--green);border-color:#cce9d9;background:#eef8f3}
+button.sideitem{cursor:pointer;font:inherit;font-size:12px;min-height:36px}
+button.sideitem:hover{color:var(--brand-dark);border-color:var(--brand)}
+#mobileProgress{display:none}
+#resetTop{flex:0 0 auto;margin-left:auto}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px 16px;min-width:0}
+.meter{height:6px;background:#e9edf5;border-radius:20px;overflow:hidden;margin:12px 0 22px}
+.meter div{height:100%;background:var(--brand);transition:width .15s}
+.steptext{color:var(--brand-dark);font-size:12px;font-weight:800;letter-spacing:.05em}
+.title{font-size:clamp(24px,6.5vw,32px);line-height:1.19;letter-spacing:-.6px;margin:10px 0}
+.desc{color:var(--muted);font-size:14px;max-width:640px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1fr;gap:8px}
+.option{border:1px solid #dce1ed;border-radius:12px;background:#fff;padding:12px 14px;text-align:left;min-height:52px;color:var(--ink);display:flex;align-items:center;width:100%}
+.option:hover{background:#f3fafe}
+.option[aria-pressed=true]{background:#e9f5fc;border:2px solid var(--brand);padding:11px 13px}
+.option strong{display:block;font-size:14px}
+.option small{display:block;color:var(--muted);font-size:11px}
+.question{border-bottom:1px solid #e9ecf2;padding:18px 0}
+.question:last-of-type{border:0}
+.question h3{font-size:15px;margin-bottom:6px}
+.question p{color:var(--muted);font-size:12px;margin-bottom:12px}
+.actions{position:sticky;bottom:0;z-index:3;background:#fff;border-top:1px solid var(--line);margin:24px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;justify-content:space-between}
+.actions .btn{flex:1;font-size:14px;padding-inline:12px}
+.actions .btn.text{flex:0 0 auto}
+
+/* Report */
+.marketgrid{display:grid;grid-template-columns:1fr;gap:12px;margin:8px 0 10px}
+.marketcard{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;min-width:0}
+.marketcard h3{font-size:16px;margin:0 0 10px}
+.mlist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.mlist li{font-size:13px;line-height:1.45;min-width:0;overflow-wrap:anywhere}
+.mlist li .label{display:block;margin-bottom:2px}
+.reportcard{border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;min-width:0}
+.reportcard h3{font-size:17px;margin:8px 0}
+.reportcard p{font-size:13px;color:var(--muted);margin-bottom:10px}
+.reportcard .meta{font-size:11px;color:var(--muted)}
+.number{display:inline-grid;place-items:center;min-width:27px;height:27px;background:var(--pale);color:var(--brand-dark);border-radius:9px;font-weight:800;flex:none}
+.roadmap{display:grid;gap:10px}
+.road{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;min-width:0}
+.road>div{min-width:0}
+.road strong{display:block;font-size:14px}
+.road small{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.reporttext{min-height:260px;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* Tablet and up */
+@media(min-width:600px){
+ .nav{min-height:64px}
+ .brand .logo{height:32px}
+ .nav .subtle{display:block}
+ .input,.textarea,.select{font-size:15px}
+ .row>.btn{flex:0 1 auto}
+ .hero .row .btn{flex:0 1 auto}
+ .hero{padding-block:52px 46px}
+ .hero h1{letter-spacing:-1.6px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .option{min-height:60px}
+ .panel{padding:28px}
+ .actions{position:static;margin:28px 0 0;padding:22px 0 0;border-top:1px solid var(--line);background:transparent}
+ .actions .btn{flex:0 1 auto}
+ .marketgrid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+ .reportcard,.marketcard{padding:17px}
+ .benefits{grid-template-columns:repeat(3,1fr);gap:15px;margin:28px auto 56px}
+ .workspace{padding-block:22px 60px}
+}
+/* Desktop */
+@media(min-width:900px){
+ .nav{min-height:72px}
+ .brand .logo{height:34px}
+ .brand{gap:10px;font-size:18px}
+ .hero{padding-block:78px 70px}
+ .hero-grid{grid-template-columns:1fr .85fr;gap:45px}
+ .hero h1{letter-spacing:-1.9px}
+ .preview{display:block}
+ .layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:25px}
+ .side{padding-top:22px}
+ .side>.label{display:block;margin:8px}
+ .side>.box{display:block}
+ #sidebar{display:block;overflow:visible;padding:0}
+ .sideitem,button.sideitem{display:block;width:100%;text-align:left;font-size:13px;padding:12px 8px;border:0;border-left:2px solid var(--line);border-radius:0;background:none;color:var(--muted);white-space:normal}
+ .sideitem.active{border-left-color:var(--brand);background:none;color:var(--brand-dark);font-weight:750}
+ .sideitem.done{border-left-color:var(--green);background:none;color:var(--green)}
+ .panel{padding:36px;border-radius:19px;min-height:590px}
+ .title{letter-spacing:-.8px}
+}
+@media(hover:none){.btn:hover{filter:none}.option:hover{background:#fff}.option[aria-pressed=true]:hover{background:#e9f5fc}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style></head><body>
+<header class="bar"><div class="container nav"><div class="brand"><img class="logo" src="data:image/png;base64,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" alt="Bizaffix" width="134" height="46"><span class="product">Compass</span></div><span class="subtle">Compliance Navigator · <b>Local demo</b></span></div></header>
+<main id="landing"><section class="hero"><div class="container hero-grid"><div><span class="tag">Free product discovery preview</span><h1>Know what your product may need <span style="color:var(--brand)">before launch.</span></h1><p>Describe your software, hardware or AI product, pick every market you plan to launch in, and get a preliminary roadmap with the laws, certifications and markings each location calls for.</p><div class="hero-details"><span>✓ No signup to start</span><span>✓ Target 3–5 minutes</span><span>✓ Multiple launch markets</span></div><div class="row"><button class="btn" id="startBtn">Analyze my product →</button><button class="btn outline" id="examplesBtn">Try an example</button></div><p class="hint" style="margin-top:18px">This prototype runs locally. No live AI, regulatory verification, email, or CRM connection. Don't enter confidential or personal records.</p></div><div class="preview"><div class="row between"><strong>Example product roadmap</strong><span class="pill info">Illustrative</span></div><h3>Connected healthcare device</h3><p class="hint">Hardware + software · United States, EU, UAE · Prototype</p><div class="mini">⚖️ <b>Classification:</b> Clarify intended medical function</div><div class="mini">🔐 <b>Data:</b> Confirm who processes patient information</div><div class="mini">🧪 <b>Per market:</b> FDA pathway · MDR CE marking · MOHAP registration</div><div class="line"></div><span class="pill green">Specific actions, not just standards</span></div></div></section><div class="container benefits"><div class="benefit"><h3>Understand your product</h3><p>Review and correct detected software, hardware and AI components.</p></div><div class="benefit"><h3>See relevant questions</h3><p>Questions adapt to intended use, industry, devices and market.</p></div><div class="benefit"><h3>Leave with a plan</h3><p>See what each launch location requires, why it was raised and what to do next.</p></div></div></main>
+<main class="workspace container" id="workspace" hidden><div class="layout"><aside class="side" aria-label="Assessment steps"><div class="label" style="margin:8px">YOUR ASSESSMENT</div><div id="sidebar"></div><div class="box"><strong style="font-size:13px">Demo privacy</strong><p class="hint">Progress is saved only in this browser. Clear it anytime. No information is sent to our servers by this demo.</p></div></aside><section class="panel" aria-label="Assessment content"><div class="row between"><div id="mobileProgress"></div><button class="btn text small" id="resetTop">Start over</button></div><div class="meter" role="progressbar" aria-label="Assessment progress" aria-valuemin="0" aria-valuemax="100" id="meter"><div id="meterFill"></div></div><div id="content" aria-live="off"></div></section></div></main>
+<footer class="footer container">Educational discovery demo only · No verified compliance determination · No live lead submission</footer><div id="announcer" role="status" aria-live="polite" class="sr-only"></div>
+<script>
+'use strict';
+const KEY='bizaffix-compass-local';
+const steps=['Describe product','Review interpretation','Quick context','Relevant questions','Your roadmap','Save or share'];
+const industries=[['health','Healthcare & MedTech'],['education','Education & EdTech'],['ai','AI & Enterprise SaaS'],['consumer','Consumer Electronics & IoT'],['finance','Financial Services'],['industrial','Manufacturing & Industrial'],['automotive','Automotive & Mobility'],['energy','Energy & Infrastructure'],['retail','Retail & E-commerce'],['government','Government & Public Sector'],['other','Other / Cross-industry']];
+const markets=[['us','United States'],['eu','European Union / EEA'],['uk','United Kingdom'],['uae','United Arab Emirates'],['sa','Saudi Arabia'],['ca','Canada'],['au','Australia'],['other','Other']];
+const stages=[['idea','Idea'],['design','Design / requirements'],['prototype','Prototype'],['mvp','Building MVP'],['pilot','Pilot / testing'],['live','Already launched'],['scale','Scaling / expanding']];
+const goals=[['launch','Launch a product'],['mvp','Build an MVP'],['cert','Prepare for certification'],['customer','Meet a customer requirement'],['expand','Enter a new market'],['fix','Fix issues in an existing product'],['research','Explore requirements']];
+const types=[['software','Software / Digital'],['hardware','Hardware / Physical'],['hybrid','Hardware + Software'],['unsure','Still exploring']];
+const components=['Web application','Mobile application','Cloud platform','AI / ML model','Data storage','EHR / clinical integration','Payment processing','Sensor','Bluetooth / wireless','Battery','Electronics','Embedded firmware','Physical enclosure','Industrial controller','Device-to-cloud connection'];
+const HW_COMPONENTS=['Sensor','Battery','Electronics','Embedded firmware','Bluetooth / wireless','Physical enclosure','Industrial controller'];
+
+// Orientation references only. Every finding says so; none of these links proves applicability.
+const SOURCE={
+ fda:{title:'FDA Digital Health Policy Navigator',url:'https://www.fda.gov/medical-devices/digital-health-center-excellence/digital-health-policy-navigator'},
+ mdr:{title:'European Commission — Medical devices',url:'https://health.ec.europa.eu/medical-devices-sector_en'},
+ mhra:{title:'MHRA — Medicines and Healthcare products Regulatory Agency',url:'https://www.gov.uk/government/organisations/medicines-and-healthcare-products-regulatory-agency'},
+ hc:{title:'Health Canada — Medical devices',url:'https://www.canada.ca/en/health-canada/services/drugs-health-products/medical-devices.html'},
+ tga:{title:'TGA — Therapeutic Goods Administration',url:'https://www.tga.gov.au/'},
+ hipaa:{title:'HHS — Covered Entities and Business Associates',url:'https://www.hhs.gov/hipaa/for-professionals/covered-entities/index.html'},
+ coppa:{title:'FTC — Children’s Privacy',url:'https://www.ftc.gov/business-guidance/privacy-security/childrens-privacy'},
+ ferpa:{title:'US Department of Education — FERPA',url:'https://studentprivacy.ed.gov/ferpa'},
+ gdpr:{title:'European Commission — Application of GDPR',url:'https://commission.europa.eu/law/law-topic/data-protection/information-business-and-organisations/application-gdpr_en'},
+ ftc:{title:'FTC — Privacy and Security business guidance',url:'https://www.ftc.gov/business-guidance/privacy-security'},
+ ico:{title:'ICO — Guidance for organisations (UK GDPR)',url:'https://ico.org.uk/for-organisations/'},
+ icochild:{title:'ICO — Children’s code',url:'https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/childrens-information/childrens-code-guidance-and-resources/'},
+ opc:{title:'Office of the Privacy Commissioner of Canada — For businesses',url:'https://www.priv.gc.ca/en/for-businesses/'},
+ oaic:{title:'OAIC — Privacy guidance for organisations',url:'https://www.oaic.gov.au/privacy'},
+ ce:{title:'European Commission — CE marking',url:'https://europa.eu/youreurope/business/product-requirements/labels-markings/ce-marking/index_en.htm'},
+ ai:{title:'European Commission — AI regulatory framework',url:'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai'},
+ fcc:{title:'FCC — Equipment Authorization',url:'https://www.fcc.gov/oet/ea'},
+ ukradio:{title:'UK Government — Radio Equipment Regulations 2017',url:'https://www.gov.uk/guidance/radio-equipment-regulations-2017'},
+ ised:{title:'ISED Canada — Spectrum management and telecommunications',url:'https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en'},
+ acma:{title:'ACMA — Australian Communications and Media Authority',url:'https://www.acma.gov.au/'},
+ pci:{title:'PCI Security Standards Council',url:'https://www.pcisecuritystandards.org/'},
+ cfpb:{title:'CFPB — Compliance resources',url:'https://www.consumerfinance.gov/compliance/'},
+ fca:{title:'FCA — Authorisation',url:'https://www.fca.org.uk/firms/authorisation'},
+ cpsc:{title:'CPSC — Business and manufacturing guidance',url:'https://www.cpsc.gov/Business--Manufacturing'},
+ gpsr:{title:'European Commission — General Product Safety Regulation',url:'https://commission.europa.eu/business-economy-euro/product-safety-and-requirements/product-safety/general-product-safety-regulation_en'},
+ machinery:{title:'European Commission — Machinery',url:'https://single-market-economy.ec.europa.eu/sectors/mechanical-engineering/machinery_en'},
+ osha:{title:'OSHA — Machine guarding',url:'https://www.osha.gov/machine-guarding'},
+ nhtsa:{title:'NHTSA — National Highway Traffic Safety Administration',url:'https://www.nhtsa.gov/'},
+ cisa:{title:'CISA — Critical infrastructure security and resilience',url:'https://www.cisa.gov/topics/critical-infrastructure-security-and-resilience'},
+ nis2:{title:'European Commission — NIS2 Directive',url:'https://digital-strategy.ec.europa.eu/en/policies/nis2-directive'},
+ fedramp:{title:'FedRAMP',url:'https://www.fedramp.gov/'},
+ s508:{title:'Section508.gov — IT accessibility',url:'https://www.section508.gov/'}
+};
+const ALERT_RE=/\b(alerts?|notif(?:y|ies)|alarms?|diagnos\w*|predict\w*|risk score|clinical decision)\b/i;
+
+const empty=()=>({step:0,desc:'',profile:null,industry:'',markets:[],stage:'',goal:'',answers:{},lead:{name:'',email:'',company:''},marketing:false,consult:false});
+let S=empty();
+const $=s=>document.querySelector(s);
+const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const label=(arr,v)=>arr.find(x=>x[0]===v)?.[1]||'Not specified';
+
+// ---------- persistence
+function save(){
+ try{const snapshot={...S,lead:{name:'',email:'',company:''},marketing:false,consult:false};localStorage.setItem(KEY,JSON.stringify(snapshot))}
+ catch{announce('Local save unavailable in this browser.')}
+}
+function validProfile(p){return !!p&&typeof p==='object'&&types.some(x=>x[0]===p.type)&&industries.some(x=>x[0]===p.industry)&&Array.isArray(p.components)&&p.components.every(x=>typeof x==='string')&&typeof p.summary==='string'&&typeof p.intendedUse==='string'}
+function restore(){
+ try{
+  const data=JSON.parse(localStorage.getItem(KEY));
+  if(!data||typeof data!=='object'||!Number.isInteger(data.step)||data.step<0||data.step>=steps.length)return false;
+  S={...empty(),...data,answers:(data.answers&&typeof data.answers==='object')?data.answers:{},lead:{name:'',email:'',company:''}};
+  if(typeof S.desc!=='string')S.desc='';
+  if(!validProfile(S.profile)){S.profile=null;S.step=0;}            // never land on a later step without a usable profile
+  if(typeof data.market==='string'&&data.market&&!Array.isArray(data.markets))S.markets=[data.market];   // migrate v5 single market
+  if(!Array.isArray(S.markets))S.markets=[];S.markets=S.markets.filter(m=>markets.some(x=>x[0]===m));
+  if(S.step>=3&&(!S.markets.length||!S.stage||!S.goal))S.step=2;
+  return true;
+ }catch{return false}
+}
+function announce(msg){$('#announcer').textContent=msg}
+
+// ---------- navigation
+function view(step,focus=true){
+ S.step=step;save();
+ $('#landing').hidden=true;$('#workspace').hidden=false;
+ render();window.scrollTo({top:0,behavior:'instant'});
+ if(focus)requestAnimationFrame(()=>$('#screenTitle')?.focus());
+}
+function begin(example=false){
+ if(example){S=empty();S.desc='We are developing a wearable sensor with Bluetooth, mobile app and AI that monitors patient vital signs and alerts clinicians about potentially dangerous changes.';save()}
+ view(0);
+}
+let armedReset=null;
+// Two-click confirmation: embedded viewers return false from confirm(), so the dialog cannot be relied on.
+function reset(btn){
+ if(armedReset!==btn){
+  armedReset=btn;const original=btn.textContent;btn.dataset.original=original;
+  btn.textContent='Erase saved assessment? Click again';btn.classList.add('danger');
+  announce('Click the button again within 6 seconds to erase this browser’s saved assessment.');
+  setTimeout(()=>{if(armedReset===btn){armedReset=null;btn.textContent=btn.dataset.original;btn.classList.remove('danger');}},6000);
+  return;
+ }
+ armedReset=null;try{localStorage.removeItem(KEY)}catch{}
+ S=empty();$('#landing').hidden=false;$('#workspace').hidden=true;window.scrollTo(0,0);
+ btn.textContent=btn.dataset.original;btn.classList.remove('danger');announce('Saved assessment cleared');
+}
+$('#startBtn').addEventListener('click',()=>begin(false));
+$('#examplesBtn').addEventListener('click',()=>begin(true));
+$('#resetTop').addEventListener('click',e=>reset(e.currentTarget));
+
+// ---------- deterministic demo interpretation (never described as live AI)
+function inferLocal(description){
+ const d=description.toLowerCase();const term=p=>p.test(d);
+ const health=term(/\b(patients?|clinical|clinicians?|doctors?|nurses?|diagnos\w*|hospitals?|telehealth|medical|vital signs|healthcare|ehr|therap\w*)\b/);
+ const edu=term(/\b(schools?|students?|teachers?|classrooms?|e-?learning|online learning|learning management|courses?|tutor\w*|edtech|lms|curriculum)\b/);
+ const finance=term(/\b(bank\w*|payments?|loans?|lending|invoic\w*|insurance|fintech|trading|wallets?|credit|fraud|remittance|payroll|accounting)\b/);
+ const automotive=term(/\b(vehicles?|cars?|automotive|drivers?|fleet|ev charg\w*|telematics|adas)\b/);
+ const energy=term(/\b(grid|utility|utilities|solar|energy|power plant|smart meter\w*|substation|oil and gas)\b/);
+ const industrial=term(/\b(factory|factories|industrial|plc|manufactur\w*|automation|machinery|warehouse|scada)\b/);
+ const government=term(/\b(government|public sector|municipal\w*|agency|agencies|citizens?|federal|ministry)\b/);
+ const retail=term(/\b(e-?commerce|retail\w*|shops?|storefront|checkout|marketplace|merchants?)\b/);
+ const consumer=term(/\b(iot|smart home|smartwatch|wearables?|fitness tracker|consumer device|smart speaker|gadget)\b/);
+ const ai=term(/\b(ai|artificial intelligence|machine learning|ml model|llm|generative|predict\w*|recommendation engine|computer vision|chatbot)\b/);
+ const hardware=term(/\b(wearables?|sensors?|hardware|electronics?|circuit|pcb|bluetooth|battery|firmware|robots?|robotic|physical device|iot device|smart device|enclosure|embedded|actuator|controller)\b/);
+ const software=term(/\b(apps?|application|software|platform|dashboard|portal|website|web|cloud|saas|api|algorithm|mobile|service|tool|chatbot)\b/)||ai;
+ const type=hardware&&software?'hybrid':hardware?'hardware':software?'software':'unsure';
+ const industry=health?'health':edu?'education':finance?'finance':automotive?'automotive':energy?'energy':industrial?'industrial':government?'government':retail?'retail':consumer?'consumer':ai?'ai':'other';
+ const detect=[[/\b(web|website|portal|dashboard)\b/,'Web application'],[/\b(mobile|apps?|smartphone)\b/,'Mobile application'],[/\b(cloud|saas|server|backend)\b/,'Cloud platform'],[/\b(ai|artificial intelligence|machine learning|llm|predict\w*|chatbot)\b/,'AI / ML model'],[/\b(patient record|ehr|electronic health)\b/,'EHR / clinical integration'],[/\b(payments?|checkout|card)\b/,'Payment processing'],[/\b(sensors?|vital signs|wearables?)\b/,'Sensor'],[/\b(bluetooth|wireless|wifi|wi-fi)\b/,'Bluetooth / wireless'],[/\b(battery|rechargeable)\b/,'Battery'],[/\b(firmware|embedded)\b/,'Embedded firmware'],[/\b(plc|industrial controller|scada)\b/,'Industrial controller'],[/\b(iot|connected device|device to cloud)\b/,'Device-to-cloud connection']];
+ let detected=detect.filter(([p])=>p.test(d)).map(x=>x[1]);
+ if(!detected.length)detected=[hardware?'Electronics':'Web application'];
+ return {type,industry,components:[...new Set(detected)],summary:description.slice(0,280),intendedUse:description.slice(0,320),mode:'demo-structured',confirmed:false,sourceDesc:description};
+}
+
+// ---------- adaptive questions
+const YES=[['yes','Yes'],['no','No'],['unknown','Not sure']];
+const AUDIENCE=[['consumer','Consumers / individuals'],['professionals','Professionals / clinicians / staff'],['institutions','Schools / hospitals / organizations'],['mixed','More than one'],['unknown','Not sure']];
+const IMPACT=[['none','Minor inconvenience'],['business','Operational, financial or privacy impact'],['safety','Possible physical or clinical harm'],['highstakes','Significant effect on a person’s opportunities or rights'],['unknown','Not sure']];
+const EVIDENCE=[['verified','Documented and internally reviewed'],['available','Some documents or tests exist'],['partial','Work in progress / incomplete'],['none','Nothing prepared yet'],['unknown','Not sure']];
+const BLOCKER=[['requirements','Unsure which requirements apply'],['architecture','Unsure what needs building or changing'],['testing','Testing, evidence or certification concerns'],['privacy','Security, privacy or customer due diligence'],['resources','Budget, time or specialist support'],['none','No major blocker yet']];
+function isHardware(p){return ['hardware','hybrid'].includes(p.type)||(p.components||[]).some(x=>HW_COMPONENTS.includes(x))}
+function specificQuestions(){
+ const p=S.profile||{},c=p.components||[],ind=S.industry||p.industry,a=S.answers,hw=isHardware(p);
+ const consumerFacing=['consumer','mixed'].includes(a.audience);
+ const q=[
+  ['audience','Who will use your product?',AUDIENCE,'This helps determine which user, privacy and safety considerations to investigate.'],
+  ['impact','If the product fails or gives a wrong result, what could happen?',IMPACT,'Choose the most serious credible consequence, even if it is unlikely.'],
+  ['evidence','What documents, tests or quality evidence do you have today?',EVIDENCE,'Examples: product requirements, security controls, testing results, risk records. No uploads needed.'],
+  ['blocker','What is your biggest obstacle right now?',BLOCKER,'We will use this to tailor your roadmap, not to exaggerate risks.']
+ ];
+ if(ind==='health'){
+  q.push(['clinical','Does it diagnose, monitor, treat or influence clinical decisions?',YES,'Intended medical functions can affect regulatory classification.']);
+  if(ALERT_RE.test(p.intendedUse||''))q.push(['clinicalreview','Will a professional review important alerts or recommendations?',YES,'Triggered by your stated intended purpose.']);
+  q.push(['healthdata','Will you handle identifiable patient data for healthcare providers or their vendors?',YES]);
+ }
+ if(ind==='education'){
+  q.push(['children','Will children under 13 use the service or is it directed at them?',YES]);
+  q.push(['schooldata','Will schools supply or control student education records?',YES]);
+ }
+ if(ind==='finance'||ind==='retail'||c.includes('Payment processing')){
+  q.push(['payments','Will you store, process or transmit payment card data yourself?',YES,'Using a hosted payment provider end-to-end usually reduces, but does not remove, this scope.']);
+ }
+ if(ind==='finance'){
+  q.push(['regulated','Will you provide a regulated financial service (lending, payments, investments, insurance) rather than tools for licensed firms?',YES]);
+ }
+ if(['industrial','energy','automotive'].includes(ind)||c.includes('Industrial controller')){
+  q.push(['safetyfunction','Does the product perform a safety function (emergency stop, interlock, braking, protection)?',YES]);
+ }
+ if(ind==='automotive')q.push(['vehicle','Is it installed in, or does it control, a road vehicle?',YES]);
+ if(ind==='energy')q.push(['critical','Does it connect to or control grid, utility or other critical-infrastructure systems?',YES]);
+ if(ind==='government')q.push(['publicsector','Will government agencies procure, host or operate it?',YES,'Public-sector buyers commonly require accessibility and security authorizations.']);
+ if(hw&&(ind==='consumer'||ind==='retail'||consumerFacing))q.push(['consumerproduct','Will the physical device be sold to or used by consumers?',YES]);
+ if(hw){
+  q.push(['radio','Does the device have Bluetooth, Wi-Fi or another radio?',YES]);
+  q.push(['electrical','Does it contain electronics, a battery, or connect to mains power?',YES,'Electrical safety and EMC conformity usually depend on this.']);
+  if(a.impact==='safety'||a.impact==='unknown')q.push(['physical','Can a device malfunction create a physical safety hazard?',YES]);
+ }
+ if(c.includes('AI / ML model')||ind==='ai')q.push(['decisions','Does AI influence important decisions or clinical/educational recommendations?',YES]);
+ if(consumerFacing&&ind!=='education')q.push(['minors','Could children or teenagers realistically use the product?',YES,'Triggered because you selected a consumer audience.']);
+ q.push(['userdata','Does the product collect identifiable personal data?',YES,'Answer for all selected markets.']);
+ return q;
+}
+// Only answers to questions that are currently shown count. Hidden questions keep their stored value for resume, but never drive a finding.
+function liveAnswers(){const ids=new Set(specificQuestions().map(q=>q[0]));return Object.fromEntries(Object.entries(S.answers).filter(([k])=>ids.has(k)))}
+function answerLabel(id){const q=specificQuestions().find(x=>x[0]===id);const v=liveAnswers()[id];return q&&v?label(q[2],v):'Not answered'}
+const yesish=v=>v==='yes'||v==='unknown';
+
+// ---------- extra orientation references used by the market table
+Object.assign(SOURCE,{
+ nrtl:{title:'OSHA — Nationally Recognized Testing Laboratory program',url:'https://www.osha.gov/nationally-recognized-testing-laboratory-program'},
+ ukca:{title:'UK Government — Using the UKCA marking',url:'https://www.gov.uk/guidance/using-the-ukca-marking'},
+ ukproduct:{title:'UK Government — Product safety for businesses',url:'https://www.gov.uk/guidance/product-safety-for-businesses'},
+ ncsc:{title:'NCSC — Cyber Essentials',url:'https://www.ncsc.gov.uk/cyberessentials/overview'},
+ ccpsa:{title:'Health Canada — Consumer product safety',url:'https://www.canada.ca/en/health-canada/services/consumer-product-safety.html'},
+ asic:{title:'ASIC — Australian Securities and Investments Commission',url:'https://asic.gov.au/'},
+ accc:{title:'Product Safety Australia (ACCC)',url:'https://www.productsafety.gov.au/'},
+ mohap:{title:'UAE Ministry of Health and Prevention',url:'https://mohap.gov.ae/'},
+ cbuae:{title:'Central Bank of the UAE',url:'https://www.centralbank.ae/'},
+ tdra:{title:'UAE TDRA — Telecommunications and Digital Government Regulatory Authority',url:'https://tdra.gov.ae/'},
+ moiat:{title:'UAE Ministry of Industry and Advanced Technology',url:'https://moiat.gov.ae/'},
+ sdaia:{title:'SDAIA — Saudi Data & AI Authority',url:'https://sdaia.gov.sa/'},
+ sfda:{title:'SFDA — Saudi Food and Drug Authority',url:'https://www.sfda.gov.sa/'},
+ sama:{title:'SAMA — Saudi Central Bank',url:'https://www.sama.gov.sa/'},
+ cst:{title:'CST — Saudi Communications, Space and Technology Commission',url:'https://www.cst.gov.sa/'},
+ saso:{title:'SASO — Saudi Standards, Metrology and Quality Organization',url:'https://saso.gov.sa/'}
+});
+
+// ---------- topics (market-independent) and the per-market requirement table
+// Each topic is triggered by answers; each market lists what that topic typically means there.
+// Entries are [label, kind, note, sourceKey]. kind: law | cert | marking | registration | guidance.
+const TOPICS={
+ clinical:{title:'Medical device oversight',prio:'high',phase:'Clarify',why:'Your product may perform monitoring, diagnostic or clinical decision-support functions. Classification depends on intended claims and on each software function, and differs by market.',action:'Document intended-use statements, users and each clinical function; confirm the device pathway for every launch market before committing to claims.'},
+ healthdata:{title:'Health data safeguards',prio:'high',phase:'Design',why:'Identifiable health information is subject to stricter conditions than ordinary personal data in every selected market, under different regimes.',action:'Map health-data flows, storage location, legal basis or consent model and access controls per market.'},
+ children:{title:'Child and teenage users',prio:'high',phase:'Clarify',why:'Services used by minors face consent, age-assurance and design expectations beyond general privacy rules.',action:'Confirm age groups, parental-consent model, default settings and data minimisation for younger users.'},
+ schoolrecords:{title:'School-controlled education records',prio:'high',phase:'Design',why:'Schools usually remain responsible for student records and expect vendor contracts, retention limits and access controls.',action:'Identify who controls the records, what the school contract must cover and how access, retention and deletion work.'},
+ payments:{title:'Payment-card data handling',prio:'high',phase:'Design',why:'Storing, processing or transmitting cardholder data brings PCI DSS obligations via your acquirer in every market; local payment rules may add to this.',action:'Map where card data enters, moves and rests; confirm merchant level and SAQ type with your payment provider; tokenise to reduce scope.'},
+ finlicense:{title:'Financial-service licensing',prio:'high',phase:'Clarify',why:'Providing a regulated financial service directly requires authorisation, disclosures and complaint handling that tooling vendors do not face.',action:'Confirm whether you are the regulated provider or a technology supplier to one; identify the authorising body per market.'},
+ radio:{title:'Wireless / radio equipment approval',prio:'medium',phase:'Validate',why:'Radios need equipment authorisation or type approval in each market; pre-certified modules reduce but do not remove this.',action:'Record radio modules and their existing certifications; plan testing and labelling per market.'},
+ electrical:{title:'Electrical safety and EMC conformity',prio:'medium',phase:'Validate',why:'Powered hardware is expected to show electrical-safety and electromagnetic-compatibility conformity, usually through a marking or listing recognised in each market.',action:'Identify the applicable safety and EMC standards, pick a test lab recognised in your markets and plan labelling and technical documentation.'},
+ consumerproduct:{title:'Consumer product safety',prio:'high',phase:'Design',why:'Physical products sold to consumers carry general product-safety, labelling and recall-readiness obligations.',action:'Record product category, intended users and foreseeable misuse; identify applicable safety standards and recall procedures.'},
+ funcsafety:{title:'Safety functions and machinery safety',prio:'high',phase:'Design',why:'Safety functions (stops, interlocks, protection) are held to functional-safety expectations and may fall under machinery rules.',action:'List each safety function, its required integrity, and how it is designed, verified and maintained; seek specialist review of the applicable standard.'},
+ vehicle:{title:'Vehicle equipment approval',prio:'high',phase:'Design',why:'Products installed in or controlling road vehicles face type-approval, safety-standard and cybersecurity expectations from regulators and OEM customers.',action:'Clarify whether you are an OEM supplier or aftermarket seller; list the vehicle functions touched and the approvals your customers require.'},
+ critical:{title:'Critical-infrastructure security',prio:'high',phase:'Design',why:'Systems connected to grid or utility operations are covered by critical-infrastructure security and incident-reporting regimes, directly or via operator contracts.',action:'Identify the operators you connect to, their security requirements and any incident-reporting duties; document segmentation and access control.'},
+ govsec:{title:'Public-sector security and accessibility',prio:'high',phase:'Implement',why:'Government buyers commonly require accessibility conformance and a security authorisation or assurance process before procurement.',action:'Identify the procurement route, the accessibility standard requested and the security framework the agency expects; plan evidence early.'},
+ aigov:{title:'AI purpose and human oversight',prio:'medium',phase:'Design',why:'The impact of AI outputs and the degree of human oversight affect engineering safeguards; some markets add explicit AI obligations.',action:'Document AI functions, validation criteria, human review and failure handling.'},
+ privacy:{title:'Personal-data obligations',prio:'medium',phase:'Design',why:'Collecting identifiable personal data brings notice, security and individual-rights duties in every selected market.',action:'Inventory data collected, purposes, retention, third parties and user-rights handling; confirm cross-border transfer rules between your markets.'}
+};
+const KIND={law:'Law / regulation',cert:'Certification',marking:'Conformity marking',registration:'Registration / approval',guidance:'Guidance / expectation'};
+const MR={
+ us:{
+  privacy:['FTC Act §5 and state privacy laws (e.g. CCPA/CPRA)','law','No single federal privacy law; state laws apply by residents served.','ftc'],
+  healthdata:['HIPAA (if you are a covered entity or business associate)','law','Depends on the relationship with healthcare customers.','hipaa'],
+  children:['COPPA','law','Verifiable parental consent for under-13 data.','coppa'],
+  schoolrecords:['FERPA (school official exception, vendor contracts)','law','Schools stay responsible; contracts carry the duties.','ferpa'],
+  clinical:['FDA medical device pathway (510(k), De Novo, PMA, or enforcement discretion)','registration','Software functions are assessed individually.','fda'],
+  payments:['PCI DSS (via your acquirer)','cert','Industry standard enforced through card-network contracts.','pci'],
+  finlicense:['CFPB rules and state licensing (money transmitter, lending)','law','State-by-state licensing is common.','cfpb'],
+  radio:['FCC equipment authorization (Part 15)','cert','Certification or SDoC depending on device.','fcc'],
+  electrical:['NRTL listing (e.g. UL) for electrical safety; FCC Part 15 EMC','cert','Listing is often required by retailers and for workplace use.','nrtl'],
+  consumerproduct:['CPSC requirements (CPSIA, Children’s Product / General Certificate of Conformity)','law','Testing and certificates depend on product category.','cpsc'],
+  funcsafety:['OSHA machine-safety rules; ANSI/ISO safety standards','guidance','Standards are voluntary but widely expected by buyers.','osha'],
+  vehicle:['NHTSA FMVSS self-certification','law','Manufacturers self-certify; defects must be reported.','nhtsa'],
+  critical:['CISA guidance; sector rules (e.g. NERC CIP for bulk power)','guidance','Sector regulators impose the binding rules.','cisa'],
+  govsec:['FedRAMP authorization and Section 508 accessibility','cert','State buyers often ask for StateRAMP or similar.','fedramp'],
+  aigov:['No general AI law; FTC and sector rules, some state AI laws','guidance','Expect sector regulators to apply existing rules to AI.','ftc']
+ },
+ eu:{
+  privacy:['GDPR','law','Applies to EU/EEA residents regardless of where you are.','gdpr'],
+  healthdata:['GDPR special-category data (Art. 9) and national health rules','law','Explicit consent or another Art. 9 condition is needed.','gdpr'],
+  children:['GDPR Art. 8 (parental consent; age 13–16 by member state)','law','Age threshold differs by country.','gdpr'],
+  schoolrecords:['GDPR processor terms (Art. 28) with each school','law','Schools act as controllers.','gdpr'],
+  clinical:['CE marking under the Medical Device Regulation (MDR 2017/745)','marking','Notified body involvement above Class I.','mdr'],
+  payments:['PCI DSS; PSD2 if you are a payment service provider','cert','Strong customer authentication rules may apply.','pci'],
+  finlicense:['Authorisation by the national competent authority (PSD2, MiCA, MiFID as relevant)','law','Passporting across member states once authorised.',null],
+  radio:['CE marking under the Radio Equipment Directive (RED)','marking','Includes RED cybersecurity requirements for connected devices.','ce'],
+  electrical:['CE marking: Low Voltage Directive and EMC Directive','marking','Declaration of conformity and technical file required.','ce'],
+  consumerproduct:['General Product Safety Regulation (GPSR)','law','Responsible economic operator in the EU required.','gpsr'],
+  funcsafety:['CE marking under the Machinery Regulation (EU) 2023/1230','marking','Replaces the Machinery Directive from 2027.','machinery'],
+  vehicle:['EU vehicle type-approval (UNECE regulations incl. R155 cybersecurity, R156 software updates)','cert','OEM customers will require evidence.',null],
+  critical:['NIS2 Directive (as transposed nationally)','law','Essential and important entities; supplier duties flow down.','nis2'],
+  govsec:['Member-state procurement rules; EN 301 549 accessibility','guidance','National cloud security schemes may apply.',null],
+  aigov:['EU AI Act (risk-based obligations)','law','High-risk uses carry conformity assessment.','ai']
+ },
+ uk:{
+  privacy:['UK GDPR and Data Protection Act 2018','law','ICO registration fee usually applies.','ico'],
+  healthdata:['UK GDPR special-category data; NHS DSP Toolkit for NHS customers','law','NHS buyers require DSPT evidence.','ico'],
+  children:['ICO Children’s code (Age Appropriate Design Code)','law','Applies to services likely accessed by under-18s.','icochild'],
+  schoolrecords:['UK GDPR processor terms with each school','law','DfE guidance on cloud services for schools.','ico'],
+  clinical:['MHRA registration; UKCA marking (CE accepted during the transition period)','registration','Check the current UKCA/CE transition dates.','mhra'],
+  payments:['PCI DSS (via your acquirer)','cert','','pci'],
+  finlicense:['FCA authorisation (and PRA for banks/insurers)','law','','fca'],
+  radio:['Radio Equipment Regulations 2017 (UKCA)','marking','','ukradio'],
+  electrical:['UKCA: Electrical Equipment (Safety) Regulations and EMC Regulations','marking','CE still recognised for many categories; verify current policy.','ukca'],
+  consumerproduct:['General Product Safety Regulations 2005','law','','ukproduct'],
+  funcsafety:['Supply of Machinery (Safety) Regulations 2008 (UKCA)','marking','','ukca'],
+  vehicle:['VCA type approval (GB type approval scheme)','cert','',null],
+  critical:['NIS Regulations 2018','law','',null],
+  govsec:['Cyber Essentials (Plus); Public Sector Bodies Accessibility Regulations 2018','cert','','ncsc'],
+  aigov:['No AI act; regulator-led principles','guidance','Sector regulators apply existing rules.',null]
+ },
+ ca:{
+  privacy:['PIPEDA, plus Quebec Law 25 and other provincial laws','law','','opc'],
+  healthdata:['Provincial health-privacy laws (e.g. PHIPA in Ontario)','law','Custodian relationships define duties.',null],
+  children:['PIPEDA meaningful-consent guidance for minors','guidance','','opc'],
+  schoolrecords:['Provincial education and privacy laws; school-board contracts','law','',null],
+  clinical:['Health Canada Medical Device Licence (MDL) and Establishment Licence (MDEL)','registration','','hc'],
+  payments:['PCI DSS (via your acquirer)','cert','','pci'],
+  finlicense:['FINTRAC MSB registration; provincial securities/lending regulators','law','',null],
+  radio:['ISED certification (RSS standards)','cert','','ised'],
+  electrical:['cUL / CSA certification (provincial electrical safety authorities)','cert','Required before retail sale in most provinces.',null],
+  consumerproduct:['Canada Consumer Product Safety Act','law','','ccpsa'],
+  funcsafety:['Provincial OHS rules; CSA Z432 machine safeguarding','guidance','',null],
+  vehicle:['Transport Canada CMVSS','law','',null],
+  critical:['Canadian Centre for Cyber Security guidance','guidance','',null],
+  govsec:['Protected B cloud assessment; accessibility (ACA)','cert','',null],
+  aigov:['No general AI law in force; sector rules','guidance','',null]
+ },
+ au:{
+  privacy:['Privacy Act 1988 (Australian Privacy Principles)','law','','oaic'],
+  healthdata:['Sensitive information under the APPs; My Health Record rules','law','','oaic'],
+  children:['OAIC children’s privacy guidance; Online Safety Act codes','guidance','','oaic'],
+  schoolrecords:['State education department privacy and procurement rules','law','',null],
+  clinical:['TGA inclusion in the ARTG','registration','','tga'],
+  payments:['PCI DSS (via your acquirer)','cert','','pci'],
+  finlicense:['ASIC Australian Financial Services or credit licence','law','','asic'],
+  radio:['ACMA Regulatory Compliance Mark (RCM)','marking','','acma'],
+  electrical:['RCM / Electrical Equipment Safety System (EESS) registration','marking','','acma'],
+  consumerproduct:['Australian Consumer Law (ACCC product safety)','law','','accc'],
+  funcsafety:['WHS Act; AS 4024 machinery safety','guidance','',null],
+  vehicle:['Australian Design Rules (ADRs)','law','',null],
+  critical:['Security of Critical Infrastructure Act 2018','law','',null],
+  govsec:['IRAP assessment; WCAG accessibility','cert','',null],
+  aigov:['No general AI law; voluntary AI safety standard','guidance','',null]
+ },
+ uae:{
+  privacy:['UAE Personal Data Protection Law (Federal Decree-Law 45/2021); DIFC and ADGM have their own laws','law','Free zones differ from onshore.',null],
+  healthdata:['ICT in Health Fields Law (health-data localisation)','law','Health data generally must stay in the UAE.','mohap'],
+  children:['PDPL consent requirements for minors','law','',null],
+  schoolrecords:['Emirate education-authority rules (e.g. KHDA, ADEK)','guidance','',null],
+  clinical:['MOHAP medical device registration','registration','','mohap'],
+  payments:['PCI DSS; CBUAE payment rules','cert','','pci'],
+  finlicense:['Central Bank of the UAE, DFSA (DIFC) or FSRA (ADGM) licensing','law','','cbuae'],
+  radio:['TDRA type approval','registration','','tdra'],
+  electrical:['ECAS / EQM conformity (MoIAT)','marking','','moiat'],
+  consumerproduct:['ECAS product conformity (MoIAT)','marking','','moiat'],
+  funcsafety:['MoIAT technical regulations; buyer HSE requirements','guidance','','moiat'],
+  vehicle:['MoIAT vehicle conformity requirements','registration','','moiat'],
+  critical:['UAE Cybersecurity Council / NESA standards','guidance','',null],
+  govsec:['UAE Information Assurance standard; TDRA digital government requirements','guidance','','tdra'],
+  aigov:['No binding AI law; national AI strategy and guidelines','guidance','',null]
+ },
+ sa:{
+  privacy:['Saudi Personal Data Protection Law (SDAIA)','law','Data-transfer restrictions apply.','sdaia'],
+  healthdata:['PDPL sensitive-data rules; NHIC health-data policies','law','','sdaia'],
+  children:['PDPL consent requirements for minors','law','','sdaia'],
+  schoolrecords:['Ministry of Education data and procurement rules','guidance','',null],
+  clinical:['SFDA Medical Device Marketing Authorization (MDMA)','registration','','sfda'],
+  payments:['PCI DSS; SAMA payment rules','cert','','pci'],
+  finlicense:['SAMA or Capital Market Authority licensing','law','','sama'],
+  radio:['CST type approval','registration','','cst'],
+  electrical:['SASO conformity via SABER (IECEE recognition)','cert','Shipment-level certificates through SABER.','saso'],
+  consumerproduct:['SASO technical regulations via SABER','cert','','saso'],
+  funcsafety:['SASO machinery technical regulations','cert','','saso'],
+  vehicle:['SASO vehicle conformity','cert','','saso'],
+  critical:['National Cybersecurity Authority Essential Cybersecurity Controls','law','',null],
+  govsec:['NCA controls; Digital Government Authority requirements','guidance','',null],
+  aigov:['SDAIA AI ethics principles','guidance','','sdaia']
+ },
+ other:{}
+};
+
+function activeTopics(){
+ const p=S.profile||{},a=liveAnswers(),ind=S.industry||p.industry,hw=isHardware(p),c=p.components||[],t=[];
+ const on=(id,trigger)=>t.push({id,trigger});
+ if(ind==='health'&&yesish(a.clinical))on('clinical',`Healthcare; intended function: ${a.clinical}`);
+ if(ind==='health'&&yesish(a.healthdata))on('healthdata',`Patient-data relationship: ${a.healthdata}`);
+ const childAns=ind==='education'?a.children:a.minors;if(yesish(childAns))on('children',`Child users: ${childAns}`);
+ if(ind==='education'&&yesish(a.schooldata))on('schoolrecords',`School records: ${a.schooldata}`);
+ if(yesish(a.payments))on('payments',`Card data handled: ${a.payments}`);
+ if(ind==='finance'&&yesish(a.regulated))on('finlicense',`Regulated service: ${a.regulated}`);
+ if(yesish(a.safetyfunction))on('funcsafety',`Safety function: ${a.safetyfunction}`);
+ if(ind==='automotive'&&yesish(a.vehicle))on('vehicle',`Vehicle integration: ${a.vehicle}`);
+ if(ind==='energy'&&yesish(a.critical))on('critical',`Critical infrastructure: ${a.critical}`);
+ if(ind==='government'&&yesish(a.publicsector))on('govsec',`Public-sector buyer: ${a.publicsector}`);
+ if(yesish(a.consumerproduct))on('consumerproduct',`Consumer product: ${a.consumerproduct}`);
+ if(hw&&yesish(a.radio))on('radio',`Wireless hardware: ${a.radio}`);
+ if(hw&&yesish(a.electrical))on('electrical',`Powered electronics: ${a.electrical}`);
+ if((c.includes('AI / ML model')||ind==='ai')&&yesish(a.decisions))on('aigov',`Important AI decisions: ${a.decisions}`);
+ if(yesish(a.userdata)&&!t.some(x=>x.id==='healthdata'))on('privacy',`Personal data: ${a.userdata}`);
+ return t;
+}
+function marketItems(mk,topic){const e=MR[mk]?.[topic];return e?{label:e[0],kind:e[1],note:e[2],src:e[3]}:null}
+
+// ---------- findings
+function buildFindings(){
+ const p=S.profile||{},a=liveAnswers(),stage=S.stage,goal=S.goal,hw=isHardware(p),f=[];
+ const add=(id,title,prio,why,action,trigger,phase='Clarify',perMarket=[])=>f.push({id,title,prio,why,action,trigger,phase,perMarket});
+ if(a.impact==='safety'||a.impact==='highstakes')add('impact','Assess consequences of incorrect outputs','high','You reported that a failure could cause physical harm or materially affect people. The relevant controls cannot be confirmed from this self-assessment.','Document credible failure scenarios, assign controls, and establish verification/oversight before launch.',`Failure consequence selected: ${a.impact}`,'Design');
+ if(S.industry==='health'&&ALERT_RE.test(p.intendedUse||'')&&(a.clinicalreview==='no'||a.clinicalreview==='unknown'))add('alertreview','Clarify safety controls for consequential alerts','high','Your stated intended purpose includes clinical alerts or predictions. Their consequences and review processes require product-specific evaluation.','Document who receives alerts, how errors are detected and how professional review or fallback works.',`Intended purpose: ${(p.intendedUse||'').slice(0,140)}; professional review: ${a.clinicalreview}`,'Design');
+ for(const t of activeTopics()){
+  const T=TOPICS[t.id];
+  const perMarket=S.markets.map(mk=>({market:mk,item:marketItems(mk,t.id)}));
+  add(t.id,T.title,T.prio,T.why,T.action,t.trigger,T.phase,perMarket);
+ }
+ if(hw&&yesish(a.physical))add('safety','Assess physical safety and failure scenarios','high','Physical components can create hazards beyond software quality. No specific test standard has been established from the questionnaire.','Create a hazard inventory, identify safety-critical functions and seek product-specific testing advice.',`Potential injury on failure: ${a.physical}`,'Design');
+ if(a.evidence==='partial'||a.evidence==='none'||a.evidence==='unknown')add('evidence','Establish a development and assurance evidence baseline',a.evidence==='none'?'high':'medium','Your responses indicate that documents or test evidence may be absent, incomplete or unknown. This is a self-reported discovery concern, not an audit finding.','Inventory existing requirements, risk records, security controls, change history and test evidence.',`Evidence reported: ${a.evidence}`,'Implement');
+ if(!f.length)add('scope','Confirm product requirements before certification planning','medium','The limited discovery answers did not trigger a specific reviewed topic. This does not mean the product is compliant or exempt.','Confirm precise product claims, technical components, customers and target markets.','Limited questionnaire / no matching demo topic');
+ const uncovered=S.markets.filter(mk=>!Object.keys(MR[mk]||{}).length);
+ if(uncovered.length)add('market',`Reference coverage is limited for: ${uncovered.map(m=>label(markets,m)).join(', ')}`,'medium','This prototype has no market-specific references for these jurisdictions; findings above are generic engineering topics there.','Confirm applicable local laws, standards and certifications with a qualified specialist before launch.',`Markets: ${uncovered.map(m=>label(markets,m)).join(', ')}`);
+ if(S.markets.length>1)add('multimarket','Plan one conformity programme across markets','medium',`You selected ${S.markets.length} launch markets. Test reports, technical files and data-protection controls can often be reused, but markings, registrations and local representatives differ.`,'Sequence markets, pick test labs recognised in all of them, and keep one technical file with market-specific annexes.',`Markets: ${S.markets.map(m=>label(markets,m)).join(', ')}`,'Clarify');
+ if(['idea','design'].includes(stage))f.forEach(x=>{if(x.phase==='Validate')x.phase='Plan validation';if(x.phase==='Implement')x.phase='Design';});
+ if(['live','scale'].includes(stage))f.forEach(x=>{if(x.id==='evidence')x.action='Audit the existing implementation, prioritize remediation and define change-control evidence. '+x.action;});
+ if(goal==='customer')f.forEach(x=>{if(['evidence','healthdata','schoolrecords','privacy','payments','govsec'].includes(x.id))x.action+=' Prepare a customer-facing evidence inventory.';});
+ if(goal==='expand')f.forEach(x=>{if(['market','privacy','radio','electrical','clinical','consumerproduct','multimarket'].includes(x.id))x.action+=' Compare this against your existing launch-market controls.';});
+ if(goal==='cert')f.forEach(x=>{if(['clinical','radio','electrical','safety','funcsafety','consumerproduct','vehicle'].includes(x.id))x.action+=' Confirm the relevant conformity/approval pathway with a specialist.';});
+ const order={high:0,medium:1,low:2};return f.sort((x,y)=>order[x.prio]-order[y.prio]);
+}
+// Per-location checklist: everything the selected markets require for the triggered topics.
+function marketChecklist(){
+ const topics=activeTopics();
+ return S.markets.map(mk=>({market:mk,name:label(markets,mk),covered:!!Object.keys(MR[mk]||{}).length,items:topics.map(t=>({topic:t.id,title:TOPICS[t.id].title,item:marketItems(mk,t.id)}))}));
+}
+function sourceLink(key){if(!key||!SOURCE[key])return '';const s=SOURCE[key];return `<a target="_blank" rel="noopener noreferrer" href="${safe(s.url)}">${safe(s.title)} ↗</a>`}
+function perMarketHtml(list){
+ if(!list.length)return '';
+ return `<div class="box" style="margin:10px 0"><div class="label">By location</div><ul class="mlist">${list.map(({market,item})=>`<li><b>${safe(label(markets,market))}:</b> ${item?`${safe(item.label)} <span class="pill ${item.kind}">${safe(KIND[item.kind])}</span>${item.note?`<div class="hint">${safe(item.note)}</div>`:''}${item.src?`<div class="hint">${sourceLink(item.src)}</div>`:''}`:'<span class="hint">No reference for this market in the demo; confirm with a local specialist.</span>'}</li>`).join('')}</ul><div class="hint">References are orientation links, not proof that the rule applies.</div></div>`;
+}
+
+// ---------- roadmap
+const PHASE={'Clarify':'01 · Clarify','Design':'02 · Design','Implement':'03 · Implement','Plan validation':'04 · Plan validation','Validate':'04 · Validate'};
+function buildRoadmap(){
+ const stage=S.stage,goal=S.goal,a=liveAnswers(),list=[];
+ const opener=stage==='idea'?'Before committing to architecture,':['live','scale'].includes(stage)?'For the existing live product,':'During current development,';
+ list.push({title:'Confirm intended purpose, functions and markets',detail:`${opener} record intended claims, users, product functions and target markets (${S.markets.map(m=>label(markets,m)).join(', ')||'none selected'}).`,phase:'01 · Clarify'});
+ if(goal==='customer')list.push({title:'Prepare a customer assurance evidence list',detail:'Identify what the prospective customer asked for and what verified documents you can supply.',phase:'01 · Customer readiness'});
+ if(goal==='expand')list.push({title:'Compare existing and new-market obligations',detail:'Document what is already controlled and identify requirements needing market-specific review.',phase:'01 · Market expansion'});
+ if(goal==='cert')list.push({title:'Confirm the relevant assessment or approval route',detail:'Separate legal obligations, standards and voluntary certification expectations.',phase:'01 · Regulatory pathway'});
+ if(goal==='research')list.push({title:'Turn findings into a requirements list',detail:'Write each finding as a candidate requirement with an owner and an open question to resolve.',phase:'01 · Requirements'});
+ if(goal==='fix')list.push({title:'Triage known issues against the findings',detail:'Map reported problems to the topics below and fix the highest-consequence gaps first.',phase:'02 · Remediation'});
+ if(goal==='mvp')list.push({title:'Scope compliance-critical features into the MVP',detail:'Decide which controls must ship in the first version and which can wait, and record why.',phase:'02 · MVP scope'});
+ const blockers={requirements:['Resolve the most important applicability questions','Confirm intended use, primary users and market before choosing certifications or suppliers.'],architecture:['Convert findings into architecture and delivery tasks','Assign an owner, identify affected components, and add requirements to the development backlog.'],testing:['Inventory validation evidence and test dependencies','Map test reports to functions and determine which test scope still needs specialist review.'],privacy:['Prepare a privacy and security readiness review','Document data flows, access controls, suppliers and available customer assurance evidence.'],resources:['Prioritize critical unknowns before estimating effort','Separate early decisions from deferrable work; avoid claiming unsupported timelines or costs.']};
+ if(blockers[a.blocker])list.push({title:blockers[a.blocker][0],detail:blockers[a.blocker][1],phase:'02 · Your blocker'});
+ if(stage==='pilot')list.push({title:'Define pilot exit criteria',detail:'Agree what evidence the pilot must produce before wider release, including incident handling.',phase:'04 · Pilot'});
+ for(const x of buildFindings().slice(0,4))list.push({title:x.action.split(/(?<=\.)\s+/)[0],detail:`Related to: ${x.title}. ${x.trigger}.`,phase:PHASE[x.phase]||x.phase});
+ const certs=marketChecklist().flatMap(m=>m.items.filter(i=>i.item&&['cert','marking','registration'].includes(i.item.kind)).map(i=>`${m.name}: ${i.item.label}`));
+ if(certs.length)list.push({title:'Schedule certifications, markings and registrations per market',detail:certs.slice(0,6).join(' · ')+(certs.length>6?` · and ${certs.length-6} more`:''),phase:'04 · Validate'});
+ if(['live','scale'].includes(stage))list.push({title:'Plan controlled remediation and release',detail:'Evaluate impact on existing users, update change records and define release evidence.',phase:'05 · Operate'});
+ else list.push({title:'Plan verification before launch',detail:'Define what evidence and testing would demonstrate that relevant controls work.',phase:'05 · Validate'});
+ return list.sort((x,y)=>parseInt(x.phase)-parseInt(y.phase));
+}
+
+// ---------- rendering
+function heading(k,title,desc){return `<div class="steptext">${safe(steps[k])} · ${k+1} of ${steps.length}</div><h1 tabindex="-1" id="screenTitle" class="title">${safe(title)}</h1><p class="desc">${safe(desc)}</p>`}
+function actions(nextText='Continue'){return `<div class="actions"><button class="btn text" data-act="back" ${S.step===0?'disabled':''}>← Back</button><button class="btn" data-act="next">${safe(nextText)} →</button></div>`}
+function choices(key,values,selected){return `<div class="grid" role="group" aria-label="${safe(key)}">${values.map(([v,l])=>`<button type="button" class="option" data-select="${safe(key)}" data-value="${safe(v)}" aria-pressed="${selected===v}"><strong>${safe(l)}</strong></button>`).join('')}</div>`}
+function multi(key,values,selected){return `<div class="grid" role="group" aria-label="${safe(key)}">${values.map(([v,l])=>`<button type="button" class="option" data-multi="${safe(key)}" data-value="${safe(v)}" aria-pressed="${selected.includes(v)}"><strong>${selected.includes(v)?'✓ ':''}${safe(l)}</strong></button>`).join('')}</div>`}
+function question(id,title,opts,help=''){const value=S.answers[id]||'';return `<div class="question"><h3>${safe(title)}</h3>${help?`<p>${safe(help)}</p>`:''}<div class="grid" role="group" aria-label="${safe(title)}">${opts.map(([v,l])=>`<button type="button" class="option" data-answer="${safe(id)}" data-value="${safe(v)}" aria-pressed="${value===v}"><strong>${safe(l)}</strong></button>`).join('')}</div></div>`}
+const marketNames=()=>S.markets.map(m=>label(markets,m)).join(', ')||'No market selected';
+function render(){
+ const i=S.step;
+ $('#sidebar').innerHTML=steps.map((x,j)=>j<i?`<button type="button" class="sideitem done" data-goto="${j}">✓ ${safe(x)}</button>`:`<div class="sideitem ${i===j?'active':''}">${j+1}. ${safe(x)}</div>`).join('');
+ $('#mobileProgress').textContent=`Step ${i+1} of ${steps.length} · ${steps[i]}`;
+ requestAnimationFrame(()=>{const act=$('#sidebar .sideitem.active'),bar=$('#sidebar');if(act&&bar&&bar.scrollWidth>bar.clientWidth)bar.scrollTo({left:act.offsetLeft-(bar.clientWidth-act.offsetWidth)/2,behavior:'instant'})});
+ $('#meterFill').style.width=`${((i+1)/steps.length)*100}%`;$('#meter').setAttribute('aria-valuenow',String(Math.round((i+1)/steps.length*100)));
+ let html='';
+ if(i===0)html=heading(i,'What are you building?','Describe your idea in plain language. Include who uses it, what it does and any software or physical components.')+`<label for="description" class="field">Product description</label><textarea id="description" class="textarea" maxlength="2500" placeholder="Example: A wearable with Bluetooth that monitors vital signs and alerts clinicians through an app.">${safe(S.desc)}</textarea><p class="hint">Avoid patient details, student records, source code and trade secrets. Demo: product answers are saved in this browser, not transmitted.</p><div class="notice">The next screen shows a structured <b>demo interpretation</b> that you can completely edit. This is not a live AI classification.</div><p id="validation" class="error" role="alert"></p>`+actions('Review product interpretation');
+ if(i===1){
+  const p=S.profile||(S.profile=inferLocal(S.desc));
+  const refreshed=p.sourceDesc!==undefined&&p.sourceDesc!==S.desc;
+  html=heading(i,'Did we understand it correctly?','Review your product architecture and intended purpose. Edit anything we have misunderstood.')+`<div class="notice">Interpretation mode: <b>Local demo rules</b>. A production deployment would use a secure, schema-validated AI service. ${p.confirmed?'<b>Your earlier edits are kept.</b>':''}${refreshed?' <b>Note:</b> the description changed after this interpretation was made; use “Re-interpret” to start from the new text.':''}</div><label for="intended" class="field">What is its intended purpose?</label><textarea class="textarea" id="intended" style="min-height:83px">${safe(p.intendedUse)}</textarea><div class="field">Product type</div>${choices('type',types,p.type)}<div class="field">Industry</div>${choices('industry',industries,p.industry)}<div class="field">Product components — remove or add</div><div class="chips">${p.components.map((c,j)=>`<span class="chip">${safe(c)} <button type="button" data-remove="${j}" aria-label="Remove ${safe(c)}">×</button></span>`).join('')}</div><label class="field" for="addComponent">Add a component</label><div class="row"><select id="addComponent" class="select" style="flex:1;min-width:150px"><option value="">Choose a component</option>${components.filter(c=>!p.components.includes(c)).map(x=>`<option value="${safe(x)}">${safe(x)}</option>`).join('')}</select><button class="btn outline" data-act="addcomponent">Add</button></div><p class="hint" style="margin-top:14px"><button type="button" class="btn text small" data-act="reinterpret">Re-interpret from description</button> (discards edits on this screen)</p>${actions('Confirm interpretation')}`;
+ }
+ if(i===2)html=heading(i,'A few quick details','These choices determine which questions and roadmap actions matter for your product.')+`<div class="field">Launch markets <span class="hint" style="font-weight:400">— select all that apply</span></div>${multi('markets',markets,S.markets)}<p class="hint">${S.markets.length?`Selected: ${safe(marketNames())}`:'Pick at least one location. Each one adds its own laws, certifications and markings to your roadmap.'}</p><div class="field">Current product stage</div>${choices('stage',stages,S.stage)}<div class="field">What are you trying to achieve?</div>${choices('goal',goals,S.goal)}<p id="validation" class="error" role="alert"></p>`+actions('See relevant questions');
+ if(i===3){const qs=specificQuestions();html=heading(i,'Just the questions that matter',`These ${qs.length} questions are selected for your product and markets (${marketNames()}). Choose ‘Not sure’ rather than guessing.`)+qs.map(q=>question(...q)).join('')+`<p id="validation" class="error" role="alert"></p>`+actions('Build my roadmap')}
+ if(i===4){
+  const report=buildFindings(),roadmap=buildRoadmap(),checklist=marketChecklist(),p=S.profile||{};
+  html=heading(i,'Your preliminary product roadmap','These are discovery signals, not a compliance audit. Each finding explains why it appeared, what to do next, and what it means in each launch market.')+`<div class="notice warning"><b>Demo limitations:</b> This report is generated locally from illustrative screening rules, not a verified regulatory decision engine. No documents or evidence were reviewed. Official links are for further reading; applicability is not established.</div><div class="box"><div class="label">Your product</div><p><b>${safe(label(industries,S.industry))}</b> · ${safe(label(types,p.type))}</p><p><b>Launch markets:</b> ${safe(marketNames())}</p><p class="hint">${safe(label(stages,S.stage))} · Goal: ${safe(label(goals,S.goal))}</p><p><b>Intended purpose:</b> ${safe(p.intendedUse)}</p><p class="hint"><b>Intended users:</b> ${safe(answerLabel('audience'))} · <b>Failure impact:</b> ${safe(answerLabel('impact'))}<br><b>Evidence:</b> ${safe(answerLabel('evidence'))} · <b>Main blocker:</b> ${safe(answerLabel('blocker'))}</p><div class="chips">${(p.components||[]).map(x=>`<span class="chip">${safe(x)}</span>`).join('')}</div></div>
+  <h2 style="margin:28px 0 7px">What each location requires</h2><p class="desc">Laws, certifications, markings and registrations triggered by your answers, listed per launch market.</p><div class="marketgrid">${checklist.map(m=>`<article class="marketcard"><h3>${safe(m.name)}</h3>${!m.covered?'<p class="hint">No market-specific references in this demo. Treat the topics below as a checklist to confirm with a local specialist.</p>':''}${m.items.length?`<ul class="mlist">${m.items.map(it=>`<li><span class="label">${safe(it.title)}</span><div>${it.item?`${safe(it.item.label)} <span class="pill ${it.item.kind}">${safe(KIND[it.item.kind])}</span>${it.item.src?`<div class="hint">${sourceLink(it.item.src)}</div>`:''}`:'<span class="hint">Confirm locally</span>'}</div></li>`).join('')}</ul>`:'<p class="hint">No market-specific topics were triggered by your answers.</p>'}</article>`).join('')}</div>
+  <div class="row between"><h2 style="margin:28px 0 7px">Priority findings</h2><span class="pill info">${report.length} discovery topics</span></div>${report.map(x=>`<article class="reportcard"><div class="row"><span class="pill ${x.prio==='high'?'high':'info'}">${x.prio==='high'?'High priority':'Review'}</span><span class="pill">${x.perMarket.length?'Location-specific':'Engineering guidance'}</span></div><h3>${safe(x.title)}</h3><p>${safe(x.why)}</p><div class="box" style="margin:10px 0"><div class="label">Why this appeared</div><div style="font-size:12px">${safe(x.trigger)}</div></div><p><b>Suggested action:</b> ${safe(x.action)}</p>${perMarketHtml(x.perMarket)}</article>`).join('')}<h2 style="margin:28px 0 12px">Your next actions</h2><div class="roadmap">${roadmap.map((r,j)=>`<div class="road"><span class="number">${j+1}</span><div><span class="label">${safe(r.phase)}</span><strong>${safe(r.title)}</strong><small>${safe(r.detail)}</small></div></div>`).join('')}</div><div class="notice" style="margin-top:20px">Nothing in this report proves compliance, noncompliance, exemption, or approval. For markets with limited coverage, consult a qualified local specialist.</div>`+actions('Save or share results');
+ }
+ if(i===5){
+  html=heading(i,'Keep your roadmap','Your results are ready. Copy or download the full text report, or copy a short shareable summary.')+`<div class="box"><h3>Get your results now</h3><p class="hint">No email needed. The full report includes findings, per-market requirements, sources and limitations as plain text.</p><div class="row"><button class="btn" data-act="showreport" aria-expanded="false" aria-controls="reportBox">Show full report</button><button class="btn outline" data-act="copyreport">Copy full report</button><button class="btn outline" data-act="download">Download .txt</button><button class="btn outline" data-act="copy">Copy shareable summary</button></div><div id="reportBox" hidden><label for="reportText" class="field">Full report (select all to copy)</label><textarea id="reportText" class="textarea reporttext" readonly>${safe(plainReport())}</textarea></div></div><h2 style="font-size:20px;margin:28px 0 12px">Optional: Detailed report delivery</h2><div class="notice warning">Demo only: the form below is <b>not submitted</b>. No emails are sent and no CRM lead is created. Use it to evaluate the user experience.</div><label for="leadName" class="field">Name (optional in demo)</label><input class="input" id="leadName" autocomplete="name" value="${safe(S.lead.name||'')}"><label for="leadEmail" class="field">Work email (optional in demo)</label><input class="input" id="leadEmail" type="email" autocomplete="email" value="${safe(S.lead.email||'')}"><label for="leadCompany" class="field">Company (optional)</label><input class="input" id="leadCompany" autocomplete="organization" value="${safe(S.lead.company||'')}"><label class="checkboxline"><input id="marketing" type="checkbox" ${S.marketing?'checked':''}><span>I'd like product and compliance updates. Optional; independent from report delivery.</span></label><label class="checkboxline"><input id="consult" type="checkbox" ${S.consult?'checked':''}><span>I'm interested in discussing engineering support.</span></label><button class="btn outline" data-act="leadDemo">Preview lead submission (no data sent)</button><p id="leadResult" role="status" class="hint"></p><div class="line"></div><button class="btn text" data-act="back">← Back to roadmap</button><button class="btn text" data-act="restart">Start another assessment</button>`;
+ }
+ $('#content').innerHTML=html;attach();
+}
+function rerenderChoice(btn){
+ const attr=btn.dataset.answer?'data-answer':btn.dataset.select?'data-select':btn.dataset.multi?'data-multi':btn.dataset.remove?'data-remove':'data-act';
+ const key=btn.getAttribute(attr),value=btn.dataset.value;
+ const y=window.scrollY;render();window.scrollTo(0,y);
+ const all=[...document.querySelectorAll(`[${attr}]`)];
+ const focus=all.find(el=>el.getAttribute(attr)===key&&(!value||el.dataset.value===value))||document.querySelector('#screenTitle');
+ if(focus)focus.focus({preventScroll:true});
+}
+function attach(){
+ for(const btn of document.querySelectorAll('[data-select]'))btn.addEventListener('click',()=>{const k=btn.dataset.select,v=btn.dataset.value;if(k==='type'||k==='industry'){S.profile[k]=v;if(k==='industry')S.industry=v;}else S[k]=v;save();rerenderChoice(btn);});
+ for(const btn of document.querySelectorAll('[data-multi]'))btn.addEventListener('click',()=>{const v=btn.dataset.value;S.markets=S.markets.includes(v)?S.markets.filter(x=>x!==v):[...S.markets,v];S.markets.sort((a,b)=>markets.findIndex(m=>m[0]===a)-markets.findIndex(m=>m[0]===b));save();rerenderChoice(btn);});
+ for(const btn of document.querySelectorAll('[data-answer]'))btn.addEventListener('click',()=>{S.answers[btn.dataset.answer]=btn.dataset.value;save();rerenderChoice(btn);});
+ for(const btn of document.querySelectorAll('[data-remove]'))btn.addEventListener('click',()=>{S.profile.components.splice(Number(btn.dataset.remove),1);save();rerenderChoice(btn);});
+ for(const btn of document.querySelectorAll('[data-act]'))btn.addEventListener('click',()=>action(btn.dataset.act,btn));
+ for(const btn of document.querySelectorAll('[data-goto]'))btn.addEventListener('click',()=>view(Number(btn.dataset.goto)));
+ const desc=$('#description');if(desc)desc.addEventListener('input',()=>{S.desc=desc.value;save()});
+ const intended=$('#intended');if(intended)intended.addEventListener('input',()=>{S.profile.intendedUse=intended.value;save()});
+ for(const k of ['Name','Email','Company']){const input=$('#lead'+k);if(input)input.addEventListener('input',()=>{S.lead[k.toLowerCase()]=input.value})}
+ for(const k of ['marketing','consult']){const check=$('#'+k);if(check)check.addEventListener('change',()=>{S[k]=check.checked})}
+}
+async function copyText(text,okMsg){
+ try{await navigator.clipboard.writeText(text);announce(okMsg);return true}
+ catch{const box=$('#reportBox'),ta=$('#reportText');if(box&&ta){box.hidden=false;ta.focus();ta.select();announce('Clipboard unavailable. The text is selected below; press Ctrl/Cmd+C.')}else announce('Clipboard unavailable in this browser.');return false}
+}
+async function action(a,btn){
+ if(a==='back'){view(Math.max(0,S.step-1));return}
+ if(a==='addcomponent'){const c=$('#addComponent').value;if(c&&!S.profile.components.includes(c)){S.profile.components.push(c);save();rerenderChoice($('#addComponent'))}return}
+ if(a==='reinterpret'){S.profile=inferLocal(S.desc);S.industry=S.profile.industry;save();render();announce('Interpretation refreshed from your description');return}
+ if(a==='restart'){reset(btn);return}
+ if(a==='showreport'){const box=$('#reportBox');box.hidden=!box.hidden;btn.setAttribute('aria-expanded',String(!box.hidden));btn.textContent=box.hidden?'Show full report':'Hide full report';if(!box.hidden)$('#reportText').focus();return}
+ if(a==='copyreport'){await copyText(plainReport(),'Full report copied to clipboard');return}
+ if(a==='download'){const blob=new Blob([plainReport()],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob),el=document.createElement('a');el.href=url;el.download='bizaffix-compass-roadmap-DEMO.txt';document.body.appendChild(el);el.click();el.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);announce('Download requested. If nothing happened, use Copy full report.');return}
+ if(a==='copy'){await copyText(safeSummary(),'Public-safe summary copied to clipboard');return}
+ if(a==='leadDemo'){const email=(S.lead.email||'').trim();if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){$('#leadResult').textContent='Please enter a valid email or leave the field empty.';return}$('#leadResult').textContent='Demo preview complete. Nothing was sent or stored: no email, consultation request or lead was created, and these contact fields are not saved in this browser.';return}
+ if(a==='next'){
+  if(S.step===0){
+   if(S.desc.trim().length<25){$('#validation').textContent='Please add a little more detail (at least 25 characters).';$('#description').focus();return}
+   if(!validProfile(S.profile)){S.profile=inferLocal(S.desc);S.industry=S.profile.industry}
+   view(1);return;
+  }
+  if(S.step===1){if(!S.profile.intendedUse.trim()){announce('Please describe the intended purpose.');$('#intended').focus();return}S.profile.confirmed=true;S.industry=S.profile.industry;view(2);return}
+  if(S.step===2){if(!S.markets.length||!S.stage||!S.goal){$('#validation').textContent='Choose at least one launch market, your product stage, and your main goal before continuing.';announce('Complete all three selections');return}view(3);return}
+  if(S.step===3){const missing=specificQuestions().filter(x=>!S.answers[x[0]]);if(missing.length){$('#validation').textContent=`Please answer ${missing.length} remaining question(s). “Not sure” is fine.`;announce('Complete the remaining questions');return}view(4);return}
+  if(S.step===4){view(5);return}
+ }
+}
+function safeSummary(){const p=S.profile||{},f=buildFindings();return `BIZAFFIX COMPASS — PRODUCT COMPLIANCE DISCOVERY (DEMO)\nIndustry: ${label(industries,S.industry)}\nType: ${label(types,p.type)}\nMarkets: ${marketNames()}\nStage: ${label(stages,S.stage)}\n\nAreas to investigate:\n${f.slice(0,3).map(x=>'- '+x.title).join('\n')}\n\nThis is an illustrative preliminary discovery output, not a verified compliance assessment. No personal or confidential product details included.`}
+function plainReport(){
+ const p=S.profile||{},f=buildFindings(),roads=buildRoadmap(),cl=marketChecklist();
+ const src=k=>k&&SOURCE[k]?`${SOURCE[k].title} — ${SOURCE[k].url}`:'';
+ return `BIZAFFIX COMPASS — PRODUCT COMPLIANCE ROADMAP (LOCAL DEMO)\nGenerated: ${new Date().toISOString()}\n\nNOT A COMPLIANCE CERTIFICATION OR LEGAL OPINION. This is an offline illustrative screening; sources are orientation links, not verified applicability determinations. No evidence was reviewed.\n\nPRODUCT\nDescription: ${S.desc}\nIntended purpose: ${p.intendedUse}\nType: ${label(types,p.type)}\nIndustry: ${label(industries,S.industry)}\nComponents: ${(p.components||[]).join(', ')}\nLaunch markets: ${marketNames()}\nStage: ${label(stages,S.stage)}\nGoal: ${label(goals,S.goal)}\nAudience: ${answerLabel('audience')}\nFailure impact: ${answerLabel('impact')}\nEvidence status: ${answerLabel('evidence')}\nMain blocker: ${answerLabel('blocker')}\n\nWHAT EACH LOCATION REQUIRES\n${cl.map(m=>`${m.name.toUpperCase()}${m.covered?'':' (no market-specific references in this demo)'}\n${m.items.length?m.items.map(it=>`- ${it.title}: ${it.item?`${it.item.label} [${KIND[it.item.kind]}]${it.item.note?' — '+it.item.note:''}${it.item.src?'\n  '+src(it.item.src):''}`:'confirm locally'}`).join('\n'):'- No market-specific topics triggered.'}`).join('\n\n')}\n\nFINDINGS\n${f.map((x,i)=>`${i+1}. ${x.title} [${x.prio}]\nWhy: ${x.why}\nTriggered by: ${x.trigger}\nNext action: ${x.action}${x.perMarket.length?'\nBy location:\n'+x.perMarket.map(({market,item})=>`  - ${label(markets,market)}: ${item?`${item.label} [${KIND[item.kind]}]`:'no reference in demo; confirm locally'}`).join('\n'):''}`).join('\n\n')}\n\nROADMAP\n${roads.map((x,i)=>`${i+1}. [${x.phase}] ${x.title}\n${x.detail}`).join('\n\n')}\n\nLIMITATIONS\nUS, EU, UK, Canada, Australia, UAE and Saudi Arabia have orientation references for common topics; "Other" has none. Rules have not been validated by a regulatory expert for this demo. Professional review is needed to establish obligations.`;
+}
+if(restore()){$('#landing').hidden=true;$('#workspace').hidden=false;render();}else{$('#landing').hidden=false;$('#workspace').hidden=true}
+</script></body></html>
