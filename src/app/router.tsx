@@ -4,6 +4,7 @@ import { AboutPage } from '@/pages/AboutPage.tsx'
 import { CareersPage } from '@/pages/CareersPage.tsx'
 import { CaseStudyPage } from '@/pages/CaseStudyPage.tsx'
 import { FoundationPage } from '@/pages/FoundationPage.tsx'
+import { CompassPage } from '@/pages/CompassPage.tsx'
 import { ContactPage } from '@/pages/ContactPage.tsx'
 import { HealthcarePage } from '@/pages/HealthcarePage.tsx'
 import { HomePage } from '@/pages/HomePage.tsx'
@@ -30,6 +31,7 @@ export function AppRouter() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/careers" element={<CareersPage />} />
         <Route path="/careers/:slug" element={<CareersPage />} />
+        <Route path="/compass" element={<CompassPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/__design-system" element={<FoundationPage />} />
         <Route path="*" element={<PlaceholderPage title="This page isn’t on the map." />} />
